@@ -29,6 +29,10 @@ int main(int argc, char const* argv[]) {
 
   while (true) {
     driver.read();
+    DeviceInfo const& info = driver.deviceInfo;
+    std::cout << "sys config: " << info.system_configuration <<
+        " fw version: " << info.fw_version <<
+        " fw revision: " << info.fw_revision << std::endl;
 
     BottomTracking const& tracking = driver.bottomTracking;
     std::cout << tracking.time.toString() << " " << driver.status.seq;
