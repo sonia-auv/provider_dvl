@@ -9,14 +9,14 @@ using namespace dvl_teledyne;
 Driver::Driver()
     : iodrivers_base::Driver(1000000),
       mConfMode(false),
-      mDesiredBaudrate(9600) {
+      mDesiredBaudrate(M_SONIA_BAUDRATE) {
   buffer.resize(1000000);
 }
 
 void Driver::open(std::string const& uri) {
   openURI(uri);
   setConfigurationMode();
-  if (mDesiredBaudrate != 9600) setDesiredBaudrate(mDesiredBaudrate);
+  if (mDesiredBaudrate != M_SONIA_BAUDRATE) setDesiredBaudrate(mDesiredBaudrate);
 
   startAcquisition();
 }
