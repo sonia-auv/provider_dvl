@@ -716,9 +716,12 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
     }
 
     if (time_out.elapsed(timeout)) {
-      throw TimeoutError(timeout_type,
-                         "readPacket(): no data after waiting " +
-                             boost::lexical_cast<string>(timeout) + "ms");
+      //throw TimeoutError(timeout_type,
+      //                   "readPacket(): no data after waiting " +
+      //                       boost::lexical_cast<string>(timeout) + "ms");
+      std::cout << "readPacket(): no data after waiting " +
+                             boost::lexical_cast<string>(timeout) + "ms" << std::endl;
+      time_out.restart();
     }
 
     // we still have time left to wait for arriving data. see how much

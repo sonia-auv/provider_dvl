@@ -9,7 +9,6 @@ using namespace dvl_teledyne;
 Driver::Driver()
     : iodrivers_base::Driver(1000000),
       mConfMode(false),
-      M_SONIA_BAUDRATE(115200),
       mDesiredBaudrate(M_SONIA_BAUDRATE) {
   buffer.resize(1000000);
 }

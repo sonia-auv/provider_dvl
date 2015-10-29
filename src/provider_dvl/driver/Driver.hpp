@@ -4,6 +4,8 @@
 #include <provider_dvl/base/Driver.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 
+#define M_SONIA_BAUDRATE 115200
+
 namespace dvl_teledyne {
 class Driver : public iodrivers_base::Driver, public PD0Parser {
   std::vector<uint8_t> buffer;
@@ -11,7 +13,6 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
 
   bool mConfMode;
   int mDesiredBaudrate;
-  const int M_SONIA_BAUDRATE;
 
   /** Tells the DVL to switch to the desired rate */
   void setDeviceBaudrate(int rate);
