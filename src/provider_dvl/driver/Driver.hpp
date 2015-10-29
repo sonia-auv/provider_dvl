@@ -11,7 +11,7 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
 
   bool mConfMode;
   int mDesiredBaudrate;
-  const int M_SONIA_BAUDRATE= 115200;
+  const int M_SONIA_BAUDRATE;
 
   /** Tells the DVL to switch to the desired rate */
   void setDeviceBaudrate(int rate);
