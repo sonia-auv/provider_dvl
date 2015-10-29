@@ -43,7 +43,8 @@
 
 using namespace std;
 using namespace iodrivers_base;
-
+//------------------------------------------------------------------------------
+//
 string Driver::printable_com(std::string const& str) {
   return printable_com(str.c_str(), str.size());
 }
@@ -67,6 +68,8 @@ string Driver::printable_com(char const* str, size_t str_size) {
   return result.str();
 }
 
+//------------------------------------------------------------------------------
+//
 string Driver::binary_com(std::string const& str) {
   return binary_com(str.c_str(), str.size());
 }
@@ -83,6 +86,8 @@ string Driver::binary_com(char const* str, size_t str_size) {
   return result.str();
 }
 
+//==============================================================================
+//        CONSTRUCTOR/DESCTRUCTOR
 Driver::Driver(int max_packet_size, bool extract_last)
     : internal_buffer(new uint8_t[max_packet_size]),
       internal_buffer_size(0),
@@ -103,37 +108,66 @@ Driver::~Driver() {
     delete *it;
 }
 
+//==============================================================================
+//        METHODE CODE SECTION
+//------------------------------------------------------------------------------
+//
 void Driver::setMainStream(IOStream* stream) {
   delete m_stream;
   m_stream = stream;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::addListener(IOListener* listener) { m_listeners.insert(listener); }
 
+//------------------------------------------------------------------------------
+//
 void Driver::removeListener(IOListener* listener) {
   m_listeners.erase(listener);
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::clear() {
   if (m_stream) m_stream->clear();
 }
 
+//------------------------------------------------------------------------------
+//
 Status Driver::getStatus() const { return m_stats; }
+
+//------------------------------------------------------------------------------
+//
 void Driver::resetStatus() { m_stats = Status(); }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setExtractLastPacket(bool flag) { m_extract_last = flag; }
+
+//------------------------------------------------------------------------------
+//
 bool Driver::getExtractLastPacket() const { return m_extract_last; }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setFileDescriptor(int fd, bool auto_close) {
   setMainStream(new FDStream(fd, auto_close));
 }
 
+//------------------------------------------------------------------------------
+//
 int Driver::getFileDescriptor() const {
   if (m_stream) return m_stream->getFileDescriptor();
   return FDStream::INVALID_FD;
 }
+
+//------------------------------------------------------------------------------
+//
 bool Driver::isValid() const { return m_stream; }
 
+//------------------------------------------------------------------------------
+//
 void Driver::openURI(std::string const& uri) {
   // Modes:
   //   0 for serial
@@ -184,16 +218,22 @@ void Driver::openURI(std::string const& uri) {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::openSerial(std::string const& port, int baud_rate) {
   setFileDescriptor(Driver::openSerialIO(port, baud_rate));
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::openInet(const char* hostname, int port) {
   openTCP(hostname, port);
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::openIPServer(int port, addrinfo const& hints) {
   struct addrinfo* result;
   string port_as_string = boost::lexical_cast<string>(port);
@@ -218,6 +258,8 @@ void Driver::openIPServer(int port, addrinfo const& hints) {
   setMainStream(new UDPServerStream(sfd, true));
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::openIPClient(std::string const& hostname, int port,
                           addrinfo const& hints) {
   struct addrinfo* result;
@@ -246,7 +288,8 @@ void Driver::openIPClient(std::string const& hostname, int port,
 
   setFileDescriptor(sfd);
 }
-
+//------------------------------------------------------------------------------
+//
 void Driver::openTCP(std::string const& hostname, int port) {
   struct addrinfo hints;
   memset(&hints, 0, sizeof(struct addrinfo));
@@ -264,6 +307,8 @@ void Driver::openTCP(std::string const& hostname, int port) {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::openUDP(std::string const& hostname, int port) {
   if (hostname.empty()) {
     struct addrinfo hints;
@@ -281,6 +326,8 @@ void Driver::openUDP(std::string const& hostname, int port) {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 int Driver::openSerialIO(std::string const& port, int baud_rate) {
   int fd = ::open(port.c_str(), O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
   if (fd == FDStream::INVALID_FD) throw UnixError("cannot open device " + port);
@@ -303,16 +350,22 @@ int Driver::openSerialIO(std::string const& port, int baud_rate) {
   return fd;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::openFile(std::string const& path) {
   int fd = ::open(path.c_str(), O_RDWR | O_SYNC | O_NONBLOCK);
   if (fd == FDStream::INVALID_FD) throw UnixError("cannot open file " + path);
   setFileDescriptor(fd);
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::setSerialBaudrate(int brate) {
   return setSerialBaudrate(getFileDescriptor(), brate);
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::setSerialBaudrate(int fd, int brate) {
   int tc_rate = 0;
 #ifdef __gnu_linux__
@@ -410,11 +463,15 @@ bool Driver::setSerialBaudrate(int fd, int brate) {
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::close() {
   delete m_stream;
   m_stream = 0;
 }
 
+//------------------------------------------------------------------------------
+//
 std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
                                                   int buffer_size) const {
   int packet_start = 0, packet_size = 0;
@@ -466,6 +523,8 @@ std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
   return make_pair(buffer + packet_start, packet_size);
 }
 
+//------------------------------------------------------------------------------
+//
 int Driver::doPacketExtraction(uint8_t* buffer) {
   pair<uint8_t const*, int> packet =
       findPacket(internal_buffer, internal_buffer_size);
@@ -486,6 +545,8 @@ int Driver::doPacketExtraction(uint8_t* buffer) {
   return packet.second;
 }
 
+//------------------------------------------------------------------------------
+//
 pair<int, bool> Driver::extractPacketFromInternalBuffer(uint8_t* buffer,
                                                         int out_buffer_size) {
   // How many packet bytes are there currently in +buffer+
@@ -503,6 +564,8 @@ pair<int, bool> Driver::extractPacketFromInternalBuffer(uint8_t* buffer,
   return make_pair(result_size, false);
 }
 
+//------------------------------------------------------------------------------
+//
 pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
                                            int out_buffer_size) {
   if (out_buffer_size < MAX_PACKET_SIZE)
@@ -553,6 +616,8 @@ pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
   // Never reached
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::hasPacket() const {
   if (internal_buffer_size == 0) return false;
 
@@ -561,24 +626,41 @@ bool Driver::hasPacket() const {
   return (packet.second > 0);
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setReadTimeout(base::Time const& timeout) {
   m_read_timeout = timeout;
 }
+
+//------------------------------------------------------------------------------
+//
 base::Time Driver::getReadTimeout() const { return m_read_timeout; }
+
+//------------------------------------------------------------------------------
+//
 int Driver::readPacket(uint8_t* buffer, int buffer_size) {
   return readPacket(buffer, buffer_size, getReadTimeout());
 }
+
+//------------------------------------------------------------------------------
+//
 int Driver::readPacket(uint8_t* buffer, int buffer_size,
                        base::Time const& packet_timeout) {
   return readPacket(buffer, buffer_size, packet_timeout,
                     packet_timeout + base::Time::fromSeconds(1));
 }
+
+//------------------------------------------------------------------------------
+//
 int Driver::readPacket(uint8_t* buffer, int buffer_size,
                        base::Time const& packet_timeout,
                        base::Time const& first_byte_timeout) {
   return readPacket(buffer, buffer_size, packet_timeout.toMilliseconds(),
                     first_byte_timeout.toMilliseconds());
 }
+
+//------------------------------------------------------------------------------
+//
 int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
                        int first_byte_timeout) {
   if (first_byte_timeout > packet_timeout) first_byte_timeout = -1;
@@ -657,18 +739,31 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
   }
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setWriteTimeout(base::Time const& timeout) {
   m_write_timeout = timeout;
 }
+
+//------------------------------------------------------------------------------
+//
 base::Time Driver::getWriteTimeout() const { return m_write_timeout; }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::writePacket(uint8_t const* buffer, int buffer_size) {
   return writePacket(buffer, buffer_size, getWriteTimeout());
 }
+
+//------------------------------------------------------------------------------
+//
 bool Driver::writePacket(uint8_t const* buffer, int buffer_size,
                          base::Time const& timeout) {
   return writePacket(buffer, buffer_size, timeout.toMilliseconds());
 }
+
+//------------------------------------------------------------------------------
+//
 bool Driver::writePacket(uint8_t const* buffer, int buffer_size, int timeout) {
   if (!m_stream)
     throw std::runtime_error(
