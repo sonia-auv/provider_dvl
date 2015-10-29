@@ -2,16 +2,16 @@
 // Created by jeremie on 10/29/15.
 //
 
-#ifndef PROVIDER_DVL_PD5MESSAGES_H
-#define PROVIDER_DVL_PD5MESSAGES_H
+#ifndef PROVIDER_DVL_PD5PACKET_H
+#define PROVIDER_DVL_PD5PACKET_H
 
 #include <stdint.h>
 
-class PD5Messages {
+class PD5Packet {
  public:
   static const uint32_t MESSAGE_SIZE = 86;
-  PD5Messages();
-  ~PD5Messages();
+  PD5Packet();
+  ~PD5Packet();
   uint8_t GetSystemConfig();
   void SetSystemConfig(uint8_t systemConfig);
 
@@ -222,363 +222,363 @@ class PD5Messages {
 // INLINE CODE SECTION
 //------------------------------------------------------------------------------
 //
-inline uint8_t PD5Messages::GetSystemConfig() {
+inline uint8_t PD5Packet::GetSystemConfig() {
   return systemConfig;
 }
 
-inline void PD5Messages::SetSystemConfig(uint8_t systemConfig) {
+inline void PD5Packet::SetSystemConfig(uint8_t systemConfig) {
   systemConfig = systemConfig;
 }
 
-inline uint32_t PD5Messages::GetXVelBtm() {
+inline uint32_t PD5Packet::GetXVelBtm() {
   return xVelBtm;
 }
 
-inline void PD5Messages::SetXVelBtm(uint32_t velBtm) {
+inline void PD5Packet::SetXVelBtm(uint32_t velBtm) {
   xVelBtm = velBtm;
 }
 
-inline uint32_t PD5Messages::GetYVelBtm() {
+inline uint32_t PD5Packet::GetYVelBtm() {
   return yVelBtm;
 }
 
-inline void PD5Messages::SetYVelBtm(uint32_t velBtm) {
+inline void PD5Packet::SetYVelBtm(uint32_t velBtm) {
   yVelBtm = velBtm;
 }
 
-inline uint32_t PD5Messages::GetZVelBtm() {
+inline uint32_t PD5Packet::GetZVelBtm() {
   return zVelBtm;
 }
 
-inline void PD5Messages::SetZVelBtm(uint32_t velBtm) {
+inline void PD5Packet::SetZVelBtm(uint32_t velBtm) {
   zVelBtm = velBtm;
 }
 
-inline uint32_t PD5Messages::GetEVelBtm() {
+inline uint32_t PD5Packet::GetEVelBtm() {
   return eVelBtm;
 }
 
-inline void PD5Messages::SetEVelBtm(uint32_t velBtm) {
+inline void PD5Packet::SetEVelBtm(uint32_t velBtm) {
   eVelBtm = velBtm;
 }
 
-inline uint32_t PD5Messages::GetBm1RngBtm() {
+inline uint32_t PD5Packet::GetBm1RngBtm() {
   return bm1RngBtm;
 }
 
-inline void PD5Messages::SetBm1RngBtm(uint32_t bm1RngBtm) {
+inline void PD5Packet::SetBm1RngBtm(uint32_t bm1RngBtm) {
   bm1RngBtm = bm1RngBtm;
 }
 
-inline uint32_t PD5Messages::GetBm2RngBtm() {
+inline uint32_t PD5Packet::GetBm2RngBtm() {
   return bm2RngBtm;
 }
 
-inline void PD5Messages::SetBm2RngBtm(uint32_t bm2RngBtm) {
+inline void PD5Packet::SetBm2RngBtm(uint32_t bm2RngBtm) {
   bm2RngBtm = bm2RngBtm;
 }
 
-inline uint32_t PD5Messages::GetBm3RngBtm() {
+inline uint32_t PD5Packet::GetBm3RngBtm() {
   return bm3RngBtm;
 }
 
-inline void PD5Messages::SetBm3RngBtm(uint32_t bm3RngBtm) {
+inline void PD5Packet::SetBm3RngBtm(uint32_t bm3RngBtm) {
   bm3RngBtm = bm3RngBtm;
 }
 
-inline uint32_t PD5Messages::GetBm4RngBtm() {
+inline uint32_t PD5Packet::GetBm4RngBtm() {
   return bm4RngBtm;
 }
 
-inline void PD5Messages::SetBm4RngBtm(uint32_t bm4RngBtm) {
+inline void PD5Packet::SetBm4RngBtm(uint32_t bm4RngBtm) {
   bm4RngBtm = bm4RngBtm;
 }
 
-inline uint32_t PD5Messages::GetBottomStatus() {
+inline uint32_t PD5Packet::GetBottomStatus() {
   return bottomStatus;
 }
 
-inline void PD5Messages::SetBottomStatus(uint32_t bottomStatus) {
+inline void PD5Packet::SetBottomStatus(uint32_t bottomStatus) {
   bottomStatus = bottomStatus;
 }
 
-inline uint32_t PD5Messages::GetBeam1LowCorrelation() {
+inline uint32_t PD5Packet::GetBeam1LowCorrelation() {
   return beam1LowCorrelation;
 }
 
-inline void PD5Messages::SetBeam1LowCorrelation(uint32_t beam1LowCorrelation) {
+inline void PD5Packet::SetBeam1LowCorrelation(uint32_t beam1LowCorrelation) {
   beam1LowCorrelation = beam1LowCorrelation;
 }
 
-inline uint32_t PD5Messages::GetBeam1LowEchoAmplitude() {
+inline uint32_t PD5Packet::GetBeam1LowEchoAmplitude() {
   return beam1LowEchoAmplitude;
 }
 
-inline void PD5Messages::SetBeam1LowEchoAmplitude(uint32_t beam1LowEchoAmplitude) {
+inline void PD5Packet::SetBeam1LowEchoAmplitude(uint32_t beam1LowEchoAmplitude) {
   beam1LowEchoAmplitude = beam1LowEchoAmplitude;
 }
 
-inline uint32_t PD5Messages::GetBeam2LowCorrelation() {
+inline uint32_t PD5Packet::GetBeam2LowCorrelation() {
   return beam2LowCorrelation;
 }
 
-inline void PD5Messages::SetBeam2LowCorrelation(uint32_t beam2LowCorrelation) {
+inline void PD5Packet::SetBeam2LowCorrelation(uint32_t beam2LowCorrelation) {
   beam2LowCorrelation = beam2LowCorrelation;
 }
 
-inline uint32_t PD5Messages::GetBeam2LowEchoAmplitude() {
+inline uint32_t PD5Packet::GetBeam2LowEchoAmplitude() {
   return beam2LowEchoAmplitude;
 }
 
-inline void PD5Messages::SetBeam2LowEchoAmplitude(uint32_t beam2LowEchoAmplitude) {
+inline void PD5Packet::SetBeam2LowEchoAmplitude(uint32_t beam2LowEchoAmplitude) {
   beam2LowEchoAmplitude = beam2LowEchoAmplitude;
 }
 
-inline uint32_t PD5Messages::GetBeam3LowCorrelation() {
+inline uint32_t PD5Packet::GetBeam3LowCorrelation() {
   return beam3LowCorrelation;
 }
 
-inline void PD5Messages::SetBeam3LowCorrelation(uint32_t beam3LowCorrelation) {
+inline void PD5Packet::SetBeam3LowCorrelation(uint32_t beam3LowCorrelation) {
   beam3LowCorrelation = beam3LowCorrelation;
 }
 
-inline uint32_t PD5Messages::GetBeam3LowEchoAmplitude() {
+inline uint32_t PD5Packet::GetBeam3LowEchoAmplitude() {
   return beam3LowEchoAmplitude;
 }
 
-inline void PD5Messages::SetBeam3LowEchoAmplitude(uint32_t beam3LowEchoAmplitude) {
+inline void PD5Packet::SetBeam3LowEchoAmplitude(uint32_t beam3LowEchoAmplitude) {
   beam3LowEchoAmplitude = beam3LowEchoAmplitude;
 }
 
-inline uint32_t PD5Messages::GetBeam4LowCorrelation() {
+inline uint32_t PD5Packet::GetBeam4LowCorrelation() {
   return beam4LowCorrelation;
 }
 
-inline void PD5Messages::SetBeam4LowCorrelation(uint32_t beam4LowCorrelation) {
+inline void PD5Packet::SetBeam4LowCorrelation(uint32_t beam4LowCorrelation) {
   beam4LowCorrelation = beam4LowCorrelation;
 }
 
-inline uint32_t PD5Messages::GetBeam4LowEchoAmplitude() {
+inline uint32_t PD5Packet::GetBeam4LowEchoAmplitude() {
   return beam4LowEchoAmplitude;
 }
 
-inline void PD5Messages::SetBeam4LowEchoAmplitude(uint32_t beam4LowEchoAmplitude) {
+inline void PD5Packet::SetBeam4LowEchoAmplitude(uint32_t beam4LowEchoAmplitude) {
   beam4LowEchoAmplitude = beam4LowEchoAmplitude;
 }
 
-inline uint32_t PD5Messages::GetXVelRef() {
+inline uint32_t PD5Packet::GetXVelRef() {
   return xVelRef;
 }
 
-inline void PD5Messages::SetXVelRef(uint32_t velRef) {
+inline void PD5Packet::SetXVelRef(uint32_t velRef) {
   xVelRef = velRef;
 }
 
-inline uint32_t PD5Messages::GetYVelRef() {
+inline uint32_t PD5Packet::GetYVelRef() {
   return yVelRef;
 }
 
-inline void PD5Messages::SetYVelRef(uint32_t velRef) {
+inline void PD5Packet::SetYVelRef(uint32_t velRef) {
   yVelRef = velRef;
 }
 
-inline uint32_t PD5Messages::GetZVelRef() {
+inline uint32_t PD5Packet::GetZVelRef() {
   return zVelRef;
 }
 
-inline void PD5Messages::SetZVelRef(uint32_t velRef) {
+inline void PD5Packet::SetZVelRef(uint32_t velRef) {
   zVelRef = velRef;
 }
 
-inline uint32_t PD5Messages::GetEVelRef() {
+inline uint32_t PD5Packet::GetEVelRef() {
   return eVelRef;
 }
 
-inline void PD5Messages::SetEVelRef(uint32_t velRef) {
+inline void PD5Packet::SetEVelRef(uint32_t velRef) {
   eVelRef = velRef;
 }
 
-inline uint32_t PD5Messages::GetRefLayerStart() {
+inline uint32_t PD5Packet::GetRefLayerStart() {
   return refLayerStart;
 }
 
-inline void PD5Messages::SetRefLayerStart(uint32_t refLayerStart) {
+inline void PD5Packet::SetRefLayerStart(uint32_t refLayerStart) {
   refLayerStart = refLayerStart;
 }
 
-inline uint32_t PD5Messages::GetRefLayerEnd() {
+inline uint32_t PD5Packet::GetRefLayerEnd() {
   return refLayerEnd;
 }
 
-inline void PD5Messages::SetRefLayerEnd(uint32_t refLayerEnd) {
+inline void PD5Packet::SetRefLayerEnd(uint32_t refLayerEnd) {
   refLayerEnd = refLayerEnd;
 }
 
-inline uint8_t PD5Messages::GetRefLayerStatus() {
+inline uint8_t PD5Packet::GetRefLayerStatus() {
   return refLayerStatus;
 }
 
-inline void PD5Messages::SetRefLayerStatus(uint8_t refLayerStatus) {
+inline void PD5Packet::SetRefLayerStatus(uint8_t refLayerStatus) {
   refLayerStatus = refLayerStatus;
 }
 
-inline uint8_t PD5Messages::GetHour() {
+inline uint8_t PD5Packet::GetHour() {
   return hour;
 }
 
-inline void PD5Messages::SetHour(uint8_t hour) {
+inline void PD5Packet::SetHour(uint8_t hour) {
   hour = hour;
 }
 
-inline uint8_t PD5Messages::GetMinute() {
+inline uint8_t PD5Packet::GetMinute() {
   return minute;
 }
 
-inline void PD5Messages::SetMinute(uint8_t minute) {
+inline void PD5Packet::SetMinute(uint8_t minute) {
   minute = minute;
 }
 
-inline uint8_t PD5Messages::GetSecond() {
+inline uint8_t PD5Packet::GetSecond() {
   return second;
 }
 
-inline void PD5Messages::SetSecond(uint8_t second) {
+inline void PD5Packet::SetSecond(uint8_t second) {
   second = second;
 }
 
-inline uint8_t PD5Messages::GetHundredth() {
+inline uint8_t PD5Packet::GetHundredth() {
   return hundredth;
 }
 
-inline void PD5Messages::SetHundredth(uint8_t hundredth) {
+inline void PD5Packet::SetHundredth(uint8_t hundredth) {
   hundredth = hundredth;
 }
 
-inline uint32_t PD5Messages::GetBitResult() {
+inline uint32_t PD5Packet::GetBitResult() {
   return bitResult;
 }
 
-inline void PD5Messages::SetBitResult(uint32_t bitResult) {
+inline void PD5Packet::SetBitResult(uint32_t bitResult) {
   bitResult = bitResult;
 }
 
-inline uint32_t PD5Messages::GetSpeedOfSound() {
+inline uint32_t PD5Packet::GetSpeedOfSound() {
   return speedOfSound;
 }
 
-inline void PD5Messages::SetSpeedOfSound(uint32_t speedOfSound) {
+inline void PD5Packet::SetSpeedOfSound(uint32_t speedOfSound) {
   speedOfSound = speedOfSound;
 }
 
-inline uint32_t PD5Messages::GetTemperature() {
+inline uint32_t PD5Packet::GetTemperature() {
   return temperature;
 }
 
-inline void PD5Messages::SetTemperature(uint32_t temperature) {
+inline void PD5Packet::SetTemperature(uint32_t temperature) {
   temperature = temperature;
 }
 
-inline uint8_t PD5Messages::GetSalinity() {
+inline uint8_t PD5Packet::GetSalinity() {
   return salinity;
 }
 
-inline void PD5Messages::SetSalinity(uint8_t salinity) {
+inline void PD5Packet::SetSalinity(uint8_t salinity) {
   salinity = salinity;
 }
 
-inline uint32_t PD5Messages::GetDepth() {
+inline uint32_t PD5Packet::GetDepth() {
   return depth;
 }
 
-inline void PD5Messages::SetDepth(uint32_t depth) {
+inline void PD5Packet::SetDepth(uint32_t depth) {
   depth = depth;
 }
 
-inline uint32_t PD5Messages::GetPitch() {
+inline uint32_t PD5Packet::GetPitch() {
   return pitch;
 }
 
-inline void PD5Messages::SetPitch(uint32_t pitch) {
+inline void PD5Packet::SetPitch(uint32_t pitch) {
   pitch = pitch;
 }
 
-inline uint32_t PD5Messages::GetRoll() {
+inline uint32_t PD5Packet::GetRoll() {
   return roll;
 }
 
-inline void PD5Messages::SetRoll(uint32_t roll) {
+inline void PD5Packet::SetRoll(uint32_t roll) {
   roll = roll;
 }
 
-inline uint32_t PD5Messages::GetHeading() {
+inline uint32_t PD5Packet::GetHeading() {
   return heading;
 }
 
-inline void PD5Messages::SetHeading(uint32_t heading) {
+inline void PD5Packet::SetHeading(uint32_t heading) {
   heading = heading;
 }
 
-inline uint32_t PD5Messages::GetDmgBottomEast() {
+inline uint32_t PD5Packet::GetDmgBottomEast() {
   return dmgBottomEast;
 }
 
-inline void PD5Messages::SetDmgBottomEast(uint32_t dmgBottomEast) {
+inline void PD5Packet::SetDmgBottomEast(uint32_t dmgBottomEast) {
   dmgBottomEast = dmgBottomEast;
 }
 
-inline uint32_t PD5Messages::GetDmgBottomNorth() {
+inline uint32_t PD5Packet::GetDmgBottomNorth() {
   return dmgBottomNorth;
 }
 
-inline void PD5Messages::SetDmgBottomNorth(uint32_t dmgBottomNorth) {
+inline void PD5Packet::SetDmgBottomNorth(uint32_t dmgBottomNorth) {
   dmgBottomNorth = dmgBottomNorth;
 }
 
-inline uint32_t PD5Messages::GetDmgBottomUp() {
+inline uint32_t PD5Packet::GetDmgBottomUp() {
   return dmgBottomUp;
 }
 
-inline void PD5Messages::SetDmgBottomUp(uint32_t dmgBottomUp) {
+inline void PD5Packet::SetDmgBottomUp(uint32_t dmgBottomUp) {
   dmgBottomUp = dmgBottomUp;
 }
 
-inline uint32_t PD5Messages::GetDmgBottomError() {
+inline uint32_t PD5Packet::GetDmgBottomError() {
   return dmgBottomError;
 }
 
-inline void PD5Messages::SetDmgBottomError(uint32_t dmgBottomError) {
+inline void PD5Packet::SetDmgBottomError(uint32_t dmgBottomError) {
   dmgBottomError = dmgBottomError;
 }
 
-inline uint32_t PD5Messages::GetRefBottomEast() {
+inline uint32_t PD5Packet::GetRefBottomEast() {
   return refBottomEast;
 }
 
-inline void PD5Messages::SetRefBottomEast(uint32_t refBottomEast) {
+inline void PD5Packet::SetRefBottomEast(uint32_t refBottomEast) {
   refBottomEast = refBottomEast;
 }
 
-inline uint32_t PD5Messages::GetRefBottomNorth() {
+inline uint32_t PD5Packet::GetRefBottomNorth() {
   return refBottomNorth;
 }
 
-inline void PD5Messages::SetRefBottomNorth(uint32_t refBottomNorth) {
+inline void PD5Packet::SetRefBottomNorth(uint32_t refBottomNorth) {
   refBottomNorth = refBottomNorth;
 }
 
-inline uint32_t PD5Messages::GetRefBottomUp() {
+inline uint32_t PD5Packet::GetRefBottomUp() {
   return refBottomUp;
 }
 
-inline void PD5Messages::SetRefBottomUp(uint32_t refBottomUp) {
+inline void PD5Packet::SetRefBottomUp(uint32_t refBottomUp) {
   refBottomUp = refBottomUp;
 }
 
-inline uint32_t PD5Messages::GetRefBottomError() {
+inline uint32_t PD5Packet::GetRefBottomError() {
   return refBottomError;
 }
 
-inline void PD5Messages::SetRefBottomError(uint32_t refBottomError) {
+inline void PD5Packet::SetRefBottomError(uint32_t refBottomError) {
   refBottomError = refBottomError;
 }
 
