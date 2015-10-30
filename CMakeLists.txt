@@ -19,12 +19,27 @@ find_package(catkin REQUIRED COMPONENTS
         message_generation
         message_runtime
 )
+#===============================================================================
+# G E N E R A T E   M E S S A G E S   &   S E R V I C E S
+
+add_message_files(
+        DIRECTORY msg
+        FILES
+        PD0Packet.msg
+)
+
+generate_messages( DEPENDENCIES std_msgs )
 
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
         INCLUDE_DIRS src
         LIBRARIES
-        CATKIN_DEPENDS roscpp std_msgs
+        CATKIN_DEPENDS
+        roscpp
+        message_generation
+        message_runtime
+        std_msgs
+        DEPENDS Boost thread
 )
 
 #===============================================================================
@@ -65,6 +80,7 @@ set_target_properties( ${TARGET_NAME}
         PROPERTIES
         LINKER_LANGUAGE CXX
 )
+add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_gencpp)
 
 # Creating the Info exec
 set( TARGET_NAME info )
