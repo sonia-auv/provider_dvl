@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
   std::ofstream file;
   file.open("/sonia/DVL_LOG.txt");
   BottomTracking bottomTracking;
-  while (true) {
+  while (ros::ok()) {
     driver.read();
     ros::spinOnce();
     bottomTracking = driver.bottomTracking;
@@ -57,5 +57,6 @@ int main(int argc, char *argv[]) {
       packet.good_ping_ratio[i] = bottomTracking.good_ping_ratio[i];
       packet.rssi[i] = bottomTracking.rssi[i];
     }
+    publisher.publish(packet);
   }
 }
