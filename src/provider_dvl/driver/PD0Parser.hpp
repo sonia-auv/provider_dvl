@@ -10,7 +10,9 @@
 #include <provider_dvl/driver/PD0Messages.hpp>
 
 namespace dvl_teledyne {
+using namespace PD0Message;
 class PD0Parser {
+
  protected:
   int extractPacket(uint8_t const* buffer, size_t size,
                     size_t max_size = 0) const;

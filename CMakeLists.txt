@@ -10,6 +10,8 @@ endif ( NOT CMAKE_BUILD_TYPE )
 set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11" )
 set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++1 -O3" )
 
+set(provider_dvl_SRC_DIR "src")
+
 #===============================================================================
 # C A T K I N   C O N F I G U R A T I O N
 
@@ -17,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
         std_msgs
         roscpp
         message_generation
+    	geometry_msgs
         message_runtime
 )
 #===============================================================================
@@ -25,35 +28,43 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
         DIRECTORY msg
         FILES
-        PD0Packet.msg
+    	# Tools ros msgs used in the DVL message
+    	Sensors.msg
+    	CellReading.msg
+    	# Types of messages
+    	DeviceInfo.msg
+    	AcquisitionConfiguration.msg
+    	OutputConfiguration.msg
+    	Status.msg
+    	CellReadings.msg
+    	BottomTrackingConfiguration.msg
+    	BottomTracking.msg
+    	# Types Packets
+   	    PD0Packet.msg
 )
 
-generate_messages( DEPENDENCIES std_msgs )
+generate_messages( DEPENDENCIES std_msgs geometry_msgs)
 
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
-        INCLUDE_DIRS src
-        LIBRARIES
-        CATKIN_DEPENDS
-        roscpp
-        message_generation
-        message_runtime
-        std_msgs
-        DEPENDS Boost thread
+    INCLUDE_DIRS ${provider_dvl_SRC_DIR}
+    LIBRARIES
+    CATKIN_DEPENDS roscpp message_generation message_runtime std_msgs geometry_msgs 
 )
 
 #===============================================================================
 # I N C L U D E   F I L E S
 
-set( provider_dvl_SRC_DIR "src" )
 
 # Get all the files of the projects.
-file( GLOB_RECURSE provider_dvl_FILES
-        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.cpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.hpp"
+# Get all the files of the projects.
+file(GLOB_RECURSE provider_dvl_FILES
         "${provider_dvl_SRC_DIR}/provider_dvl/base/*.cpp"
         "${provider_dvl_SRC_DIR}/provider_dvl/base/*.hpp"
-)
+        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.cpp"
+        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.hpp"
+        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.cpp"
+        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.hpp")
 
 # Include all the directories where source can be found.
 include_directories(
@@ -67,54 +78,22 @@ include_directories(
 set( TARGET_NAME provider_dvl_node )
 
 # Creating the ROS Node
-add_executable( ${TARGET_NAME}
-    src/provider_dvl/Main.cpp
-    ${provider_dvl_FILES}
-)
-
-target_link_libraries(${TARGET_NAME}
-    ${catkin_LIBRARIES}
-    )
-
-set_target_properties( ${TARGET_NAME}
-        PROPERTIES
-        LINKER_LANGUAGE CXX
-)
-add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_gencpp)
+add_executable( ${TARGET_NAME} src/provider_dvl/Main.cpp ${provider_dvl_FILES})
+target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
+set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+add_dependencies(${TARGET_NAME} ${TARGET_NAME}_generate_messages_cpp)
 
 # Creating the Info exec
 set( TARGET_NAME info )
-
-add_executable( ${TARGET_NAME}
-    src/provider_dvl/MainInfo.cpp
-    ${provider_dvl_FILES}
-    )
-
-target_link_libraries(${TARGET_NAME}
-    ${catkin_LIBRARIES}
-    )
-
-set_target_properties( ${TARGET_NAME}
-    PROPERTIES
-    LINKER_LANGUAGE CXX
-    )
+add_executable( ${TARGET_NAME} src/provider_dvl/MainInfo.cpp ${provider_dvl_FILES})
+target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
+set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 # Creating the Config exec
 set( TARGET_NAME conf )
-
-add_executable( ${TARGET_NAME}
-    src/provider_dvl/MainConfigure.cpp
-    ${provider_dvl_FILES}
-    )
-
-target_link_libraries(${TARGET_NAME}
-    ${catkin_LIBRARIES}
-    )
-
-set_target_properties( ${TARGET_NAME}
-    PROPERTIES
-    LINKER_LANGUAGE CXX
-    )
+add_executable( ${TARGET_NAME} src/provider_dvl/MainConfigure.cpp ${provider_dvl_FILES})
+target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES})
+set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 #==========================================================================
 # C R E A T I N G   U N I T   T E S T S

@@ -6,7 +6,7 @@
 #include <eigen3/Eigen/Eigen>
 #include <vector>
 
-namespace dvl_teledyne {
+namespace PD0Message {
 struct Sensors {
   bool calculates_speed_of_sound;
   bool depth;

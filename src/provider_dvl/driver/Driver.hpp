@@ -34,7 +34,7 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
   void setDesiredBaudrate(int rate);
 
   /** Configures the output coordinate system */
-  void setOutputConfiguration(OutputConfiguration conf);
+  void setOutputConfiguration(PD0Message::OutputConfiguration conf);
 
   /** Sends a text file that contains commands to the device
    *

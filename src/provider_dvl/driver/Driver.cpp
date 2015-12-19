@@ -151,7 +151,7 @@ void Driver::readConfigurationAck(base::Time const& timeout) {
 }
 
 /** Configures the output coordinate system */
-void Driver::setOutputConfiguration(OutputConfiguration conf) {
+void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
 
   uint8_t mode_codes_1[4] = {'0', '0', '1', '1'};

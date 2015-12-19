@@ -1,20 +1,15 @@
-# Acquisition timestamp
-float64 timestamp
+Header header
 
-# Ranges to the bottom, in meters
-float64[4] range
+provider_dvl/DeviceInfo device_info
 
-# Velocities
-float64[4] velocity
+provider_dvl/AcquisitionConfiguration acquisition_conf
 
-# Correlation at the bottom cell (between 0 and 1)
-float64[4] correlation
+provider_dvl/OutputConfiguration output_conf
 
-# Magnitude in the evaluation filter
-float64[4] evaluation
+provider_dvl/Status status
 
-# Ratio of good bottom tracking pings
-float64[4] good_ping_ratio
+provider_dvl/CellReadings cell_readings
 
-# RSSI at the center of the bottom ping (in dB)
-float64[4] rssi
+provider_dvl/BottomTrackingConfiguration bottom_tracking_conf
+
+provider_dvl/BottomTracking bottom_tracking

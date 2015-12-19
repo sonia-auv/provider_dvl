@@ -26,7 +26,7 @@ int main(int argc, char const* argv[]) {
                    driver.deviceInfo.available_sensors.calculates_speed_of_sound
             << std::endl;
   std::cout << "  available sensors:" << std::endl;
-  dvl_teledyne::Sensors const& sensors = driver.deviceInfo.available_sensors;
+  PD0Message::Sensors const& sensors = driver.deviceInfo.available_sensors;
   std::cout << "    depth: " << (sensors.depth ? "yes" : "no") << std::endl;
   std::cout << "    yaw: " << (sensors.yaw ? "yes" : "no") << std::endl;
   std::cout << "    pitch: " << (sensors.pitch ? "yes" : "no") << std::endl;
