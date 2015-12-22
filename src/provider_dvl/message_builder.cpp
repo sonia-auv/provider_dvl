@@ -47,7 +47,7 @@ namespace msg_builder {
 
 //------------------------------------------------------------------------------
 //
-Sensors BuildSensors(const PD0Message::Sensors &sensors) {
+provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
   Sensors msg;
   msg.header.stamp = ros::Time::now();
 
@@ -64,7 +64,7 @@ Sensors BuildSensors(const PD0Message::Sensors &sensors) {
 
 //------------------------------------------------------------------------------
 //
-CellReading BuildCellReading(const PD0Message::CellReading &reading) {
+provider_dvl::CellReading BuildCellReading(const PD0Message::CellReading &reading) {
   CellReading msg;
   msg.header.stamp = ros::Time::now();
 
@@ -80,7 +80,7 @@ CellReading BuildCellReading(const PD0Message::CellReading &reading) {
 
 //------------------------------------------------------------------------------
 //
-DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
+provider_dvl::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
   DeviceInfo msg;
   msg.header.stamp = ros::Time::now();
 
@@ -96,7 +96,7 @@ DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
 
 //------------------------------------------------------------------------------
 //
-AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
+provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
                                                        &acquisition_conf) {
   AcquisitionConfiguration msg;
   msg.header.stamp = ros::Time::now();
@@ -133,7 +133,7 @@ AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::Acquisi
 
 //------------------------------------------------------------------------------
 //
-OutputConfiguration BuildOutputConfiguration(const
+provider_dvl::OutputConfiguration BuildOutputConfiguration(const
                                              PD0Message::OutputConfiguration
                                              &output_conf) {
   OutputConfiguration msg;
@@ -149,7 +149,7 @@ OutputConfiguration BuildOutputConfiguration(const
 
 //------------------------------------------------------------------------------
 //
-Status BuildStatus(const PD0Message::Status &status) {
+provider_dvl::Status BuildStatus(const PD0Message::Status &status) {
   Status msg;
   msg.header.stamp = ros::Time::now();
 
@@ -184,7 +184,7 @@ Status BuildStatus(const PD0Message::Status &status) {
 
 //------------------------------------------------------------------------------
 //
-CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
+provider_dvl::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
   CellReadings msg;
   msg.header.stamp = ros::Time::now();
 
@@ -199,7 +199,7 @@ CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
 
 //------------------------------------------------------------------------------
 //
-BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
+provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
                                                              PD0Message::BottomTrackingConfiguration &bottom_tracking_conf) {
   BottomTrackingConfiguration msg;
   msg.header.stamp = ros::Time::now();
@@ -219,7 +219,7 @@ BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
 
 //------------------------------------------------------------------------------
 //
-BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
+provider_dvl::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
                                    &bottom_tracking) {
   BottomTracking msg;
   msg.header.stamp = ros::Time::now();

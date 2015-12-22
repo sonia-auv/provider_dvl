@@ -50,27 +50,27 @@ namespace msg_builder {
 
 //PD0Packet BuildPD0(const pd0_msg::PD0Packet &pd0_packet);
 
-Sensors BuildSensors(const PD0Message::Sensors &sensors);
+provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors);
 
-CellReading BuildCellReading(const PD0Message::CellReading &reading);
+provider_dvl::CellReading BuildCellReading(const PD0Message::CellReading &reading);
 
-DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info);
+provider_dvl::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info);
 
-AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
+provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
                                          &acquisition_conf);
 
-OutputConfiguration BuildOutputConfiguration(const
+provider_dvl::OutputConfiguration BuildOutputConfiguration(const
                                              PD0Message::OutputConfiguration
                                              &output_conf);
 
-Status BuildStatus(const PD0Message::Status &status);
+provider_dvl::Status BuildStatus(const PD0Message::Status &status);
 
-CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings);
+provider_dvl::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings);
 
-BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
+provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
                                                              PD0Message::BottomTrackingConfiguration &bottom_tracking_conf);
 
-BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
+provider_dvl::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
                                    &bottom_tracking);
 
 

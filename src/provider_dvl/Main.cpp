@@ -36,7 +36,9 @@ int main(int argc, char *argv[]) {
   ros::Publisher bottom_tracking_conf_pub_;
   ros::Publisher bottom_tracking_pub_;
   ros::Publisher twist_pub_;
-  pd0_pub_ = n.advertise<provider_dvl::PD0Packet>( node_name + "/pd0_packet", 100);
+
+  twist_pub_ = n.advertise<geometry_msgs::TwistWithCovarianceStamped>(node_name + "/twist", 100);
+  pd0_pub_ =   n.advertise<provider_dvl::PD0Packet>( node_name + "/pd0_packet", 100);
   acquisition_conf_pub_ = n.advertise<provider_dvl::AcquisitionConfiguration>
       (node_name +"/acquisition_conf", 100);
   output_conf_pub_ = n.advertise<provider_dvl::OutputConfiguration>
@@ -51,8 +53,6 @@ int main(int argc, char *argv[]) {
           (node_name +"/bottom_tracking_conf", 100);
   bottom_tracking_pub_ = n.advertise<provider_dvl::BottomTracking>
       (node_name +"/bottom_tracking", 100);
-  twist_pub_ = n.advertise<geometry_msgs::TwistWithCovarianceStamped>
-      (node_name +"/twist", 100);
 
   dvl_teledyne::Driver driver;
   driver.open(argv[1]);
@@ -91,12 +91,14 @@ int main(int argc, char *argv[]) {
     pd0Packet.bottom_tracking = bottomTracking;
 
     pd0_pub_.publish(pd0Packet);
+
     acquisition_conf_pub_.publish(deviceInfo);
     output_conf_pub_.publish(outputConfiguration);
     status_pub_.publish(status);
     cell_readings_pub_.publish(cellReadings);
     bottom_tracking_conf_pub_.publish(bottomTrackingConfiguration);
     bottom_tracking_pub_.publish(bottomTracking);
+
     twist_pub_.publish(twistWithCovarianceStamped);
     ros::spinOnce();
   }
