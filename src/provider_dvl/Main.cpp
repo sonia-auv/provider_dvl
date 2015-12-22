@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
           (node_name +"/bottom_tracking_conf", 100);
   bottom_tracking_pub_ = n.advertise<provider_dvl::BottomTracking>
       (node_name +"/bottom_tracking", 100);
-  twist_pub_ = n.advertise<provider_dvl::BottomTracking>
+  twist_pub_ = n.advertise<geometry_msgs::TwistWithCovarianceStamped>
       (node_name +"/twist", 100);
 
   dvl_teledyne::Driver driver;
