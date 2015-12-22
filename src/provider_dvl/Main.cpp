@@ -23,8 +23,9 @@ int main(int argc, char *argv[]) {
     return 1;
   }
 
+  std::string node_name("provider_dvl");
 
-  ros::init(argc, argv, "provider_dvl");
+  ros::init(argc, argv, node_name);
   ros::NodeHandle n;
 
   ros::Publisher pd0_pub_;
@@ -35,24 +36,23 @@ int main(int argc, char *argv[]) {
   ros::Publisher bottom_tracking_conf_pub_;
   ros::Publisher bottom_tracking_pub_;
   ros::Publisher twist_pub_;
-
-  pd0_pub_ = n.advertise<provider_dvl::PD0Packet>("pd0_packet", 100);
+  pd0_pub_ = n.advertise<provider_dvl::PD0Packet>( node_name + "/pd0_packet", 100);
   acquisition_conf_pub_ = n.advertise<provider_dvl::AcquisitionConfiguration>
-      ("acquisition_conf", 100);
+      (node_name +"/acquisition_conf", 100);
   output_conf_pub_ = n.advertise<provider_dvl::OutputConfiguration>
-      ("output_conf",
+      (node_name +"/output_conf",
        100);
-  status_pub_ = n.advertise<provider_dvl::Status>("status",
+  status_pub_ = n.advertise<provider_dvl::Status>(node_name +"/status",
                                                   100);
   cell_readings_pub_ = n.advertise<provider_dvl::CellReadings>
-      ("cell_readings", 100);
+      (node_name +"/cell_readings", 100);
   bottom_tracking_conf_pub_ =
       n.advertise<provider_dvl::BottomTrackingConfiguration>
-          ("bottom_tracking_conf", 100);
+          (node_name +"/bottom_tracking_conf", 100);
   bottom_tracking_pub_ = n.advertise<provider_dvl::BottomTracking>
-      ("bottom_tracking", 100);
+      (node_name +"/bottom_tracking", 100);
   twist_pub_ = n.advertise<provider_dvl::BottomTracking>
-      ("twist", 100);
+      (node_name +"/twist", 100);
 
   dvl_teledyne::Driver driver;
   driver.open(argv[1]);
