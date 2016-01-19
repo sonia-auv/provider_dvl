@@ -59,7 +59,9 @@ file(GLOB_RECURSE provider_dvl_FILES
         "${provider_dvl_SRC_DIR}/provider_dvl/base/*.cpp"
         "${provider_dvl_SRC_DIR}/provider_dvl/base/*.hpp"
         "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.cpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.hpp")
+        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.hpp"
+        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.hpp"
+        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.cpp")
 
 # Include all the directories where source can be found.
 include_directories(
@@ -73,20 +75,24 @@ include_directories(
 set( TARGET_NAME provider_dvl_node )
 
 # Creating the ROS Node
-add_executable( ${TARGET_NAME} src/provider_dvl/Main.cpp src/provider_dvl/message_builder.cpp ${provider_dvl_FILES})
+add_executable( ${TARGET_NAME} src/provider_dvl/Main.cpp ${provider_dvl_FILES})
+add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-add_dependencies(${TARGET_NAME} ${TARGET_NAME}_gencpp)
+#add_dependencies(${TARGET_NAME} ${TARGET_NAME}_generate_messages_cpp)
+#add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_gencpp)
 
 # Creating the Info exec
 set( TARGET_NAME info )
 add_executable( ${TARGET_NAME} src/provider_dvl/MainInfo.cpp ${provider_dvl_FILES})
+add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 # Creating the Config exec
 set( TARGET_NAME conf )
 add_executable( ${TARGET_NAME} src/provider_dvl/MainConfigure.cpp ${provider_dvl_FILES})
+add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES})
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
