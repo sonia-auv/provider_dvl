@@ -17,38 +17,16 @@ set(provider_dvl_SRC_DIR "src")
 
 find_package(catkin REQUIRED COMPONENTS
         roscpp
-		std_msgs
-		geometry_msgs
-        message_generation
+        sonia_msgs
 )
 #===============================================================================
 # G E N E R A T E   M E S S A G E S   &   S E R V I C E S
-
-add_message_files(
-        DIRECTORY msg
-        FILES
-    	# Tools ros msgs used in the DVL message
-    	Sensors.msg
-    	CellReading.msg
-    	# Types of messages
-    	DeviceInfo.msg
-    	AcquisitionConfiguration.msg
-    	OutputConfiguration.msg
-    	Status.msg
-    	CellReadings.msg
-    	BottomTrackingConfiguration.msg
-    	BottomTracking.msg
-    	# Types Packets
-   	    PD0Packet.msg
-)
-
-generate_messages( DEPENDENCIES std_msgs geometry_msgs)
 
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
     INCLUDE_DIRS ${provider_dvl_SRC_DIR}
     LIBRARIES
-    CATKIN_DEPENDS roscpp std_msgs geometry_msgs  message_runtime
+    CATKIN_DEPENDS roscpp sonia_msgs
 )
 
 #===============================================================================
@@ -76,23 +54,18 @@ set( TARGET_NAME provider_dvl_node )
 
 # Creating the ROS Node
 add_executable( ${TARGET_NAME} src/provider_dvl/Main.cpp ${provider_dvl_FILES})
-add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-#add_dependencies(${TARGET_NAME} ${TARGET_NAME}_generate_messages_cpp)
-#add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_gencpp)
 
 # Creating the Info exec
 set( TARGET_NAME info )
 add_executable( ${TARGET_NAME} src/provider_dvl/MainInfo.cpp ${provider_dvl_FILES})
-add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 
 # Creating the Config exec
 set( TARGET_NAME conf )
 add_executable( ${TARGET_NAME} src/provider_dvl/MainConfigure.cpp ${provider_dvl_FILES})
-add_dependencies(${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES})
 set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
 

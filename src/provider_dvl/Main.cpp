@@ -2,16 +2,16 @@
 #include <ros/ros.h>
 #include <provider_dvl/message_builder.hpp>
 #include <fstream>
-#include <provider_dvl/PD0Packet.h>
-#include <provider_dvl/DeviceInfo.h>
-#include <provider_dvl/AcquisitionConfiguration.h>
-#include <provider_dvl/OutputConfiguration.h>
-#include <provider_dvl/Status.h>
-#include <provider_dvl/CellReadings.h>
-#include <provider_dvl/BottomTrackingConfiguration.h>
-#include <provider_dvl/BottomTracking.h>
-#include <provider_dvl/CellReading.h>
-#include <provider_dvl/Sensors.h>
+#include <sonia_msgs/PD0Packet.h>
+#include <sonia_msgs/DeviceInfo.h>
+#include <sonia_msgs/AcquisitionConfiguration.h>
+#include <sonia_msgs/OutputConfiguration.h>
+#include <sonia_msgs/Status.h>
+#include <sonia_msgs/CellReadings.h>
+#include <sonia_msgs/BottomTrackingConfiguration.h>
+#include <sonia_msgs/BottomTracking.h>
+#include <sonia_msgs/CellReading.h>
+#include <sonia_msgs/Sensors.h>
 
 using namespace dvl_teledyne;
 
@@ -38,20 +38,20 @@ int main(int argc, char *argv[]) {
   ros::Publisher twist_pub_;
 
   twist_pub_ = n.advertise<geometry_msgs::TwistWithCovarianceStamped>(node_name + "/twist", 100);
-  pd0_pub_ =   n.advertise<provider_dvl::PD0Packet>( node_name + "/pd0_packet", 100);
-  acquisition_conf_pub_ = n.advertise<provider_dvl::AcquisitionConfiguration>
+  pd0_pub_ =   n.advertise<sonia_msgs::PD0Packet>( node_name + "/pd0_packet", 100);
+  acquisition_conf_pub_ = n.advertise<sonia_msgs::AcquisitionConfiguration>
       (node_name +"/acquisition_conf", 100);
-  output_conf_pub_ = n.advertise<provider_dvl::OutputConfiguration>
+  output_conf_pub_ = n.advertise<sonia_msgs::OutputConfiguration>
       (node_name +"/output_conf",
        100);
-  status_pub_ = n.advertise<provider_dvl::Status>(node_name +"/status",
+  status_pub_ = n.advertise<sonia_msgs::Status>(node_name +"/status",
                                                   100);
-  cell_readings_pub_ = n.advertise<provider_dvl::CellReadings>
+  cell_readings_pub_ = n.advertise<sonia_msgs::CellReadings>
       (node_name +"/cell_readings", 100);
   bottom_tracking_conf_pub_ =
-      n.advertise<provider_dvl::BottomTrackingConfiguration>
+      n.advertise<sonia_msgs::BottomTrackingConfiguration>
           (node_name +"/bottom_tracking_conf", 100);
-  bottom_tracking_pub_ = n.advertise<provider_dvl::BottomTracking>
+  bottom_tracking_pub_ = n.advertise<sonia_msgs::BottomTracking>
       (node_name +"/bottom_tracking", 100);
 
   dvl_teledyne::Driver driver;
@@ -63,19 +63,19 @@ int main(int argc, char *argv[]) {
   while (ros::ok()) {
 
     driver.read();
-    provider_dvl::PD0Packet pd0Packet;
-    provider_dvl::Sensors sensors;
-    provider_dvl::DeviceInfo deviceInfo = provider_dvl::msg_builder::BuildDeviceInfo(driver.deviceInfo);
-    provider_dvl::AcquisitionConfiguration acquisitionConfiguration =
+    sonia_msgs::PD0Packet pd0Packet;
+    sonia_msgs::Sensors sensors;
+    sonia_msgs::DeviceInfo deviceInfo = provider_dvl::msg_builder::BuildDeviceInfo(driver.deviceInfo);
+    sonia_msgs::AcquisitionConfiguration acquisitionConfiguration =
         provider_dvl::msg_builder::BuildAcquisitionConfiguration(driver.acqConf);
-    provider_dvl::OutputConfiguration outputConfiguration =
+        sonia_msgs::OutputConfiguration outputConfiguration =
         provider_dvl::msg_builder::BuildOutputConfiguration(driver.outputConf);
-    provider_dvl::Status status = provider_dvl::msg_builder::BuildStatus(driver.status);
-    provider_dvl::CellReadings cellReadings =
+        sonia_msgs::Status status = provider_dvl::msg_builder::BuildStatus(driver.status);
+        sonia_msgs::CellReadings cellReadings =
         provider_dvl::msg_builder::BuildCellReadings(driver.cellReadings);
-    provider_dvl::BottomTrackingConfiguration bottomTrackingConfiguration =
+        sonia_msgs::BottomTrackingConfiguration bottomTrackingConfiguration =
         provider_dvl::msg_builder::BuildBottomTrackingConfiguration(driver.bottomTrackingConf);
-    provider_dvl::BottomTracking bottomTracking =
+        sonia_msgs::BottomTracking bottomTracking =
         provider_dvl::msg_builder::BuildBottomTracking(driver.bottomTracking);
     geometry_msgs::TwistWithCovarianceStamped twistWithCovarianceStamped =
         provider_dvl::msg_builder::BuildTwistWithCovariance(driver.bottomTracking);
