@@ -47,8 +47,8 @@ namespace msg_builder {
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
-  Sensors msg;
+sonia_msgs::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
+  sonia_msgs::Sensors msg;
   msg.header.stamp = ros::Time::now();
 
   msg.calculates_speed_of_sound = sensors.calculates_speed_of_sound;
@@ -64,8 +64,8 @@ provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::CellReading BuildCellReading(const PD0Message::CellReading &reading) {
-  CellReading msg;
+sonia_msgs::CellReading BuildCellReading(const PD0Message::CellReading &reading) {
+  sonia_msgs::CellReading msg;
   msg.header.stamp = ros::Time::now();
 
   for(int i = 0; i < 4; ++i) {
@@ -80,8 +80,8 @@ provider_dvl::CellReading BuildCellReading(const PD0Message::CellReading &readin
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
-  DeviceInfo msg;
+sonia_msgs::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
+  sonia_msgs::DeviceInfo msg;
   msg.header.stamp = ros::Time::now();
 
   msg.fw_version = device_info.fw_version;
@@ -96,9 +96,9 @@ provider_dvl::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_in
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
+sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
                                                        &acquisition_conf) {
-  AcquisitionConfiguration msg;
+  sonia_msgs::AcquisitionConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.used_sensors = BuildSensors(acquisition_conf.used_sensors);
@@ -133,10 +133,10 @@ provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Me
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::OutputConfiguration BuildOutputConfiguration(const
+sonia_msgs::OutputConfiguration BuildOutputConfiguration(const
                                              PD0Message::OutputConfiguration
                                              &output_conf) {
-  OutputConfiguration msg;
+  sonia_msgs::OutputConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.coordinate_system = output_conf.coordinate_system;
@@ -149,8 +149,8 @@ provider_dvl::OutputConfiguration BuildOutputConfiguration(const
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::Status BuildStatus(const PD0Message::Status &status) {
-  Status msg;
+sonia_msgs::Status BuildStatus(const PD0Message::Status &status) {
+  sonia_msgs::Status msg;
   msg.header.stamp = ros::Time::now();
 
   msg.seq = status.seq;
@@ -184,8 +184,8 @@ provider_dvl::Status BuildStatus(const PD0Message::Status &status) {
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
-  CellReadings msg;
+sonia_msgs::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
+  sonia_msgs::CellReadings msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = cell_readings.time.microseconds;
@@ -199,9 +199,9 @@ provider_dvl::CellReadings BuildCellReadings(const PD0Message::CellReadings &cel
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
+sonia_msgs::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
                                                              PD0Message::BottomTrackingConfiguration &bottom_tracking_conf) {
-  BottomTrackingConfiguration msg;
+  sonia_msgs::BottomTrackingConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.ping_per_ensemble = bottom_tracking_conf.ping_per_ensemble;
@@ -219,9 +219,9 @@ provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
 
 //------------------------------------------------------------------------------
 //
-provider_dvl::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
+sonia_msgs::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
                                    &bottom_tracking) {
-  BottomTracking msg;
+  sonia_msgs::BottomTracking msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = bottom_tracking.time.microseconds;
