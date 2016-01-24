@@ -1,14 +1,40 @@
+# \file     CMakeLists.txt
+# \author   Thibaut Mattio <thibaut.mattio@gmail.com>
+# \date     08/05/2015
+#
+# \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+#
+# \section LICENSE
+#
+# This file is part of S.O.N.I.A. software.
+#
+# S.O.N.I.A. software is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# S.O.N.I.A. software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
+
+#===============================================================================
+# G L O B A L   P R O J E C T   C O N F I G U R A T I O N
+
 cmake_minimum_required(VERSION 2.8.3)
 project(provider_dvl)
 
-if ( NOT CMAKE_BUILD_TYPE )
-  set( CMAKE_BUILD_TYPE Debug CACHE STRING
-          "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
-          FORCE )
-endif ( NOT CMAKE_BUILD_TYPE )
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING
+      "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+      FORCE)
+endif (NOT CMAKE_BUILD_TYPE)
 
-set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11" )
-set( CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3" )
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -s")
 
 set(provider_dvl_SRC_DIR "src")
 
@@ -16,58 +42,68 @@ set(provider_dvl_SRC_DIR "src")
 # C A T K I N   C O N F I G U R A T I O N
 
 find_package(catkin REQUIRED COMPONENTS
-        roscpp
-        sonia_msgs
-)
-#===============================================================================
-# G E N E R A T E   M E S S A G E S   &   S E R V I C E S
+    roscpp
+    std_msgs
+    sensor_msgs
+    message_generation
+    sonia_msgs
+    lib_atlas
+    )
 
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
     INCLUDE_DIRS ${provider_dvl_SRC_DIR}
     LIBRARIES
-    CATKIN_DEPENDS roscpp sonia_msgs
+    CATKIN_DEPENDS roscpp std_msgs sensor_msgs message_runtime sonia_msgs lib_atlas
 )
 
 #===============================================================================
 # I N C L U D E   F I L E S
 
-# Get all the files of the projects.
 file(GLOB_RECURSE provider_dvl_FILES
-        "${provider_dvl_SRC_DIR}/provider_dvl/base/*.cpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/base/*.hpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.cpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/driver/*.hpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.hpp"
-        "${provider_dvl_SRC_DIR}/provider_dvl/message_builder.cpp")
+    "${provider_dvl_SRC_DIR}/*.cc"
+    "${provider_dvl_SRC_DIR}/*.cpp"
+    "${provider_dvl_SRC_DIR}/*.h"
+    "${provider_dvl_SRC_DIR}/*.hpp")
+
+list(REMOVE_ITEM provider_dvl_FILES
+    ${CMAKE_CURRENT_SOURCE_DIR}/${provider_dvl_SRC_DIR}/${PROJECT_NAME}/Main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainConfigure.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainInfo.cpp)
 
 # Include all the directories where source can be found.
 include_directories(
-        ${provider_dvl_SRC_DIR}
-        ${catkin_INCLUDE_DIRS}
+    ${catkin_INCLUDE_DIRS}
+    ${provider_dvl_SRC_DIR}
+    ${lib_atlas_INCLUDE_DIRS}
 )
 
 #==========================================================================
 # C R E A T E   E X E C U T A B L E
 
-set( TARGET_NAME provider_dvl_node )
+set(TARGET_NAME provider_dvl_node)
 
 # Creating the ROS Node
-add_executable( ${TARGET_NAME} src/provider_dvl/Main.cpp ${provider_dvl_FILES})
-target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
-set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX)
+add_executable(${PROJECT_NAME}_node ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/Main.cpp ${provider_dvl_FILES})
+target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
+add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp)
+set_target_properties(${PROJECT_NAME}_node PROPERTIES LINKER_LANGUAGE CXX)
 
 # Creating the Info exec
-set( TARGET_NAME info )
-add_executable( ${TARGET_NAME} src/provider_dvl/MainInfo.cpp ${provider_dvl_FILES})
-target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES} )
-set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_executable(info ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainInfo.cpp ${provider_dvl_FILES})
+target_link_libraries(info ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
+add_dependencies(info ${PROJECT_NAME}_generate_messages_cpp)
+set_target_properties(info PROPERTIES LINKER_LANGUAGE CXX)
 
 # Creating the Config exec
-set( TARGET_NAME conf )
-add_executable( ${TARGET_NAME} src/provider_dvl/MainConfigure.cpp ${provider_dvl_FILES})
-target_link_libraries(${TARGET_NAME} ${catkin_LIBRARIES})
-set_target_properties( ${TARGET_NAME} PROPERTIES LINKER_LANGUAGE CXX )
+add_executable(conf ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainConfigure.cpp ${provider_dvl_FILES})
+target_link_libraries(conf ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
+add_dependencies(conf ${PROJECT_NAME}_generate_messages_cpp)
+set_target_properties(conf PROPERTIES LINKER_LANGUAGE CXX)
 
 #==========================================================================
-# C R E A T I N G   U N I T   T E S T S
+# U N I T   T E S T S
+
+if (CATKIN_ENABLE_TESTING AND ${CMAKE_CURRENT_SOURCE_DIR}/test)
+  add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/test)
+endif ()
