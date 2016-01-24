@@ -245,9 +245,9 @@ geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(const PD0Mess
   geometry_msgs::TwistWithCovarianceStamped msg;
   msg.header.stamp = ros::Time::now();
 
-  msg.twist.twist.linear.x = bottom_tracking.range[0];
-  msg.twist.twist.linear.y = bottom_tracking.range[1];
-  msg.twist.twist.linear.z = bottom_tracking.range[2];
+  msg.twist.twist.linear.x = bottom_tracking.velocity[0];
+  msg.twist.twist.linear.y = bottom_tracking.velocity[1];
+  msg.twist.twist.linear.z = bottom_tracking.velocity[2];
 
   return msg;
 }
