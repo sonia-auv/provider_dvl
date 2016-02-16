@@ -1,8 +1,0 @@
-<launch>
-  <node pkg="provider_dvl" type="provider_dvl_node" name="provider_dvl_node" output="log" launch-prefix="gdb -ex run --args">
-    <param name="port"  type="string" value="/dev/ttyS0" />
-    <param name="baudrate" type="int" value="115200" />
-    <param name="read_timeout"  type="int" value="5000" />
-    <param name="write_timeout" type="int" value="100" />
-  </node>
-</launch>

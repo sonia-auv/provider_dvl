@@ -1,0 +1,11 @@
+<launch>
+	<node name="provider_dvl_node"
+	    pkg="provider_dvl"
+	    type="provider_dvl_node"
+	    args="serial:///dev/ttyS0:115200"
+	    output="log"
+	    launch-prefix="gdb -ex run --args" />
+
+    <rosparam command="load"
+        file="$(find provider_dvl)/config/teledyne_conf.yaml"/>
+</launch>

@@ -1,0 +1,6 @@
+#********** Driver Parameters ************
+
+driver/port: "/dev/ttyS0"
+driver/baudrate: 115200
+driver/read_timeout: 5000
+driver/write_timeout: 100
