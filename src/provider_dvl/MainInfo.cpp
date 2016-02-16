@@ -4,7 +4,7 @@
 void usage() { std::cerr << "dvl_teledyne_info DEVICE" << std::endl; }
 
 int main(int argc, char const* argv[]) {
-  if (argc != 2) {
+  if (argc < 2) {
     usage();
     return 1;
   }

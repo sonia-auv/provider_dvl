@@ -9,7 +9,7 @@ void usage() {
 }
 
 int main(int argc, char const* argv[]) {
-  if (argc < 2 || argc > 3) {
+  if (argc < 2) {
     usage();
     return 1;
   }

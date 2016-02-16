@@ -18,7 +18,7 @@ using namespace dvl_teledyne;
 void usage() { std::cerr << "dvl_teledyne_read DEVICE" << std::endl; }
 
 int main(int argc, char *argv[]) {
-  if (argc != 2) {
+  if (argc < 2) {
     usage();
     return 1;
   }
