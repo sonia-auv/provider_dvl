@@ -13,15 +13,16 @@ Driver::Driver()
   buffer.resize(1000000);
 }
 
-void Driver::open(std::string const& uri) {
+void Driver::open(std::string const &uri) {
   openURI(uri);
   setConfigurationMode();
-  if (mDesiredBaudrate != M_SONIA_BAUDRATE) setDesiredBaudrate(mDesiredBaudrate);
+  if (mDesiredBaudrate != M_SONIA_BAUDRATE)
+    setDesiredBaudrate(mDesiredBaudrate);
 
   startAcquisition();
 }
 
-void Driver::sendConfigurationFile(std::string const& file_name) {
+void Driver::sendConfigurationFile(std::string const &file_name) {
   setConfigurationMode();
 
   std::ifstream file(file_name.c_str());
@@ -36,7 +37,7 @@ void Driver::sendConfigurationFile(std::string const& file_name) {
 
     line += "\n";
     std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
-    writePacket(reinterpret_cast<uint8_t const*>(line.c_str()), line.length());
+    writePacket(reinterpret_cast<uint8_t const *>(line.c_str()), line.length());
     readConfigurationAck();
   }
 }
@@ -50,7 +51,7 @@ void Driver::setDesiredBaudrate(int rate) {
 void Driver::setDeviceBaudrate(int rate) {
   setConfigurationMode();
 
-  int code = 0;
+  uint8_t code = 0;
   switch (rate) {
     case 300:
       code = 0;
@@ -82,7 +83,13 @@ void Driver::setDeviceBaudrate(int rate) {
     default:
       throw std::runtime_error("invalid baud rate specified");
   }
-  uint8_t data[7] = {'C', 'B', '0' + code, '1', '1', '\n', 0};
+  uint8_t data[7] = {static_cast<uint8_t >('C'),
+                     static_cast<uint8_t >('B'),
+                     static_cast<uint8_t >('0' + code),
+                     static_cast<uint8_t >('1'),
+                     static_cast<uint8_t >('1'),
+                     static_cast<uint8_t >('\n'),
+                     0};
   writePacket(data, 6, 100);
   readConfigurationAck();
 }
@@ -92,9 +99,9 @@ void Driver::read() {
   if (packet_size) parseEnsemble(&buffer[0], packet_size);
 }
 
-int Driver::extractPacket(uint8_t const* buffer, size_t buffer_size) const {
+int Driver::extractPacket(uint8_t const *buffer, size_t buffer_size) const {
   if (mConfMode) {
-    char const* buffer_as_string = reinterpret_cast<char const*>(buffer);
+    char const *buffer_as_string = reinterpret_cast<char const *>(buffer);
     if (buffer_as_string[0] == '>')
       return 1;
     else if (buffer_as_string[0] == 'E') {
@@ -131,7 +138,7 @@ void Driver::setConfigurationMode() {
   // We do it repeatedly so that we are sure that the CR is not lost.
   clear();
   for (int i = 0; i < 12; ++i) {
-    writePacket(reinterpret_cast<uint8_t const*>("\n"), 1, 100);
+    writePacket(reinterpret_cast<uint8_t const *>("\n"), 1, 100);
     try {
       readConfigurationAck(base::Time::fromSeconds(0.1));
       clear();
@@ -142,12 +149,12 @@ void Driver::setConfigurationMode() {
   }
 }
 
-void Driver::readConfigurationAck(base::Time const& timeout) {
+void Driver::readConfigurationAck(base::Time const &timeout) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
   int packet_size = readPacket(&buffer[0], buffer.size(), timeout);
   if (buffer[0] != '>')
     throw std::runtime_error(
-        std::string(reinterpret_cast<char const*>(&buffer[0]), packet_size));
+        std::string(reinterpret_cast<char const *>(&buffer[0]), packet_size));
 }
 
 /** Configures the output coordinate system */
@@ -156,11 +163,16 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
 
   uint8_t mode_codes_1[4] = {'0', '0', '1', '1'};
   uint8_t mode_codes_2[4] = {'0', '1', '0', '1'};
-  uint8_t const cmd[7] = {'E', 'X', mode_codes_1[conf.coordinate_system],
+  uint8_t const cmd[7] = {'E',
+                          'X',
+                          mode_codes_1[conf.coordinate_system],
                           mode_codes_2[conf.coordinate_system],
-                          (conf.use_attitude ? '1' : '0'),
-                          (conf.use_3beam_solution ? '1' : '0'),
-                          (conf.use_bin_mapping ? '1' : '0')};
+                          (conf.use_attitude ? static_cast<uint8_t>('1')
+                                             : static_cast<uint8_t>('0')),
+                          (conf.use_3beam_solution ? static_cast<uint8_t>('1')
+                                                   : static_cast<uint8_t>('0')),
+                          (conf.use_bin_mapping ? static_cast<uint8_t>('1')
+                                                : static_cast<uint8_t>('0'))};
 
   writePacket(cmd, 7, 500);
 }
@@ -168,9 +180,9 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
 void Driver::startAcquisition() {
   if (!mConfMode) throw std::logic_error("not in configuration mode");
 
-  writePacket(reinterpret_cast<uint8_t const*>("PD0\n"), 4, 100);
+  writePacket(reinterpret_cast<uint8_t const *>("PD0\n"), 4, 100);
   readConfigurationAck();
-  writePacket(reinterpret_cast<uint8_t const*>("CS\n"), 3, 100);
+  writePacket(reinterpret_cast<uint8_t const *>("CS\n"), 3, 100);
   readConfigurationAck();
   mConfMode = false;
 }

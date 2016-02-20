@@ -45,13 +45,13 @@ using namespace std;
 using namespace iodrivers_base;
 //------------------------------------------------------------------------------
 //
-string Driver::printable_com(std::string const& str) {
+string Driver::printable_com(std::string const &str) {
   return printable_com(str.c_str(), str.size());
 }
-string Driver::printable_com(uint8_t const* str, size_t str_size) {
-  return printable_com(reinterpret_cast<char const*>(str), str_size);
+string Driver::printable_com(uint8_t const *str, size_t str_size) {
+  return printable_com(reinterpret_cast<char const *>(str), str_size);
 }
-string Driver::printable_com(char const* str, size_t str_size) {
+string Driver::printable_com(char const *str, size_t str_size) {
   ostringstream result;
   result << "\"";
   for (size_t i = 0; i < str_size; ++i) {
@@ -70,13 +70,13 @@ string Driver::printable_com(char const* str, size_t str_size) {
 
 //------------------------------------------------------------------------------
 //
-string Driver::binary_com(std::string const& str) {
+string Driver::binary_com(std::string const &str) {
   return binary_com(str.c_str(), str.size());
 }
-string Driver::binary_com(uint8_t const* str, size_t str_size) {
-  return binary_com(reinterpret_cast<char const*>(str), str_size);
+string Driver::binary_com(uint8_t const *str, size_t str_size) {
+  return binary_com(reinterpret_cast<char const *>(str), str_size);
 }
-string Driver::binary_com(char const* str, size_t str_size) {
+string Driver::binary_com(char const *str, size_t str_size) {
   std::ostringstream result;
   for (size_t i = 0; i < str_size; ++i) {
     unsigned int code = str[i];
@@ -103,7 +103,7 @@ Driver::Driver(int max_packet_size, bool extract_last)
 Driver::~Driver() {
   delete[] internal_buffer;
   delete m_stream;
-  for (set<IOListener*>::iterator it = m_listeners.begin();
+  for (set<IOListener *>::iterator it = m_listeners.begin();
        it != m_listeners.end(); ++it)
     delete *it;
 }
@@ -112,18 +112,18 @@ Driver::~Driver() {
 //        METHODE CODE SECTION
 //------------------------------------------------------------------------------
 //
-void Driver::setMainStream(IOStream* stream) {
+void Driver::setMainStream(IOStream *stream) {
   delete m_stream;
   m_stream = stream;
 }
 
 //------------------------------------------------------------------------------
 //
-void Driver::addListener(IOListener* listener) { m_listeners.insert(listener); }
+void Driver::addListener(IOListener *listener) { m_listeners.insert(listener); }
 
 //------------------------------------------------------------------------------
 //
-void Driver::removeListener(IOListener* listener) {
+void Driver::removeListener(IOListener *listener) {
   m_listeners.erase(listener);
 }
 
@@ -168,7 +168,7 @@ bool Driver::isValid() const { return m_stream; }
 
 //------------------------------------------------------------------------------
 //
-void Driver::openURI(std::string const& uri) {
+void Driver::openURI(std::string const &uri) {
   // Modes:
   //   0 for serial
   //   1 for TCP
@@ -176,7 +176,7 @@ void Driver::openURI(std::string const& uri) {
   //   3 for UDP server
   //   4 for file (either Unix sockets or named FIFOs)
   int mode_idx = -1;
-  char const* modes[5] = {"serial://", "tcp://", "udp://", "udpserver://",
+  char const *modes[5] = {"serial://", "tcp://", "udp://", "udpserver://",
                           "file://"};
   for (int i = 0; i < 5; ++i) {
     if (uri.compare(0, strlen(modes[i]), modes[i]) == 0) {
@@ -220,28 +220,28 @@ void Driver::openURI(std::string const& uri) {
 
 //------------------------------------------------------------------------------
 //
-bool Driver::openSerial(std::string const& port, int baud_rate) {
+bool Driver::openSerial(std::string const &port, int baud_rate) {
   setFileDescriptor(Driver::openSerialIO(port, baud_rate));
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
-bool Driver::openInet(const char* hostname, int port) {
+bool Driver::openInet(const char *hostname, int port) {
   openTCP(hostname, port);
   return true;
 }
 
 //------------------------------------------------------------------------------
 //
-void Driver::openIPServer(int port, addrinfo const& hints) {
-  struct addrinfo* result;
+void Driver::openIPServer(int port, addrinfo const &hints) {
+  struct addrinfo *result;
   string port_as_string = boost::lexical_cast<string>(port);
   int ret = getaddrinfo(NULL, port_as_string.c_str(), &hints, &result);
   if (ret != 0) throw UnixError("cannot resolve server port " + port_as_string);
 
   int sfd = -1;
-  struct addrinfo* rp;
+  struct addrinfo *rp;
   for (rp = result; rp != NULL; rp = rp->ai_next) {
     sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
     if (sfd == -1) continue;
@@ -260,18 +260,18 @@ void Driver::openIPServer(int port, addrinfo const& hints) {
 
 //------------------------------------------------------------------------------
 //
-void Driver::openIPClient(std::string const& hostname, int port,
-                          addrinfo const& hints) {
-  struct addrinfo* result;
+void Driver::openIPClient(std::string const &hostname, int port,
+                          addrinfo const &hints) {
+  struct addrinfo *result;
   string port_as_string = boost::lexical_cast<string>(port);
   int ret =
       getaddrinfo(hostname.c_str(), port_as_string.c_str(), &hints, &result);
   if (ret != 0)
     throw UnixError("cannot resolve host/port " + hostname + "/" +
-                    port_as_string);
+        port_as_string);
 
   int sfd = -1;
-  struct addrinfo* rp;
+  struct addrinfo *rp;
   for (rp = result; rp != NULL; rp = rp->ai_next) {
     sfd = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
     if (sfd == -1) continue;
@@ -284,13 +284,13 @@ void Driver::openIPClient(std::string const& hostname, int port,
 
   if (rp == NULL)
     throw UnixError("cannot open client socket to " + hostname + " port=" +
-                    boost::lexical_cast<string>(port));
+        boost::lexical_cast<string>(port));
 
   setFileDescriptor(sfd);
 }
 //------------------------------------------------------------------------------
 //
-void Driver::openTCP(std::string const& hostname, int port) {
+void Driver::openTCP(std::string const &hostname, int port) {
   struct addrinfo hints;
   memset(&hints, 0, sizeof(struct addrinfo));
   hints.ai_family = AF_UNSPEC;     /* Allow IPv4 or IPv6 */
@@ -299,7 +299,7 @@ void Driver::openTCP(std::string const& hostname, int port) {
 
   int fd = m_stream->getFileDescriptor();
   int nodelay_flag = 1;
-  int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char*)&nodelay_flag,
+  int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *) &nodelay_flag,
                           sizeof(int));
   if (result < 0) {
     close();
@@ -309,7 +309,7 @@ void Driver::openTCP(std::string const& hostname, int port) {
 
 //------------------------------------------------------------------------------
 //
-void Driver::openUDP(std::string const& hostname, int port) {
+void Driver::openUDP(std::string const &hostname, int port) {
   if (hostname.empty()) {
     struct addrinfo hints;
     memset(&hints, 0, sizeof(struct addrinfo));
@@ -328,7 +328,7 @@ void Driver::openUDP(std::string const& hostname, int port) {
 
 //------------------------------------------------------------------------------
 //
-int Driver::openSerialIO(std::string const& port, int baud_rate) {
+int Driver::openSerialIO(std::string const &port, int baud_rate) {
   int fd = ::open(port.c_str(), O_RDWR | O_NOCTTY | O_SYNC | O_NONBLOCK);
   if (fd == FDStream::INVALID_FD) throw UnixError("cannot open device " + port);
 
@@ -352,7 +352,7 @@ int Driver::openSerialIO(std::string const& port, int baud_rate) {
 
 //------------------------------------------------------------------------------
 //
-void Driver::openFile(std::string const& path) {
+void Driver::openFile(std::string const &path) {
   int fd = ::open(path.c_str(), O_RDWR | O_SYNC | O_NONBLOCK);
   if (fd == FDStream::INVALID_FD) throw UnixError("cannot open file " + path);
   setFileDescriptor(fd);
@@ -414,10 +414,10 @@ bool Driver::setSerialBaudrate(int fd, int brate) {
       custom_rate = true;
       std::cerr << "Using custom baud rate " << brate << std::endl;
 #else
-      std::cerr
-          << "Non-standard baud rate selected. This is only supported on linux."
-          << std::endl;
-      return false;
+    std::cerr
+        << "Non-standard baud rate selected. This is only supported on linux."
+        << std::endl;
+    return false;
 #endif
   }
 
@@ -431,8 +431,8 @@ bool Driver::setSerialBaudrate(int fd, int brate) {
 
     if (closestSpeed < brate * 98 / 100 || closestSpeed > brate * 102 / 100) {
       std::cerr << "Cannot set custom serial rate to " << brate
-                << ". The closest possible value is " << closestSpeed << "."
-                << std::endl;
+          << ". The closest possible value is " << closestSpeed << "."
+          << std::endl;
     }
   } else {
     ss.flags &= ~ASYNC_SPD_MASK;
@@ -472,8 +472,8 @@ void Driver::close() {
 
 //------------------------------------------------------------------------------
 //
-std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
-                                                  int buffer_size) const {
+std::pair<uint8_t const *, int> Driver::findPacket(uint8_t const *buffer,
+                                                   int buffer_size) const {
   int packet_start = 0, packet_size = 0;
   int extract_result = extractPacket(buffer, buffer_size);
 
@@ -481,9 +481,9 @@ std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
   // the buffer
   if (extract_result > buffer_size)
     throw length_error("extractPacket() returned result size " +
-                       boost::lexical_cast<string>(extract_result) +
-                       ", which is larger than the buffer size " +
-                       boost::lexical_cast<string>(buffer_size) + ".");
+        boost::lexical_cast<string>(extract_result) +
+        ", which is larger than the buffer size " +
+        boost::lexical_cast<string>(buffer_size) + ".");
 
   if (0 == extract_result) return make_pair(buffer, 0);
 
@@ -508,7 +508,7 @@ std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
     // returned a negative value (remove bytes at the front of the buffer),
     // or if m_extract_last is true (we are looking for the last packet in
     // buffer)
-    std::pair<uint8_t const*, int> next_packet;
+    std::pair<uint8_t const *, int> next_packet;
     next_packet = findPacket(buffer + packet_start + packet_size, remaining);
 
     if (m_extract_last) {
@@ -525,8 +525,8 @@ std::pair<uint8_t const*, int> Driver::findPacket(uint8_t const* buffer,
 
 //------------------------------------------------------------------------------
 //
-int Driver::doPacketExtraction(uint8_t* buffer) {
-  pair<uint8_t const*, int> packet =
+int Driver::doPacketExtraction(uint8_t *buffer) {
+  pair<uint8_t const *, int> packet =
       findPacket(internal_buffer, internal_buffer_size);
   if (!m_extract_last) {
     m_stats.stamp = base::Time::now();
@@ -547,7 +547,7 @@ int Driver::doPacketExtraction(uint8_t* buffer) {
 
 //------------------------------------------------------------------------------
 //
-pair<int, bool> Driver::extractPacketFromInternalBuffer(uint8_t* buffer,
+pair<int, bool> Driver::extractPacketFromInternalBuffer(uint8_t *buffer,
                                                         int out_buffer_size) {
   // How many packet bytes are there currently in +buffer+
   int packet_size = 0;
@@ -566,13 +566,13 @@ pair<int, bool> Driver::extractPacketFromInternalBuffer(uint8_t* buffer,
 
 //------------------------------------------------------------------------------
 //
-pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
+pair<int, bool> Driver::readPacketInternal(uint8_t *buffer,
                                            int out_buffer_size) {
   if (out_buffer_size < MAX_PACKET_SIZE)
     throw length_error("readPacket(): provided buffer too small (got " +
-                       boost::lexical_cast<string>(out_buffer_size) +
-                       ", expected at least " +
-                       boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
+        boost::lexical_cast<string>(out_buffer_size) +
+        ", expected at least " +
+        boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
 
   // How many packet bytes are there currently in +buffer+
   int packet_size = 0;
@@ -590,7 +590,7 @@ pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
     int c = m_stream->read(internal_buffer + internal_buffer_size,
                            MAX_PACKET_SIZE - internal_buffer_size);
     if (c > 0) {
-      for (set<IOListener*>::iterator it = m_listeners.begin();
+      for (set<IOListener *>::iterator it = m_listeners.begin();
            it != m_listeners.end(); ++it)
         (*it)->readData(internal_buffer + internal_buffer_size, c);
 
@@ -609,7 +609,7 @@ pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
     } else
       return make_pair(packet_size, received_something);
 
-    if (internal_buffer_size == (size_t)MAX_PACKET_SIZE)
+    if (internal_buffer_size == (size_t) MAX_PACKET_SIZE)
       throw length_error("readPacket(): current packet too large for buffer");
   }
 
@@ -621,14 +621,14 @@ pair<int, bool> Driver::readPacketInternal(uint8_t* buffer,
 bool Driver::hasPacket() const {
   if (internal_buffer_size == 0) return false;
 
-  pair<uint8_t const*, int> packet =
+  pair<uint8_t const *, int> packet =
       findPacket(internal_buffer, internal_buffer_size);
   return (packet.second > 0);
 }
 
 //------------------------------------------------------------------------------
 //
-void Driver::setReadTimeout(base::Time const& timeout) {
+void Driver::setReadTimeout(base::Time const &timeout) {
   m_read_timeout = timeout;
 }
 
@@ -638,38 +638,38 @@ base::Time Driver::getReadTimeout() const { return m_read_timeout; }
 
 //------------------------------------------------------------------------------
 //
-int Driver::readPacket(uint8_t* buffer, int buffer_size) {
+int Driver::readPacket(uint8_t *buffer, int buffer_size) {
   return readPacket(buffer, buffer_size, getReadTimeout());
 }
 
 //------------------------------------------------------------------------------
 //
-int Driver::readPacket(uint8_t* buffer, int buffer_size,
-                       base::Time const& packet_timeout) {
+int Driver::readPacket(uint8_t *buffer, int buffer_size,
+                       base::Time const &packet_timeout) {
   return readPacket(buffer, buffer_size, packet_timeout,
                     packet_timeout + base::Time::fromSeconds(1));
 }
 
 //------------------------------------------------------------------------------
 //
-int Driver::readPacket(uint8_t* buffer, int buffer_size,
-                       base::Time const& packet_timeout,
-                       base::Time const& first_byte_timeout) {
+int Driver::readPacket(uint8_t *buffer, int buffer_size,
+                       base::Time const &packet_timeout,
+                       base::Time const &first_byte_timeout) {
   return readPacket(buffer, buffer_size, packet_timeout.toMilliseconds(),
                     first_byte_timeout.toMilliseconds());
 }
 
 //------------------------------------------------------------------------------
 //
-int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
+int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
                        int first_byte_timeout) {
   if (first_byte_timeout > packet_timeout) first_byte_timeout = -1;
 
   if (buffer_size < MAX_PACKET_SIZE)
     throw length_error("readPacket(): provided buffer too small (got " +
-                       boost::lexical_cast<string>(buffer_size) +
-                       ", expected at least " +
-                       boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
+        boost::lexical_cast<string>(buffer_size) +
+        ", expected at least " +
+        boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
 
   if (!isValid()) {
     // No valid file descriptor. Assume that the user is using the raw data
@@ -681,7 +681,7 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
     else
       throw TimeoutError(TimeoutError::PACKET,
                          "readPacket(): no packet in the internal buffer and "
-                         "no FD to read from");
+                             "no FD to read from");
   }
 
   if (!m_stream)
@@ -703,7 +703,7 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
     if (packet_timeout == 0)
       throw TimeoutError(TimeoutError::FIRST_BYTE,
                          "readPacket(): no data to read while a packet_timeout "
-                         "of 0 was given");
+                             "of 0 was given");
 
     int timeout;
     TimeoutError::TIMEOUT_TYPE timeout_type;
@@ -720,7 +720,8 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
       //                   "readPacket(): no data after waiting " +
       //                       boost::lexical_cast<string>(timeout) + "ms");
       std::cout << "readPacket(): no data after waiting " +
-                             boost::lexical_cast<string>(timeout) + "ms" << std::endl;
+          boost::lexical_cast<string>(timeout) + "ms. Timeout type: "
+          << timeout_type << std::endl;
       time_out.restart();
     }
 
@@ -732,7 +733,7 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
       // while-iteration)
       m_stream->waitRead(
           base::Time::fromMicroseconds(remaining_timeout * 1000));
-    } catch (TimeoutError& e) {
+    } catch (TimeoutError &e) {
       // throw TimeoutError(timeout_type,
       //   "readPacket(): no data after retrying with remaining time "
       //    + boost::lexical_cast<string>(remaining_timeout) + "ms of "
@@ -744,7 +745,7 @@ int Driver::readPacket(uint8_t* buffer, int buffer_size, int packet_timeout,
 
 //------------------------------------------------------------------------------
 //
-void Driver::setWriteTimeout(base::Time const& timeout) {
+void Driver::setWriteTimeout(base::Time const &timeout) {
   m_write_timeout = timeout;
 }
 
@@ -754,20 +755,20 @@ base::Time Driver::getWriteTimeout() const { return m_write_timeout; }
 
 //------------------------------------------------------------------------------
 //
-bool Driver::writePacket(uint8_t const* buffer, int buffer_size) {
+bool Driver::writePacket(uint8_t const *buffer, int buffer_size) {
   return writePacket(buffer, buffer_size, getWriteTimeout());
 }
 
 //------------------------------------------------------------------------------
 //
-bool Driver::writePacket(uint8_t const* buffer, int buffer_size,
-                         base::Time const& timeout) {
+bool Driver::writePacket(uint8_t const *buffer, int buffer_size,
+                         base::Time const &timeout) {
   return writePacket(buffer, buffer_size, timeout.toMilliseconds());
 }
 
 //------------------------------------------------------------------------------
 //
-bool Driver::writePacket(uint8_t const* buffer, int buffer_size, int timeout) {
+bool Driver::writePacket(uint8_t const *buffer, int buffer_size, int timeout) {
   if (!m_stream)
     throw std::runtime_error(
         "Driver::writePacket : invalid stream, did you forget to call open ?");
@@ -776,7 +777,7 @@ bool Driver::writePacket(uint8_t const* buffer, int buffer_size, int timeout) {
   int written = 0;
   while (true) {
     int c = m_stream->write(buffer + written, buffer_size - written);
-    for (set<IOListener*>::iterator it = m_listeners.begin();
+    for (set<IOListener *>::iterator it = m_listeners.begin();
          it != m_listeners.end(); ++it)
       (*it)->writeData(buffer + written, c);
     written += c;
