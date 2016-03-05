@@ -42,7 +42,7 @@ ED0000
 ES00
 ; Output earth coordinates, use tilts, allow 3 beam
 ; solutions and bin mapping
-EX11111
+EX01111
 ; Set to use external sensors
 ; We will be able to use all of the external sensors we can
 EZ22222220
