@@ -15,7 +15,7 @@ int main(int argc, char const* argv[]) {
   }
 
   dvl_teledyne::Driver driver;
-  driver.openSerial(argv[1], 9600);
+  driver.openSerial(argv[1], 115200);
   driver.setWriteTimeout(base::Time::fromSeconds(5));
   driver.setReadTimeout(base::Time::fromSeconds(5));
 

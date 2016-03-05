@@ -180,6 +180,10 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
 void Driver::startAcquisition() {
   if (!mConfMode) throw std::logic_error("not in configuration mode");
 
+  // We are sending raw data according to our needs here.
+  // We should definitely have a ROS service for this...
+  writePacket(reinterpret_cast<uint8_t const *>("EX01011\n"), 8, 100);
+  readConfigurationAck();
   writePacket(reinterpret_cast<uint8_t const *>("PD0\n"), 4, 100);
   readConfigurationAck();
   writePacket(reinterpret_cast<uint8_t const *>("CS\n"), 3, 100);
