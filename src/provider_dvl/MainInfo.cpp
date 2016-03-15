@@ -1,5 +1,5 @@
-#include <provider_dvl/driver/Driver.hpp>
 #include <iostream>
+#include <provider_dvl/driver/Driver.hpp>
 
 void usage() { std::cerr << "dvl_teledyne_info DEVICE" << std::endl; }
 

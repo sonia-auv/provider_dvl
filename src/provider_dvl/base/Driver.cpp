@@ -2,9 +2,9 @@
 #include <provider_dvl/base/Timeout.hpp>
 
 #include <errno.h>
-#include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <termios.h>
 #include <unistd.h>
@@ -13,24 +13,24 @@
 #include <time.h>
 
 #include <cstring>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
-#include <sys/socket.h>
+#include <netdb.h>
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 #include <netinet/udp.h>
-#include <netdb.h>
+#include <sys/socket.h>
 
 #include <boost/lexical_cast.hpp>
-#include <provider_dvl/base/IOStream.hpp>
 #include <provider_dvl/base/IOListener.hpp>
+#include <provider_dvl/base/IOStream.hpp>
 
 #ifdef __gnu_linux__
+#include <err.h>
+#include <fcntl.h>
 #include <linux/serial.h>
 #include <termio.h>
-#include <fcntl.h>
-#include <err.h>
 #endif
 
 #ifdef __APPLE__
@@ -268,7 +268,7 @@ void Driver::openIPClient(std::string const &hostname, int port,
       getaddrinfo(hostname.c_str(), port_as_string.c_str(), &hints, &result);
   if (ret != 0)
     throw UnixError("cannot resolve host/port " + hostname + "/" +
-        port_as_string);
+                    port_as_string);
 
   int sfd = -1;
   struct addrinfo *rp;
@@ -284,7 +284,7 @@ void Driver::openIPClient(std::string const &hostname, int port,
 
   if (rp == NULL)
     throw UnixError("cannot open client socket to " + hostname + " port=" +
-        boost::lexical_cast<string>(port));
+                    boost::lexical_cast<string>(port));
 
   setFileDescriptor(sfd);
 }
@@ -299,7 +299,7 @@ void Driver::openTCP(std::string const &hostname, int port) {
 
   int fd = m_stream->getFileDescriptor();
   int nodelay_flag = 1;
-  int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *) &nodelay_flag,
+  int result = setsockopt(fd, IPPROTO_TCP, TCP_NODELAY, (char *)&nodelay_flag,
                           sizeof(int));
   if (result < 0) {
     close();
@@ -414,10 +414,10 @@ bool Driver::setSerialBaudrate(int fd, int brate) {
       custom_rate = true;
       std::cerr << "Using custom baud rate " << brate << std::endl;
 #else
-    std::cerr
-        << "Non-standard baud rate selected. This is only supported on linux."
-        << std::endl;
-    return false;
+      std::cerr
+          << "Non-standard baud rate selected. This is only supported on linux."
+          << std::endl;
+      return false;
 #endif
   }
 
@@ -431,8 +431,8 @@ bool Driver::setSerialBaudrate(int fd, int brate) {
 
     if (closestSpeed < brate * 98 / 100 || closestSpeed > brate * 102 / 100) {
       std::cerr << "Cannot set custom serial rate to " << brate
-          << ". The closest possible value is " << closestSpeed << "."
-          << std::endl;
+                << ". The closest possible value is " << closestSpeed << "."
+                << std::endl;
     }
   } else {
     ss.flags &= ~ASYNC_SPD_MASK;
@@ -481,9 +481,9 @@ std::pair<uint8_t const *, int> Driver::findPacket(uint8_t const *buffer,
   // the buffer
   if (extract_result > buffer_size)
     throw length_error("extractPacket() returned result size " +
-        boost::lexical_cast<string>(extract_result) +
-        ", which is larger than the buffer size " +
-        boost::lexical_cast<string>(buffer_size) + ".");
+                       boost::lexical_cast<string>(extract_result) +
+                       ", which is larger than the buffer size " +
+                       boost::lexical_cast<string>(buffer_size) + ".");
 
   if (0 == extract_result) return make_pair(buffer, 0);
 
@@ -570,9 +570,9 @@ pair<int, bool> Driver::readPacketInternal(uint8_t *buffer,
                                            int out_buffer_size) {
   if (out_buffer_size < MAX_PACKET_SIZE)
     throw length_error("readPacket(): provided buffer too small (got " +
-        boost::lexical_cast<string>(out_buffer_size) +
-        ", expected at least " +
-        boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
+                       boost::lexical_cast<string>(out_buffer_size) +
+                       ", expected at least " +
+                       boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
 
   // How many packet bytes are there currently in +buffer+
   int packet_size = 0;
@@ -609,7 +609,7 @@ pair<int, bool> Driver::readPacketInternal(uint8_t *buffer,
     } else
       return make_pair(packet_size, received_something);
 
-    if (internal_buffer_size == (size_t) MAX_PACKET_SIZE)
+    if (internal_buffer_size == (size_t)MAX_PACKET_SIZE)
       throw length_error("readPacket(): current packet too large for buffer");
   }
 
@@ -667,9 +667,9 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
 
   if (buffer_size < MAX_PACKET_SIZE)
     throw length_error("readPacket(): provided buffer too small (got " +
-        boost::lexical_cast<string>(buffer_size) +
-        ", expected at least " +
-        boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
+                       boost::lexical_cast<string>(buffer_size) +
+                       ", expected at least " +
+                       boost::lexical_cast<string>(MAX_PACKET_SIZE) + ")");
 
   if (!isValid()) {
     // No valid file descriptor. Assume that the user is using the raw data
@@ -681,7 +681,7 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
     else
       throw TimeoutError(TimeoutError::PACKET,
                          "readPacket(): no packet in the internal buffer and "
-                             "no FD to read from");
+                         "no FD to read from");
   }
 
   if (!m_stream)
@@ -703,7 +703,7 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
     if (packet_timeout == 0)
       throw TimeoutError(TimeoutError::FIRST_BYTE,
                          "readPacket(): no data to read while a packet_timeout "
-                             "of 0 was given");
+                         "of 0 was given");
 
     int timeout;
     TimeoutError::TIMEOUT_TYPE timeout_type;
@@ -716,12 +716,13 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
     }
 
     if (time_out.elapsed(timeout)) {
-      //throw TimeoutError(timeout_type,
+      // throw TimeoutError(timeout_type,
       //                   "readPacket(): no data after waiting " +
       //                       boost::lexical_cast<string>(timeout) + "ms");
       std::cout << "readPacket(): no data after waiting " +
-          boost::lexical_cast<string>(timeout) + "ms. Timeout type: "
-          << timeout_type << std::endl;
+                       boost::lexical_cast<string>(timeout) +
+                       "ms. Timeout type: "
+                << timeout_type << std::endl;
       time_out.restart();
     }
 

@@ -1,8 +1,8 @@
+#include <endian.h>
+#include <provider_dvl/base/Float.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 #include <provider_dvl/driver/PD0Raw.hpp>
-#include <endian.h>
 #include <stdexcept>
-#include <provider_dvl/base/Float.hpp>
 
 #include <boost/lexical_cast.hpp>
 #include <string>

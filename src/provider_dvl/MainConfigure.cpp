@@ -1,6 +1,6 @@
-#include <provider_dvl/driver/Driver.hpp>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <provider_dvl/driver/Driver.hpp>
 
 using namespace dvl_teledyne;
 

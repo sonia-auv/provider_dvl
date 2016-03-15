@@ -1,11 +1,11 @@
-#include <provider_dvl/base/IOStream.hpp>
-#include <provider_dvl/base/Exceptions.hpp>
 #include <ros/ros.h>
+#include <provider_dvl/base/Exceptions.hpp>
+#include <provider_dvl/base/IOStream.hpp>
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
 #include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 #include <errno.h>
 #include <iostream>

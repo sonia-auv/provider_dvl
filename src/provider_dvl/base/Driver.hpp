@@ -1,15 +1,15 @@
 #ifndef IODRIVERS_BASE_DRIVER_HH
 #define IODRIVERS_BASE_DRIVER_HH
 
-#include <stdexcept>
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <vector>
 #include <unistd.h>
-#include <provider_dvl/base/Status.hpp>
 #include <provider_dvl/base/Exceptions.hpp>
+#include <provider_dvl/base/Status.hpp>
 #include <set>
+#include <stdexcept>
+#include <vector>
 
 struct addrinfo;
 

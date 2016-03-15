@@ -1,8 +1,8 @@
-#include <provider_dvl/driver/Driver.hpp>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <provider_dvl/driver/Driver.hpp>
 
 using namespace dvl_teledyne;
 
@@ -83,12 +83,12 @@ void Driver::setDeviceBaudrate(int rate) {
     default:
       throw std::runtime_error("invalid baud rate specified");
   }
-  uint8_t data[7] = {static_cast<uint8_t >('C'),
-                     static_cast<uint8_t >('B'),
-                     static_cast<uint8_t >('0' + code),
-                     static_cast<uint8_t >('1'),
-                     static_cast<uint8_t >('1'),
-                     static_cast<uint8_t >('\n'),
+  uint8_t data[7] = {static_cast<uint8_t>('C'),
+                     static_cast<uint8_t>('B'),
+                     static_cast<uint8_t>('0' + code),
+                     static_cast<uint8_t>('1'),
+                     static_cast<uint8_t>('1'),
+                     static_cast<uint8_t>('\n'),
                      0};
   writePacket(data, 6, 100);
   readConfigurationAck();
@@ -163,9 +163,7 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
 
   uint8_t mode_codes_1[4] = {'0', '0', '1', '1'};
   uint8_t mode_codes_2[4] = {'0', '1', '0', '1'};
-  uint8_t const cmd[7] = {'E',
-                          'X',
-                          mode_codes_1[conf.coordinate_system],
+  uint8_t const cmd[7] = {'E', 'X', mode_codes_1[conf.coordinate_system],
                           mode_codes_2[conf.coordinate_system],
                           (conf.use_attitude ? static_cast<uint8_t>('1')
                                              : static_cast<uint8_t>('0')),
