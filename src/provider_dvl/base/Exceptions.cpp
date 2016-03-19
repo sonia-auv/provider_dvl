@@ -1,6 +1,6 @@
-#include <provider_dvl/base/Exceptions.hpp>
 #include <errno.h>
 #include <string.h>
+#include <provider_dvl/base/Exceptions.hpp>
 
 using namespace iodrivers_base;
 

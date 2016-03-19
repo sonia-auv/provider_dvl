@@ -1,8 +1,8 @@
-#include <provider_dvl/driver/Driver.hpp>
 #include <sys/ioctl.h>
 #include <termios.h>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <provider_dvl/driver/Driver.hpp>
 
 using namespace dvl_teledyne;
 

@@ -3,11 +3,11 @@
 
 #include <provider_dvl/base/BaseTime.hpp>
 
-#include <unistd.h>
 #include <netinet/in.h>
 #include <stdio.h>
-#include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 namespace iodrivers_base {
 /** Generic IO handler that allows to wait, read and write to an IO stream

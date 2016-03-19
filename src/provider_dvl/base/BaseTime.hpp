@@ -1,16 +1,16 @@
 #ifndef BASE_TIME_H__
 #define BASE_TIME_H__
 
+#include <assert.h>
+#include <math.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <sys/time.h>
 #include <time.h>
-#include <stdio.h>
-#include <stdint.h>
 #include <cstdlib>
-#include <math.h>
-#include <ostream>
 #include <iomanip>
+#include <ostream>
 #include <stdexcept>
-#include <assert.h>
 
 namespace base {
 struct Time {

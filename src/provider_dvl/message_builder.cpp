@@ -29,7 +29,7 @@ namespace msg_builder {
 
 //------------------------------------------------------------------------------
 //
-//PD0Packet BuildPD0(const PD0Message::PD0Packet &pd0_packet) {
+// PD0Packet BuildPD0(const PD0Message::PD0Packet &pd0_packet) {
 //  PD0Packet msg;
 //  msg.header.stamp = ros::Time::now();
 //
@@ -64,11 +64,12 @@ sonia_msgs::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::CellReading BuildCellReading(const PD0Message::CellReading &reading) {
+sonia_msgs::CellReading BuildCellReading(
+    const PD0Message::CellReading &reading) {
   sonia_msgs::CellReading msg;
   msg.header.stamp = ros::Time::now();
 
-  for(int i = 0; i < 4; ++i) {
+  for (int i = 0; i < 4; ++i) {
     msg.velocity[i] = reading.velocity[i];
     msg.correlation[i] = reading.correlation[i];
     msg.intensity[i] = reading.intensity[i];
@@ -80,7 +81,8 @@ sonia_msgs::CellReading BuildCellReading(const PD0Message::CellReading &reading)
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info) {
+sonia_msgs::DeviceInfo BuildDeviceInfo(
+    const PD0Message::DeviceInfo &device_info) {
   sonia_msgs::DeviceInfo msg;
   msg.header.stamp = ros::Time::now();
 
@@ -96,8 +98,8 @@ sonia_msgs::DeviceInfo BuildDeviceInfo(const PD0Message::DeviceInfo &device_info
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Message::AcquisitionConfiguration
-                                                       &acquisition_conf) {
+sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(
+    const PD0Message::AcquisitionConfiguration &acquisition_conf) {
   sonia_msgs::AcquisitionConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
@@ -115,7 +117,8 @@ sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Mess
       acquisition_conf.water_layer_min_ping_threshold;
   msg.water_layer_velocity_threshold =
       acquisition_conf.water_layer_velocity_threshold;
-  msg.time_between_ping_groups = acquisition_conf.time_between_ping_groups.Microseconds;
+  msg.time_between_ping_groups =
+      acquisition_conf.time_between_ping_groups.Microseconds;
   msg.yaw_alignment = acquisition_conf.yaw_alignment;
   msg.yaw_bias = acquisition_conf.yaw_bias;
   msg.first_cell_distance = acquisition_conf.first_cell_distance;
@@ -133,9 +136,8 @@ sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(const PD0Mess
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::OutputConfiguration BuildOutputConfiguration(const
-                                             PD0Message::OutputConfiguration
-                                             &output_conf) {
+sonia_msgs::OutputConfiguration BuildOutputConfiguration(
+    const PD0Message::OutputConfiguration &output_conf) {
   sonia_msgs::OutputConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
@@ -165,7 +167,6 @@ sonia_msgs::Status BuildStatus(const PD0Message::Status &status) {
   msg.self_test_result = status.self_test_result;
   msg.status_word = status.status_word;
 
-
   msg.stddev_orientation.z = status.stddev_orientation[0];
   msg.stddev_orientation.y = status.stddev_orientation[1];
   msg.stddev_orientation.x = status.stddev_orientation[2];
@@ -184,13 +185,14 @@ sonia_msgs::Status BuildStatus(const PD0Message::Status &status) {
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_readings) {
+sonia_msgs::CellReadings BuildCellReadings(
+    const PD0Message::CellReadings &cell_readings) {
   sonia_msgs::CellReadings msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = cell_readings.time.microseconds;
 
-  for(const auto & reading : cell_readings.readings) {
+  for (const auto &reading : cell_readings.readings) {
     msg.readings.push_back(BuildCellReading(reading));
   }
 
@@ -199,8 +201,8 @@ sonia_msgs::CellReadings BuildCellReadings(const PD0Message::CellReadings &cell_
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
-                                                             PD0Message::BottomTrackingConfiguration &bottom_tracking_conf) {
+sonia_msgs::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
+    const PD0Message::BottomTrackingConfiguration &bottom_tracking_conf) {
   sonia_msgs::BottomTrackingConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
@@ -219,14 +221,14 @@ sonia_msgs::BottomTrackingConfiguration BuildBottomTrackingConfiguration(const
 
 //------------------------------------------------------------------------------
 //
-sonia_msgs::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
-                                   &bottom_tracking) {
+sonia_msgs::BottomTracking BuildBottomTracking(
+    const PD0Message::BottomTracking &bottom_tracking) {
   sonia_msgs::BottomTracking msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = bottom_tracking.time.microseconds;
 
-  for(int i = 0; i < 4; ++i) {
+  for (int i = 0; i < 4; ++i) {
     msg.range[i] = bottom_tracking.range[i];
     msg.velocity[i] = bottom_tracking.velocity[i];
     msg.correlation[i] = bottom_tracking.correlation[i];
@@ -240,8 +242,8 @@ sonia_msgs::BottomTracking BuildBottomTracking(const PD0Message::BottomTracking
 
 //------------------------------------------------------------------------------
 //
-geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(const PD0Message::BottomTracking
-                                                                   &bottom_tracking) {
+geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(
+    const PD0Message::BottomTracking &bottom_tracking) {
   geometry_msgs::TwistWithCovarianceStamped msg;
   msg.header.stamp = ros::Time::now();
 
@@ -252,6 +254,6 @@ geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(const PD0Mess
   return msg;
 }
 
-} // namespace msg_builder
+}  // namespace msg_builder
 
 }  // namespace provider_dvl

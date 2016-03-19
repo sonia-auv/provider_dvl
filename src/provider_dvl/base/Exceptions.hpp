@@ -1,8 +1,8 @@
 #ifndef IODRIVERS_BASE_EXCEPTIONS_HPP
 #define IODRIVERS_BASE_EXCEPTIONS_HPP
 
-#include <string>
 #include <stdexcept>
+#include <string>
 
 namespace iodrivers_base {
 
