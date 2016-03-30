@@ -15,13 +15,9 @@
 
 using namespace dvl_teledyne;
 
-void usage() { std::cerr << "dvl_teledyne_read DEVICE" << std::endl; }
 
 int main(int argc, char *argv[]) {
-  if (argc < 2) {
-    usage();
-    return 1;
-  }
+
 
   std::string node_name("provider_dvl");
 
@@ -54,7 +50,14 @@ int main(int argc, char *argv[]) {
       node_name + "/bottom_tracking", 100);
 
   dvl_teledyne::Driver driver;
-  driver.open(argv[1]);
+
+  if (argc < 2) {
+    ROS_WARN("No device specified. Using default value:    serial:///dev/ttyS0:115200");
+    driver.open("serial:///dev/ttyS0:115200");
+  }else{
+    driver.open(argv[1]);
+  }
+
   driver.setReadTimeout(base::Time::fromSeconds(5));
   driver.read();
 

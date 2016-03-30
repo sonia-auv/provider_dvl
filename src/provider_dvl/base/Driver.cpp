@@ -31,6 +31,8 @@
 #include <fcntl.h>
 #include <linux/serial.h>
 #include <termio.h>
+#include <ros/init.h>
+
 #endif
 
 #ifdef __APPLE__
@@ -690,7 +692,7 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
 
   Timeout time_out;
   bool read_something = false;
-  while (true) {
+  while (ros::ok()) {
     pair<int, bool> read_state = readPacketInternal(buffer, buffer_size);
 
     int packet_size = read_state.first;
@@ -716,9 +718,6 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
     }
 
     if (time_out.elapsed(timeout)) {
-      // throw TimeoutError(timeout_type,
-      //                   "readPacket(): no data after waiting " +
-      //                       boost::lexical_cast<string>(timeout) + "ms");
       std::cout << "readPacket(): no data after waiting " +
                        boost::lexical_cast<string>(timeout) +
                        "ms. Timeout type: " << timeout_type << std::endl;
