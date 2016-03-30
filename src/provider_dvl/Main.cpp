@@ -7,8 +7,6 @@
 #include <sonia_msgs/DeviceInfo.h>
 #include <sonia_msgs/OutputConfiguration.h>
 #include <sonia_msgs/PD0Packet.h>
-#include <sonia_msgs/Sensors.h>
-#include <sonia_msgs/Status.h>
 #include <fstream>
 #include <provider_dvl/driver/Driver.hpp>
 #include <provider_dvl/message_builder.hpp>
@@ -22,7 +20,7 @@ int main(int argc, char *argv[]) {
   std::string node_name("provider_dvl");
 
   ros::init(argc, argv, node_name);
-  ros::NodeHandle n;
+  ros::NodeHandlePtr n(new ros::NodeHandle("~"));
 
   ros::Publisher pd0_pub_;
   ros::Publisher acquisition_conf_pub_;
@@ -33,23 +31,23 @@ int main(int argc, char *argv[]) {
   ros::Publisher bottom_tracking_pub_;
   ros::Publisher twist_pub_;
 
-  twist_pub_ = n.advertise<geometry_msgs::TwistWithCovarianceStamped>(
+  twist_pub_ = n->advertise<geometry_msgs::TwistWithCovarianceStamped>(
       node_name + "/twist", 100);
-  pd0_pub_ = n.advertise<sonia_msgs::PD0Packet>(node_name + "/pd0_packet", 100);
-  acquisition_conf_pub_ = n.advertise<sonia_msgs::AcquisitionConfiguration>(
+  pd0_pub_ = n->advertise<sonia_msgs::PD0Packet>(node_name + "/pd0_packet", 100);
+  acquisition_conf_pub_ = n->advertise<sonia_msgs::AcquisitionConfiguration>(
       node_name + "/acquisition_conf", 100);
-  output_conf_pub_ = n.advertise<sonia_msgs::OutputConfiguration>(
+  output_conf_pub_ = n->advertise<sonia_msgs::OutputConfiguration>(
       node_name + "/output_conf", 100);
-  status_pub_ = n.advertise<sonia_msgs::Status>(node_name + "/status", 100);
+  status_pub_ = n->advertise<sonia_msgs::Status>(node_name + "/status", 100);
   cell_readings_pub_ =
-      n.advertise<sonia_msgs::CellReadings>(node_name + "/cell_readings", 100);
+      n->advertise<sonia_msgs::CellReadings>(node_name + "/cell_readings", 100);
   bottom_tracking_conf_pub_ =
-      n.advertise<sonia_msgs::BottomTrackingConfiguration>(
+      n->advertise<sonia_msgs::BottomTrackingConfiguration>(
           node_name + "/bottom_tracking_conf", 100);
-  bottom_tracking_pub_ = n.advertise<sonia_msgs::BottomTracking>(
+  bottom_tracking_pub_ = n->advertise<sonia_msgs::BottomTracking>(
       node_name + "/bottom_tracking", 100);
 
-  dvl_teledyne::Driver driver;
+  dvl_teledyne::Driver driver(n);
 
   if (argc < 2) {
     ROS_WARN("No device specified. Using default value:    serial:///dev/ttyS0:115200");
@@ -60,6 +58,7 @@ int main(int argc, char *argv[]) {
 
   driver.setReadTimeout(base::Time::fromSeconds(5));
   driver.read();
+  driver.PrintDeviceInfos();
 
   while (ros::ok()) {
     driver.read();

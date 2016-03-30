@@ -1,16 +1,22 @@
-#include <sys/ioctl.h>
+
 #include <termios.h>
 #include <fstream>
 #include <iostream>
 #include <provider_dvl/driver/Driver.hpp>
+#include <ros/console.h>
 
 using namespace dvl_teledyne;
 
-Driver::Driver()
+Driver::Driver(const ros::NodeHandlePtr &nh)
     : iodrivers_base::Driver(1000000),
+      nh_(nh),
+      send_config_file_srv_(),
       mConfMode(false),
       mDesiredBaudrate(M_SONIA_BAUDRATE) {
   buffer.resize(1000000);
+
+  send_config_file_srv_ = nh_->advertiseService(
+    "send_config_file", &Driver::SendConfigFileSrv, this);
 }
 
 void Driver::open(std::string const &uri) {
@@ -22,15 +28,55 @@ void Driver::open(std::string const &uri) {
   startAcquisition();
 }
 
-void Driver::sendConfigurationFile(std::string const &file_name) {
+bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
+                               sonia_msgs::SendDvlConfigFile::Response &res){
+  if(sendConfigurationFile(req.config_file)){
+    res.config_success = 1;
+  }
+  else{
+    res.config_success = 0;
+  }
+  return true;
+}
+
+void Driver::PrintDeviceInfos()const{
+  std::cout << "Found device" << std::endl;
+  std::cout << "  fw: " << (int)deviceInfo.fw_version << "."
+  << (int)deviceInfo.fw_revision << std::endl;
+  std::cout << "  serno: " << std::hex << deviceInfo.cpu_board_serno
+  << std::dec << std::endl;
+  std::cout << "  beam count: " << (int)deviceInfo.beam_count
+  << std::endl;
+  std::cout << "  calculates speed of sound: "
+  << (int)
+    deviceInfo.available_sensors.calculates_speed_of_sound
+  << std::endl;
+  std::cout << "  available sensors:" << std::endl;
+  PD0Message::Sensors const& sensors = deviceInfo.available_sensors;
+  std::cout << "    depth: " << (sensors.depth ? "yes" : "no") << std::endl;
+  std::cout << "    yaw: " << (sensors.yaw ? "yes" : "no") << std::endl;
+  std::cout << "    pitch: " << (sensors.pitch ? "yes" : "no") << std::endl;
+  std::cout << "    roll: " << (sensors.roll ? "yes" : "no") << std::endl;
+  std::cout << "    salinity: " << (sensors.salinity ? "yes" : "no")
+  << std::endl;
+  std::cout << "    temperature: " << (sensors.temperature ? "yes" : "no")
+  << std::endl;
+  std::cout << std::endl;
+}
+
+bool Driver::sendConfigurationFile(std::string const &file_name) {
+
   setConfigurationMode();
 
   std::ifstream file(file_name.c_str());
 
   char line_buffer[2000];
   while (!file.eof()) {
-    if (!file.getline(line_buffer, 2000) && !file.eof())
-      throw std::runtime_error("lines longer than 2000 characters");
+    if (!file.getline(line_buffer, 2000) && !file.eof()){
+      ROS_WARN("Config file lines longer than 2000 characters. Abandonning");
+      return false;
+    }
+
 
     std::string line(line_buffer);
     if (line == "CS") break;
@@ -38,9 +84,19 @@ void Driver::sendConfigurationFile(std::string const &file_name) {
     line += "\n";
     std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
     writePacket(reinterpret_cast<uint8_t const *>(line.c_str()), line.length());
-    readConfigurationAck();
+
+    try{
+      readConfigurationAck();
+    }catch(std::runtime_error e){
+      ROS_WARN("Configuration ack not received. Abandonning config.");
+      return false;
+    }
+
   }
+  return true;
 }
+
+
 
 void Driver::setDesiredBaudrate(int rate) {
   if (getFileDescriptor() != iodrivers_base::Driver::INVALID_FD)

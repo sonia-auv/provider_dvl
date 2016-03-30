@@ -1,6 +1,10 @@
 #ifndef DVL_TELEDYNE_DRIVER_HPP
 #define DVL_TELEDYNE_DRIVER_HPP
 
+#include <ros/forwards.h>
+#include <ros/service_server.h>
+#include <ros/node_handle.h>
+#include <sonia_msgs/SendDvlConfigFile.h>
 #include <provider_dvl/base/Driver.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 
@@ -13,12 +17,20 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
 
   bool mConfMode;
   int mDesiredBaudrate;
+  ros::NodeHandlePtr nh_;
+  ros::ServiceServer send_config_file_srv_;
+
 
   /** Tells the DVL to switch to the desired rate */
   void setDeviceBaudrate(int rate);
 
+  bool SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
+  sonia_msgs::SendDvlConfigFile::Response &res);
+
  public:
-  Driver();
+  Driver(const ros::NodeHandlePtr &nh);
+
+  void PrintDeviceInfos() const;
 
   /** Tries to access the DVL at the provided URI
    *
@@ -42,7 +54,7 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
    * (regardless of whether the configuration file contains a CS
    * command). Use startAcquisition() to put it in acquisition mode
    */
-  void sendConfigurationFile(std::string const& file_name);
+  bool sendConfigurationFile(std::string const& file_name);
 
   /** Sets the device into configuration mode (and make it stop pinging)
    * */

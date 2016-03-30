@@ -89,17 +89,6 @@ target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES} ${lib_atlas_LIBRA
 add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
 set_target_properties(${PROJECT_NAME}_node PROPERTIES LINKER_LANGUAGE CXX)
 
-# Creating the Info exec
-add_executable(info ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainInfo.cpp ${provider_dvl_FILES})
-target_link_libraries(info ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
-add_dependencies(info ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
-set_target_properties(info PROPERTIES LINKER_LANGUAGE CXX)
-
-# Creating the Config exec
-add_executable(conf ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/MainConfigure.cpp ${provider_dvl_FILES})
-target_link_libraries(conf ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
-add_dependencies(conf ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
-set_target_properties(conf PROPERTIES LINKER_LANGUAGE CXX)
 
 #==========================================================================
 # U N I T   T E S T S
