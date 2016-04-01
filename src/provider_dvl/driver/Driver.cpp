@@ -8,17 +8,17 @@ using namespace dvl_teledyne;
 
 Driver::Driver(const ros::NodeHandlePtr &nh)
     : iodrivers_base::Driver(1000000),
+      mConfMode(false),
+      mDesiredBaudrate(M_SONIA_BAUDRATE),
       nh_(nh),
       send_config_file_srv_(),
-      send_config_command_srv_(),
-      mConfMode(false),
-      mDesiredBaudrate(M_SONIA_BAUDRATE) {
+      send_config_command_srv_() {
   buffer.resize(1000000);
 
   send_config_file_srv_ = nh_->advertiseService(
-    "send_config_file", &Driver::SendConfigFileSrv, this);
+      "send_config_file", &Driver::SendConfigFileSrv, this);
   send_config_command_srv_ = nh_->advertiseService(
-    "send_config_command", &Driver::SendConfigCommandSrv, this);
+      "send_config_command", &Driver::SendConfigCommandSrv, this);
 }
 
 void Driver::open(std::string const &uri) {
@@ -31,32 +31,32 @@ void Driver::open(std::string const &uri) {
 }
 
 bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
-                               sonia_msgs::SendDvlConfigFile::Response &res){
-  if(sendConfigurationFile(req.config_file)){
+                               sonia_msgs::SendDvlConfigFile::Response &res) {
+  if (sendConfigurationFile(req.config_file)) {
     res.config_success = 1;
-  }
-  else{
+  } else {
     res.config_success = 0;
   }
   startAcquisition();
   return true;
 }
 
-bool Driver::SendConfigCommandSrv(sonia_msgs::SendDvlConfigCommand::Request &req,
-                               sonia_msgs::SendDvlConfigCommand::Response &res){
-
+bool Driver::SendConfigCommandSrv(
+    sonia_msgs::SendDvlConfigCommand::Request &req,
+    sonia_msgs::SendDvlConfigCommand::Response &res) {
   res.config_success = 1;
 
   setConfigurationMode();
   // \n is required at the end of a line
   req.config_command += "\n";
   // Sends the command
-  writePacket(reinterpret_cast<uint8_t const *>(req.config_command.c_str()), req.config_command.length());
+  writePacket(reinterpret_cast<uint8_t const *>(req.config_command.c_str()),
+              req.config_command.length());
 
-  try{
+  try {
     // Tests the reception of a > character to specify the success
     readConfigurationAck();
-  }catch(std::runtime_error e){
+  } catch (std::runtime_error e) {
     ROS_WARN("Configuration ack not received. Abandonning config.");
     res.config_success = 0;
   }
@@ -66,66 +66,60 @@ bool Driver::SendConfigCommandSrv(sonia_msgs::SendDvlConfigCommand::Request &req
   return true;
 }
 
-void Driver::PrintDeviceInfos()const{
+void Driver::PrintDeviceInfos() const {
   std::cout << "Found device" << std::endl;
   std::cout << "  fw: " << (int)deviceInfo.fw_version << "."
-  << (int)deviceInfo.fw_revision << std::endl;
-  std::cout << "  serno: " << std::hex << deviceInfo.cpu_board_serno
-  << std::dec << std::endl;
-  std::cout << "  beam count: " << (int)deviceInfo.beam_count
-  << std::endl;
+            << (int)deviceInfo.fw_revision << std::endl;
+  std::cout << "  serno: " << std::hex << deviceInfo.cpu_board_serno << std::dec
+            << std::endl;
+  std::cout << "  beam count: " << (int)deviceInfo.beam_count << std::endl;
   std::cout << "  calculates speed of sound: "
-  << (int)
-    deviceInfo.available_sensors.calculates_speed_of_sound
-  << std::endl;
+            << (int)deviceInfo.available_sensors.calculates_speed_of_sound
+            << std::endl;
   std::cout << "  available sensors:" << std::endl;
-  PD0Message::Sensors const& sensors = deviceInfo.available_sensors;
+  PD0Message::Sensors const &sensors = deviceInfo.available_sensors;
   std::cout << "    depth: " << (sensors.depth ? "yes" : "no") << std::endl;
   std::cout << "    yaw: " << (sensors.yaw ? "yes" : "no") << std::endl;
   std::cout << "    pitch: " << (sensors.pitch ? "yes" : "no") << std::endl;
   std::cout << "    roll: " << (sensors.roll ? "yes" : "no") << std::endl;
   std::cout << "    salinity: " << (sensors.salinity ? "yes" : "no")
-  << std::endl;
+            << std::endl;
   std::cout << "    temperature: " << (sensors.temperature ? "yes" : "no")
-  << std::endl;
+            << std::endl;
   std::cout << std::endl;
 }
 
 bool Driver::sendConfigurationFile(std::string const &file_name) {
-
   setConfigurationMode();
 
   std::ifstream file(file_name.c_str());
 
   char line_buffer[2000];
   while (!file.eof()) {
-    if (!file.getline(line_buffer, 2000) && !file.eof()){
+    if (!file.getline(line_buffer, 2000) && !file.eof()) {
       ROS_WARN("Config file lines longer than 2000 characters. Abandonning");
       return false;
     }
 
-
     std::string line(line_buffer);
     if (line == "CS") break;
 
-    if(line[0] != ';'){
+    if (line[0] != ';') {
       line += "\n";
       std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
-      writePacket(reinterpret_cast<uint8_t const *>(line.c_str()), line.length());
+      writePacket(reinterpret_cast<uint8_t const *>(line.c_str()),
+                  line.length());
 
-      try{
+      try {
         readConfigurationAck();
-      }catch(std::runtime_error e){
+      } catch (std::runtime_error e) {
         ROS_WARN("Configuration ack not received. Abandonning config.");
         return false;
       }
     }
-
   }
   return true;
 }
-
-
 
 void Driver::setDesiredBaudrate(int rate) {
   if (getFileDescriptor() != iodrivers_base::Driver::INVALID_FD)
