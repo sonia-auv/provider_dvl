@@ -108,15 +108,17 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
     std::string line(line_buffer);
     if (line == "CS") break;
 
-    line += "\n";
-    std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
-    writePacket(reinterpret_cast<uint8_t const *>(line.c_str()), line.length());
+    if(line[0] != ';'){
+      line += "\n";
+      std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
+      writePacket(reinterpret_cast<uint8_t const *>(line.c_str()), line.length());
 
-    try{
-      readConfigurationAck();
-    }catch(std::runtime_error e){
-      ROS_WARN("Configuration ack not received. Abandonning config.");
-      return false;
+      try{
+        readConfigurationAck();
+      }catch(std::runtime_error e){
+        ROS_WARN("Configuration ack not received. Abandonning config.");
+        return false;
+      }
     }
 
   }
