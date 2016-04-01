@@ -3,7 +3,6 @@
 #include <fstream>
 #include <iostream>
 #include <provider_dvl/driver/Driver.hpp>
-#include <ros/console.h>
 
 using namespace dvl_teledyne;
 
@@ -11,12 +10,15 @@ Driver::Driver(const ros::NodeHandlePtr &nh)
     : iodrivers_base::Driver(1000000),
       nh_(nh),
       send_config_file_srv_(),
+      send_config_command_srv_(),
       mConfMode(false),
       mDesiredBaudrate(M_SONIA_BAUDRATE) {
   buffer.resize(1000000);
 
   send_config_file_srv_ = nh_->advertiseService(
     "send_config_file", &Driver::SendConfigFileSrv, this);
+  send_config_command_srv_ = nh_->advertiseService(
+    "send_config_command", &Driver::SendConfigCommandSrv, this);
 }
 
 void Driver::open(std::string const &uri) {
@@ -36,6 +38,31 @@ bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
   else{
     res.config_success = 0;
   }
+  startAcquisition();
+  return true;
+}
+
+bool Driver::SendConfigCommandSrv(sonia_msgs::SendDvlConfigCommand::Request &req,
+                               sonia_msgs::SendDvlConfigCommand::Response &res){
+
+  res.config_success = 1;
+
+  setConfigurationMode();
+  // \n is required at the end of a line
+  req.config_command += "\n";
+  // Sends the command
+  writePacket(reinterpret_cast<uint8_t const *>(req.config_command.c_str()), req.config_command.length());
+
+  try{
+    // Tests the reception of a > character to specify the success
+    readConfigurationAck();
+  }catch(std::runtime_error e){
+    ROS_WARN("Configuration ack not received. Abandonning config.");
+    res.config_success = 0;
+  }
+
+  startAcquisition();
+
   return true;
 }
 

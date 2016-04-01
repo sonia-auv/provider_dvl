@@ -5,6 +5,7 @@
 #include <ros/service_server.h>
 #include <ros/node_handle.h>
 #include <sonia_msgs/SendDvlConfigFile.h>
+#include <sonia_msgs/SendDvlConfigCommand.h>
 #include <provider_dvl/base/Driver.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 
@@ -19,6 +20,7 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
   int mDesiredBaudrate;
   ros::NodeHandlePtr nh_;
   ros::ServiceServer send_config_file_srv_;
+  ros::ServiceServer send_config_command_srv_;
 
 
   /** Tells the DVL to switch to the desired rate */
@@ -26,6 +28,9 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
 
   bool SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
   sonia_msgs::SendDvlConfigFile::Response &res);
+
+  bool SendConfigCommandSrv(sonia_msgs::SendDvlConfigCommand::Request &req,
+                                    sonia_msgs::SendDvlConfigCommand::Response &res);
 
  public:
   Driver(const ros::NodeHandlePtr &nh);
