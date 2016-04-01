@@ -10,13 +10,11 @@
 #include <fstream>
 #include <provider_dvl/driver/Driver.hpp>
 #include <provider_dvl/message_builder.hpp>
+#include <provider_dvl/base/Float.hpp>
 
 using namespace dvl_teledyne;
 
-
 int main(int argc, char *argv[]) {
-
-
   std::string node_name("provider_dvl");
 
   ros::init(argc, argv, node_name);
@@ -33,7 +31,8 @@ int main(int argc, char *argv[]) {
 
   twist_pub_ = n->advertise<geometry_msgs::TwistWithCovarianceStamped>(
       node_name + "/twist", 100);
-  pd0_pub_ = n->advertise<sonia_msgs::PD0Packet>(node_name + "/pd0_packet", 100);
+  pd0_pub_ =
+      n->advertise<sonia_msgs::PD0Packet>(node_name + "/pd0_packet", 100);
   acquisition_conf_pub_ = n->advertise<sonia_msgs::AcquisitionConfiguration>(
       node_name + "/acquisition_conf", 100);
   output_conf_pub_ = n->advertise<sonia_msgs::OutputConfiguration>(
@@ -50,9 +49,11 @@ int main(int argc, char *argv[]) {
   dvl_teledyne::Driver driver(n);
 
   if (argc < 2) {
-    ROS_WARN("No device specified. Using default value:    serial:///dev/ttyS0:115200");
+    ROS_WARN(
+        "No device specified. Using default value:    "
+        "serial:///dev/ttyS0:115200");
     driver.open("serial:///dev/ttyS0:115200");
-  }else{
+  } else {
     driver.open(argv[1]);
   }
 
@@ -103,7 +104,16 @@ int main(int argc, char *argv[]) {
     bottom_tracking_conf_pub_.publish(bottomTrackingConfiguration);
     bottom_tracking_pub_.publish(bottomTracking);
 
-    twist_pub_.publish(twistWithCovarianceStamped);
+    // test if a number is different from NaN. A NaN number is not equal to
+    // itself.
+    if (twistWithCovarianceStamped.twist.twist.linear.x ==
+            twistWithCovarianceStamped.twist.twist.linear.x ||
+        twistWithCovarianceStamped.twist.twist.linear.y ==
+            twistWithCovarianceStamped.twist.twist.linear.y ||
+        twistWithCovarianceStamped.twist.twist.linear.z ==
+            twistWithCovarianceStamped.twist.twist.linear.z)
+      twist_pub_.publish(twistWithCovarianceStamped);
+
     ros::spinOnce();
   }
 }
