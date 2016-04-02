@@ -29,22 +29,21 @@ int main(int argc, char *argv[]) {
   ros::Publisher bottom_tracking_pub_;
   ros::Publisher twist_pub_;
 
-  twist_pub_ = n->advertise<geometry_msgs::TwistWithCovarianceStamped>(
-      node_name + "/twist", 100);
-  pd0_pub_ =
-      n->advertise<sonia_msgs::PD0Packet>(node_name + "/pd0_packet", 100);
+  twist_pub_ =
+      n->advertise<geometry_msgs::TwistWithCovarianceStamped>("twist", 100);
+  pd0_pub_ = n->advertise<sonia_msgs::PD0Packet>("pd0_packet", 100);
   acquisition_conf_pub_ = n->advertise<sonia_msgs::AcquisitionConfiguration>(
-      node_name + "/acquisition_conf", 100);
-  output_conf_pub_ = n->advertise<sonia_msgs::OutputConfiguration>(
-      node_name + "/output_conf", 100);
-  status_pub_ = n->advertise<sonia_msgs::Status>(node_name + "/status", 100);
+      "acquisition_conf", 100);
+  output_conf_pub_ =
+      n->advertise<sonia_msgs::OutputConfiguration>("output_conf", 100);
+  status_pub_ = n->advertise<sonia_msgs::Status>("status", 100);
   cell_readings_pub_ =
-      n->advertise<sonia_msgs::CellReadings>(node_name + "/cell_readings", 100);
+      n->advertise<sonia_msgs::CellReadings>("cell_readings", 100);
   bottom_tracking_conf_pub_ =
       n->advertise<sonia_msgs::BottomTrackingConfiguration>(
-          node_name + "/bottom_tracking_conf", 100);
-  bottom_tracking_pub_ = n->advertise<sonia_msgs::BottomTracking>(
-      node_name + "/bottom_tracking", 100);
+          "bottom_tracking_conf", 100);
+  bottom_tracking_pub_ =
+      n->advertise<sonia_msgs::BottomTracking>("bottom_tracking", 100);
 
   dvl_teledyne::Driver driver(n);
 
