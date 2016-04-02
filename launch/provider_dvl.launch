@@ -1,5 +1,5 @@
 <launch>
-	<node name="provider_dvl_node"
+	<node name="provider_dvl"
 	    pkg="provider_dvl"
 	    type="provider_dvl_node"
 	    args="serial:///dev/ttyS0:115200"
