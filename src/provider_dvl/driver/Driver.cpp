@@ -99,6 +99,7 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
     return false;
   }
 
+  ROS_INFO("Config started. List of commands sent:");
 
   char line_buffer[2000];
   while (!file.eof()) {
@@ -111,8 +112,8 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
     if (line == "CS") break;
 
     if (line[0] != ';') {
+      ROS_INFO_STREAM(line + "  ");
       line += "\n";
-      std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
       writePacket(reinterpret_cast<uint8_t const *>(line.c_str()),
                   line.length());
 
@@ -124,7 +125,7 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
       }
     }
   }
-
+  ROS_INFO("Config succeeded.");
   return true;
 }
 

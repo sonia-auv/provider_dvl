@@ -48,7 +48,7 @@ int main(int argc, char *argv[]) {
   dvl_teledyne::Driver driver(n);
 
   if (argc < 2) {
-    ROS_WARN(
+    ROS_INFO(
         "No device specified. Using default value:    "
         "serial:///dev/ttyS0:115200");
     driver.open("serial:///dev/ttyS0:115200");
