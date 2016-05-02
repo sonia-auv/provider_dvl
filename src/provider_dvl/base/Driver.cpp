@@ -528,6 +528,8 @@ std::pair<uint8_t const *, int> Driver::findPacket(uint8_t const *buffer,
 //------------------------------------------------------------------------------
 //
 int Driver::doPacketExtraction(uint8_t *buffer) {
+
+
   pair<uint8_t const *, int> packet =
       findPacket(internal_buffer, internal_buffer_size);
   if (!m_extract_last) {
@@ -586,8 +588,7 @@ pair<int, bool> Driver::readPacketInternal(uint8_t *buffer,
 
   bool received_something = false;
   while (true) {
-    // cerr << "reading with " << printable_com(buffer, buffer_size) << " as
-    // buffer" << endl;
+     //cerr << "reading with " << printable_com(buffer, 10) << " as buffer" << endl;
     int c = m_stream->read(internal_buffer + internal_buffer_size,
                            MAX_PACKET_SIZE - internal_buffer_size);
     if (c > 0) {
@@ -597,7 +598,7 @@ pair<int, bool> Driver::readPacketInternal(uint8_t *buffer,
 
       received_something = true;
 
-      // cerr << "received: " << printable_com(buffer + buffer_size, c) << endl;
+       //cerr << "received: " << printable_com(buffer + 10, c) << endl;
       internal_buffer_size += c;
 
       int new_packet = doPacketExtraction(buffer);

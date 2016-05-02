@@ -94,6 +94,12 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
 
   std::ifstream file(file_name.c_str());
 
+  if(!file.good()){
+    ROS_WARN("Config failed. Bad file name");
+    return false;
+  }
+
+
   char line_buffer[2000];
   while (!file.eof()) {
     if (!file.getline(line_buffer, 2000) && !file.eof()) {
@@ -210,8 +216,6 @@ void Driver::setConfigurationMode() {
   clear();
   writePacket(reinterpret_cast<uint8_t const *>("==="), 3, 100);
 
-  writePacket(reinterpret_cast<uint8_t const *>("B?\n"), 3, 100);
-
   mConfMode = true;
 
   // This is a tricky one. As usual with fiddling with serial lines, the
@@ -235,6 +239,7 @@ void Driver::setConfigurationMode() {
 void Driver::readConfigurationAck(base::Time const &timeout) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
   int packet_size = readPacket(&buffer[0], buffer.size(), timeout);
+
   if (buffer[0] != '>')
     throw std::runtime_error(
         std::string(reinterpret_cast<char const *>(&buffer[0]), packet_size));
