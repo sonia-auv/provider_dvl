@@ -535,8 +535,7 @@ int Driver::doPacketExtraction(uint8_t *buffer) {
     m_stats.bad_rx += packet.first - internal_buffer;
     m_stats.good_rx += packet.second;
   }
-  // cerr << "found packet " << printable_com(packet.first, packet.second) << "
-  // in internal buffer" << endl;
+   //cerr << "found packet " << printable_com(packet.first, packet.second) << "in internal buffer" << endl;
 
   int buffer_rem =
       internal_buffer_size - (packet.first + packet.second - internal_buffer);

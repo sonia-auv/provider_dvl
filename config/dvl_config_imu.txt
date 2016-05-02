@@ -107,6 +107,6 @@ SP 2 5
 ;
 ;-------------------------------------------------------------------------
 ; Save this setup to non-volatile memory in the ExplorerDVL
-;CK
+CK
 ; Start pinging
 ;CS

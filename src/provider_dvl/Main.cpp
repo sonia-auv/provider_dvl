@@ -106,9 +106,9 @@ int main(int argc, char *argv[]) {
     // test if a number is different from NaN. A NaN number is not equal to
     // itself.
     if (twistWithCovarianceStamped.twist.twist.linear.x ==
-            twistWithCovarianceStamped.twist.twist.linear.x ||
+            twistWithCovarianceStamped.twist.twist.linear.x &&
         twistWithCovarianceStamped.twist.twist.linear.y ==
-            twistWithCovarianceStamped.twist.twist.linear.y ||
+            twistWithCovarianceStamped.twist.twist.linear.y &&
         twistWithCovarianceStamped.twist.twist.linear.z ==
             twistWithCovarianceStamped.twist.twist.linear.z)
       twist_pub_.publish(twistWithCovarianceStamped);
