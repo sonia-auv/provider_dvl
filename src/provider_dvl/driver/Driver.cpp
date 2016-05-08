@@ -1,3 +1,27 @@
+/**
+ * \file	driver.cc
+ * \author	Thibaut Mattio <thibaut.mattio@gmail.com>
+ * \date	28/06/2015
+ *
+ * \copyright Copyright (c) 2015 S.O.N.I.A. All rights reserved.
+ *
+ * \section LICENSE
+ *
+ * This file is part of S.O.N.I.A. software.
+ *
+ * S.O.N.I.A. software is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * S.O.N.I.A. software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include <termios.h>
 #include <fstream>
@@ -6,6 +30,11 @@
 
 using namespace dvl_teledyne;
 
+//==============================================================================
+// C / D T O R S   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 Driver::Driver(const ros::NodeHandlePtr &nh)
     : iodrivers_base::Driver(1000000),
       mConfMode(false),
@@ -21,6 +50,11 @@ Driver::Driver(const ros::NodeHandlePtr &nh)
       "send_config_command", &Driver::SendConfigCommandSrv, this);
 }
 
+//==============================================================================
+// M E T H O D S   S E C T I O N
+
+//------------------------------------------------------------------------------
+//
 void Driver::open(std::string const &uri) {
   openURI(uri);
   setConfigurationMode();
@@ -30,6 +64,8 @@ void Driver::open(std::string const &uri) {
   startAcquisition();
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
                                sonia_msgs::SendDvlConfigFile::Response &res) {
   if (sendConfigurationFile(req.config_file)) {
@@ -41,6 +77,8 @@ bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::SendConfigCommandSrv(
     sonia_msgs::SendDvlConfigCommand::Request &req,
     sonia_msgs::SendDvlConfigCommand::Response &res) {
@@ -66,6 +104,8 @@ bool Driver::SendConfigCommandSrv(
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::PrintDeviceInfos() const {
   std::cout << "Found device" << std::endl;
   std::cout << "  fw: " << (int)deviceInfo.fw_version << "."
@@ -89,6 +129,8 @@ void Driver::PrintDeviceInfos() const {
   std::cout << std::endl;
 }
 
+//------------------------------------------------------------------------------
+//
 bool Driver::sendConfigurationFile(std::string const &file_name) {
   setConfigurationMode();
 
@@ -121,12 +163,16 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
   return true;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setDesiredBaudrate(int rate) {
   if (getFileDescriptor() != iodrivers_base::Driver::INVALID_FD)
     setDeviceBaudrate(rate);
   mDesiredBaudrate = rate;
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setDeviceBaudrate(int rate) {
   setConfigurationMode();
 
@@ -171,11 +217,15 @@ void Driver::setDeviceBaudrate(int rate) {
   readConfigurationAck();
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::read() {
   int packet_size = readPacket(&buffer[0], buffer.size());
   if (packet_size) parseEnsemble(&buffer[0], packet_size);
 }
 
+//------------------------------------------------------------------------------
+//
 int Driver::extractPacket(uint8_t const *buffer, size_t buffer_size) const {
   if (mConfMode) {
     char const *buffer_as_string = reinterpret_cast<char const *>(buffer);
@@ -203,6 +253,8 @@ int Driver::extractPacket(uint8_t const *buffer, size_t buffer_size) const {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::setConfigurationMode() {
   if (tcsendbreak(getFileDescriptor(), 0))
     throw iodrivers_base::UnixError("failed to set configuration mode");
@@ -226,6 +278,8 @@ void Driver::setConfigurationMode() {
   }
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::readConfigurationAck(base::Time const &timeout) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
   int packet_size = readPacket(&buffer[0], buffer.size(), timeout);
@@ -234,7 +288,8 @@ void Driver::readConfigurationAck(base::Time const &timeout) {
         std::string(reinterpret_cast<char const *>(&buffer[0]), packet_size));
 }
 
-/** Configures the output coordinate system */
+//------------------------------------------------------------------------------
+//
 void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
 
@@ -252,6 +307,8 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
   writePacket(cmd, 7, 500);
 }
 
+//------------------------------------------------------------------------------
+//
 void Driver::startAcquisition() {
   if (!mConfMode) throw std::logic_error("not in configuration mode");
 
