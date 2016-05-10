@@ -136,6 +136,13 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
 
   std::ifstream file(file_name.c_str());
 
+  if(!file.good()){
+    ROS_WARN("Config failed. Bad file name");
+    return false;
+  }
+
+  ROS_INFO("Config started. List of commands sent:");
+
   char line_buffer[2000];
   while (!file.eof()) {
     if (!file.getline(line_buffer, 2000) && !file.eof()) {
@@ -147,8 +154,8 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
     if (line == "CS") break;
 
     if (line[0] != ';') {
+      ROS_INFO_STREAM(line + "  ");
       line += "\n";
-      std::cout << iodrivers_base::Driver::printable_com(line) << std::endl;
       writePacket(reinterpret_cast<uint8_t const *>(line.c_str()),
                   line.length());
 
@@ -160,6 +167,7 @@ bool Driver::sendConfigurationFile(std::string const &file_name) {
       }
     }
   }
+  ROS_INFO("Config succeeded.");
   return true;
 }
 
@@ -228,7 +236,7 @@ void Driver::read() {
 //
 int Driver::extractPacket(uint8_t const *buffer, size_t buffer_size) const {
   if (mConfMode) {
-    char const *buffer_as_string = reinterpret_cast<char const *>(buffer);
+ char const *buffer_as_string = reinterpret_cast<char const *>(buffer);
     if (buffer_as_string[0] == '>')
       return 1;
     else if (buffer_as_string[0] == 'E') {
@@ -256,8 +264,11 @@ int Driver::extractPacket(uint8_t const *buffer, size_t buffer_size) const {
 //------------------------------------------------------------------------------
 //
 void Driver::setConfigurationMode() {
-  if (tcsendbreak(getFileDescriptor(), 0))
-    throw iodrivers_base::UnixError("failed to set configuration mode");
+
+  // set config mode
+  clear();
+  writePacket(reinterpret_cast<uint8_t const *>("==="), 3, 100);
+
   mConfMode = true;
 
   // This is a tricky one. As usual with fiddling with serial lines, the
@@ -269,7 +280,7 @@ void Driver::setConfigurationMode() {
   for (int i = 0; i < 12; ++i) {
     writePacket(reinterpret_cast<uint8_t const *>("\n"), 1, 100);
     try {
-      readConfigurationAck(base::Time::fromSeconds(0.1));
+      readConfigurationAck(base::Time::fromSeconds(2));
       clear();
       break;
     } catch (iodrivers_base::TimeoutError) {
@@ -283,6 +294,7 @@ void Driver::setConfigurationMode() {
 void Driver::readConfigurationAck(base::Time const &timeout) {
   if (!mConfMode) throw std::runtime_error("not in configuration mode");
   int packet_size = readPacket(&buffer[0], buffer.size(), timeout);
+
   if (buffer[0] != '>')
     throw std::runtime_error(
         std::string(reinterpret_cast<char const *>(&buffer[0]), packet_size));
@@ -312,16 +324,11 @@ void Driver::setOutputConfiguration(PD0Message::OutputConfiguration conf) {
 void Driver::startAcquisition() {
   if (!mConfMode) throw std::logic_error("not in configuration mode");
 
-  // We are sending raw data according to our needs here.
-  // We should definitely have a ROS service for this...
-  // writePacket(reinterpret_cast<uint8_t const *>("EX11111\n"), 8, 100);
-  // readConfigurationAck();
-  writePacket(reinterpret_cast<uint8_t const *>("EX01011\n"), 8, 100);
-  readConfigurationAck();
-  writePacket(reinterpret_cast<uint8_t const *>("EA00000\n"), 8, 100);
-  readConfigurationAck();
-  writePacket(reinterpret_cast<uint8_t const *>("PD0\n"), 4, 100);
-  readConfigurationAck();
+  // ensure that no characters have been entered before without \n
+  writePacket(reinterpret_cast<uint8_t const *>("\n"), 1, 100);
+  clear();
+
+  // start acq
   writePacket(reinterpret_cast<uint8_t const *>("CS\n"), 3, 100);
   readConfigurationAck();
   mConfMode = false;
