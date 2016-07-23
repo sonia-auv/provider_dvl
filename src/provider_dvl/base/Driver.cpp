@@ -740,6 +740,7 @@ int Driver::readPacket(uint8_t *buffer, int buffer_size, int packet_timeout,
       continue;
     }
   }
+  return 0;
 }
 
 //------------------------------------------------------------------------------
