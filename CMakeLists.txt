@@ -86,7 +86,7 @@ set(TARGET_NAME provider_dvl_node)
 # Creating the ROS Node
 add_executable(${PROJECT_NAME}_node ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/Main.cpp ${provider_dvl_FILES})
 target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
-add_dependencies(${PROJECT_NAME}_node ${PROJECT_NAME}_generate_messages_cpp sonia_msgs_generate_messages_cpp)
+add_dependencies(${PROJECT_NAME}_node sonia_msgs_generate_messages_cpp)
 set_target_properties(${PROJECT_NAME}_node PROPERTIES LINKER_LANGUAGE CXX)
 
 
