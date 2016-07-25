@@ -1,10 +1,17 @@
 <?xml version="1.0"?>
 <package>
   <name>provider_dvl</name>
-  <version>0.0.0</version>
-  <description>The provider_dvl package</description>
+  <version>1.0.0</version>
+  <description>
+    The provider_dvl package provide the raw data accessible through
+    the pd0 package of the Teledyne Explorer DVL
+  </description>
 
-  <maintainer email="dozois.a@gmail.com">Antoine Dozois</maintainer>
+  <author>Jeremie St Jules Prevost</author>
+  <author>Alexis Demers</author>
+
+  <maintainer email="jeremie.st.jules.prevost@gmail.com">jeremie</maintainer>
+  <maintainer email="alexidemers@gmail.com">alexis</maintainer>
 
   <license>GPLv3</license>
 
