@@ -281,8 +281,8 @@ void PD0Parser::parseVariableLeader(uint8_t const* buffer, size_t size) {
   }
 
   status.orientation[0] = le16toh(msg.roll);
-  status.orientation[0] = le16toh(msg.pitch);
-  status.orientation[0] = le16toh(msg.yaw);
+  status.orientation[1] = le16toh(msg.pitch);
+  status.orientation[2] = le16toh(msg.yaw);
 
   status.stddev_orientation[0] = M_PI / 180.0f * msg.stddev_yaw;
   status.stddev_orientation[1] = M_PI / 180.0f * 0.1f * msg.stddev_pitch;
