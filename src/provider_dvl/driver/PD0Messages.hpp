@@ -130,7 +130,7 @@ struct Status {
   uint32_t seq;
   base::Time time;
 
-  Eigen::Quaterniond orientation;
+  float orientation[3];
   /** Standard deviation of orientation in yaw, pitch and roll */
   float stddev_orientation[3];
 

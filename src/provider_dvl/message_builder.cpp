@@ -171,10 +171,9 @@ sonia_msgs::Status BuildStatus(const PD0Message::Status &status) {
   msg.stddev_orientation.y = status.stddev_orientation[1];
   msg.stddev_orientation.x = status.stddev_orientation[2];
 
-  msg.orientation.x = status.orientation.x();
-  msg.orientation.w = status.orientation.w();
-  msg.orientation.y = status.orientation.y();
-  msg.orientation.z = status.orientation.z();
+  msg.orientation.x = status.orientation[0];
+  msg.orientation.y = status.orientation[1];
+  msg.orientation.z = status.orientation[2];
 
   for (int i = 0; i < 8; ++i) {
     msg.adc_channels[i] = status.adc_channels[i];

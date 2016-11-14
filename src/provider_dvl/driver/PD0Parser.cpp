@@ -280,12 +280,10 @@ void PD0Parser::parseVariableLeader(uint8_t const* buffer, size_t size) {
         since_epoch, static_cast<uint64_t>(msg.rtc_hundredth) * 10000);
   }
 
-  status.orientation = Eigen::AngleAxisd(M_PI / 180 * 0.01 * le16toh(msg.roll),
-                                         Eigen::Vector3d::UnitX()) *
-                       Eigen::AngleAxisd(M_PI / 180 * 0.01 * le16toh(msg.pitch),
-                                         Eigen::Vector3d::UnitY()) *
-                       Eigen::AngleAxisd(M_PI / 180 * 0.01 * le16toh(msg.yaw),
-                                         Eigen::Vector3d::UnitZ());
+  status.orientation[0] = le16toh(msg.roll);
+  status.orientation[0] = le16toh(msg.pitch);
+  status.orientation[0] = le16toh(msg.yaw);
+
   status.stddev_orientation[0] = M_PI / 180.0f * msg.stddev_yaw;
   status.stddev_orientation[1] = M_PI / 180.0f * 0.1f * msg.stddev_pitch;
   status.stddev_orientation[2] = M_PI / 180.0f * 0.1f * msg.stddev_roll;
