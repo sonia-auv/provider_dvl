@@ -28,9 +28,11 @@
 #include <provider_dvl/driver/PD0Parser.hpp>
 #include <provider_dvl/driver/PD0Raw.hpp>
 #include <stdexcept>
+#include <iostream>
 
 #include <boost/lexical_cast.hpp>
 #include <string>
+
 using boost::lexical_cast;
 using std::string;
 
@@ -280,13 +282,17 @@ void PD0Parser::parseVariableLeader(uint8_t const* buffer, size_t size) {
         since_epoch, static_cast<uint64_t>(msg.rtc_hundredth) * 10000);
   }
 
-  status.orientation[0] = le16toh(msg.roll);
-  status.orientation[1] = le16toh(msg.pitch);
-  status.orientation[2] = le16toh(msg.yaw);
+  //.01 degree precision (see doc)
+  status.orientation[0] = float(int16_t(le16toh(msg.roll))) * 0.01f;
+  status.orientation[1] = float(int16_t(le16toh(msg.pitch))) * 0.01f;
+  status.orientation[2] = float(int16_t(le16toh(msg.yaw))) * 0.01f;
 
-  status.stddev_orientation[0] = M_PI / 180.0f * msg.stddev_yaw;
-  status.stddev_orientation[1] = M_PI / 180.0f * 0.1f * msg.stddev_pitch;
-  status.stddev_orientation[2] = M_PI / 180.0f * 0.1f * msg.stddev_roll;
+  // .1 degree precision (see doc)
+  status.stddev_orientation[0] = 0.1f * float(msg.stddev_roll);
+  status.stddev_orientation[1] = 0.1f * float(msg.stddev_pitch);
+  // 1 degree precision (see doc)
+  status.stddev_orientation[2] = msg.stddev_yaw;
+
   status.speed_of_sound = 1.0f * le16toh(msg.speed_of_sound);
   status.salinity = 1e-3f * le16toh(msg.salinity_at_transducer);
   status.depth = 1e-1f * le16toh(msg.depth_of_transducer);

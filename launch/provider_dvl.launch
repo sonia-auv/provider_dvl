@@ -3,13 +3,8 @@
         pkg="provider_dvl"
         type="provider_dvl_node"
 	args="serial:///dev/ttyS0:115200"
-	output="log" />
+	output="screen" />
 
-    <node name="redirect_imu_to_dvl"
-        pkg="tcp_serial_redirect"
-        type="tcp_serial_redirect.py"
-	args="-b 19200 -P 7334 --port=/dev/ttyS1"
-	output="log" />
 
     <rosparam command="load"
         file="$(find provider_dvl)/config/teledyne_conf.yaml"/>
