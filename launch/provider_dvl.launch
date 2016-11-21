@@ -3,7 +3,7 @@
         pkg="provider_dvl"
         type="provider_dvl_node"
 	args="serial:///dev/ttyS0:115200"
-	output="screen" />
+	output="log" />
 
 
     <rosparam command="load"
