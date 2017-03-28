@@ -24,14 +24,14 @@
  */
 
 #include <ros/ros.h>
-#include <AcquisitionConfiguration.h>
-#include <BottomTracking.h>
-#include <BottomTrackingConfiguration.h>
-#include <CellReading.h>
-#include <CellReadings.h>
-#include <DeviceInfo.h>
-#include <OutputConfiguration.h>
-#include <PD0Packet.h>
+#include <provider_dvl/AcquisitionConfiguration.h>
+#include <provider_dvl/BottomTracking.h>
+#include <provider_dvl/BottomTrackingConfiguration.h>
+#include <provider_dvl/CellReading.h>
+#include <provider_dvl/CellReadings.h>
+#include <provider_dvl/DeviceInfo.h>
+#include <provider_dvl/OutputConfiguration.h>
+#include <provider_dvl/PD0Packet.h>
 #include <fstream>
 #include <provider_dvl/driver/Driver.hpp>
 #include <provider_dvl/message_builder.hpp>
@@ -55,7 +55,7 @@ int main(int argc, char *argv[]) {
   ros::Publisher twist_pub_;
 
   twist_pub_ = n->advertise<geometry_msgs::TwistWithCovarianceStamped>("twist", 100);
-  pd0_pub_ = n->advertise<msg::PD0Packet>("pd0_packet", 100);
+  pd0_pub_ = n->advertise<provider_dvl::PD0Packet>("pd0_packet", 100);
   acquisition_conf_pub_ = n->advertise<msg::AcquisitionConfiguration>("acquisition_conf", 100);
   output_conf_pub_ = n->advertise<msg::OutputConfiguration>("output_conf", 100);
   status_pub_ = n->advertise<msg::Status>("status", 100);

@@ -1,6 +1,6 @@
 Header header
 
-sonia_msgs/Sensors used_sensors
+Sensors used_sensors
 
 uint8 lag_duration
 

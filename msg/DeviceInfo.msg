@@ -11,4 +11,4 @@ uint16 system_configuration
 uint8 beam_count
 
 # Set of sensors available on the device
-sonia_msgs/Sensors available_sensors
+Sensors available_sensors

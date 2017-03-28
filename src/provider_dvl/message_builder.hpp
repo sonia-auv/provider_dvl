@@ -25,16 +25,16 @@
 #define PROVIDER_DVL_MESSAGE_BUILDER_H_
 
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
-#include <provider_dvl/msg/AcquisitionConfiguration.h>
-#include <BottomTracking.h>
-#include <BottomTrackingConfiguration.h>
-#include <CellReading.h>
-#include <CellReadings.h>
-#include <DeviceInfo.h>
-#include <OutputConfiguration.h>
-#include <PD0Packet.h>
-#include <Sensors.h>
-#include <Status.h>
+#include <provider_dvl/AcquisitionConfiguration.h>
+#include <provider_dvl/BottomTracking.h>
+#include <provider_dvl/BottomTrackingConfiguration.h>
+#include <provider_dvl/CellReading.h>
+#include <provider_dvl/CellReadings.h>
+#include <provider_dvl/DeviceInfo.h>
+#include <provider_dvl/OutputConfiguration.h>
+#include <provider_dvl/PD0Packet.h>
+#include <provider_dvl/Sensors.h>
+#include <provider_dvl/Status.h>
 #include "provider_dvl/driver/PD0Messages.hpp"
 
 namespace provider_dvl {
