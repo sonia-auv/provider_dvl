@@ -55,7 +55,7 @@ add_message_files(
         FILES
         AcquisitionConfiguration.msg
         BottomTracking.msg
-        BottomTracking.msg
+        BottomTrackingConfiguration.msg
         CellReading.msg
         CellReadings.msg
         DeviceInfo.msg
