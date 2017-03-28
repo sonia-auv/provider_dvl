@@ -1,0 +1,15 @@
+Header header
+
+sonia_msgs/DeviceInfo device_info
+
+sonia_msgs/AcquisitionConfiguration acquisition_conf
+
+sonia_msgs/OutputConfiguration output_conf
+
+sonia_msgs/Status status
+
+sonia_msgs/CellReadings cell_readings
+
+sonia_msgs/BottomTrackingConfiguration bottom_tracking_conf
+
+sonia_msgs/BottomTracking bottom_tracking

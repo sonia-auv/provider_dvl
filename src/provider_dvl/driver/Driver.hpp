@@ -29,8 +29,8 @@
 #include <ros/forwards.h>
 #include <ros/service_server.h>
 #include <ros/node_handle.h>
-#include <sonia_msgs/SendDvlConfigFile.h>
-#include <sonia_msgs/SendDvlConfigCommand.h>
+#include <msg/SendDvlConfigFile.h>
+#include <msg/SendDvlConfigCommand.h>
 #include <provider_dvl/base/Driver.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 
@@ -109,11 +109,11 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
    */
   void setDeviceBaudrate(int rate);
 
-  bool SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
-                         sonia_msgs::SendDvlConfigFile::Response &res);
+  bool SendConfigFileSrv(msg::SendDvlConfigFile::Request &req,
+                         msg::SendDvlConfigFile::Response &res);
 
-  bool SendConfigCommandSrv(sonia_msgs::SendDvlConfigCommand::Request &req,
-                            sonia_msgs::SendDvlConfigCommand::Response &res);
+  bool SendConfigCommandSrv(msg::SendDvlConfigCommand::Request &req,
+                            msg::SendDvlConfigCommand::Response &res);
 
   //============================================================================
   // P R I V A T E   M E M B E R S

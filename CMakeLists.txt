@@ -46,16 +46,40 @@ find_package(catkin REQUIRED COMPONENTS
     std_msgs
     sensor_msgs
     message_generation
-    sonia_msgs
     lib_atlas
+
     )
+
+add_message_files(
+        FILES
+        AcquisitionConfiguration.msg
+        BottomTracking.msg
+        BottomTracking.msg
+        CellReading.msg
+        CellReadings.msg
+        DeviceInfo.msg
+        OutputConfiguration.msg
+        PD0Packet.msg
+        Sensors.msg
+        Status.msg
+)
+
+generate_messages(
+        DEPENDENCIES
+
+        std_msgs
+)
 
 # Declare this project as a catkin package and export the necessary build flags
 catkin_package(
     INCLUDE_DIRS ${provider_dvl_SRC_DIR}
     LIBRARIES
-    CATKIN_DEPENDS roscpp std_msgs sensor_msgs message_runtime sonia_msgs lib_atlas
+    CATKIN_DEPENDS roscpp std_msgs sensor_msgs message_runtime lib_atlas
 )
+
+
+
+
 
 #===============================================================================
 # I N C L U D E   F I L E S
@@ -86,8 +110,10 @@ set(TARGET_NAME provider_dvl_node)
 # Creating the ROS Node
 add_executable(${PROJECT_NAME}_node ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/Main.cpp ${provider_dvl_FILES})
 target_link_libraries(${PROJECT_NAME}_node ${catkin_LIBRARIES} ${lib_atlas_LIBRARIES})
-add_dependencies(${PROJECT_NAME}_node sonia_msgs_generate_messages_cpp)
+
 set_target_properties(${PROJECT_NAME}_node PROPERTIES LINKER_LANGUAGE CXX)
+
+
 
 
 #==========================================================================

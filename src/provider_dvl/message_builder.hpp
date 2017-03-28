@@ -25,16 +25,16 @@
 #define PROVIDER_DVL_MESSAGE_BUILDER_H_
 
 #include <geometry_msgs/TwistWithCovarianceStamped.h>
-#include <sonia_msgs/AcquisitionConfiguration.h>
-#include <sonia_msgs/BottomTracking.h>
-#include <sonia_msgs/BottomTrackingConfiguration.h>
-#include <sonia_msgs/CellReading.h>
-#include <sonia_msgs/CellReadings.h>
-#include <sonia_msgs/DeviceInfo.h>
-#include <sonia_msgs/OutputConfiguration.h>
-#include <sonia_msgs/PD0Packet.h>
-#include <sonia_msgs/Sensors.h>
-#include <sonia_msgs/Status.h>
+#include <provider_dvl/msg/AcquisitionConfiguration.h>
+#include <BottomTracking.h>
+#include <BottomTrackingConfiguration.h>
+#include <CellReading.h>
+#include <CellReadings.h>
+#include <DeviceInfo.h>
+#include <OutputConfiguration.h>
+#include <PD0Packet.h>
+#include <Sensors.h>
+#include <Status.h>
 #include "provider_dvl/driver/PD0Messages.hpp"
 
 namespace provider_dvl {
@@ -50,29 +50,29 @@ namespace msg_builder {
 
 // PD0Packet BuildPD0(const pd0_msg::PD0Packet &pd0_packet);
 
-sonia_msgs::Sensors BuildSensors(const PD0Message::Sensors &sensors);
+msg::Sensors BuildSensors(const PD0Message::Sensors &sensors);
 
-sonia_msgs::CellReading BuildCellReading(
+msg::CellReading BuildCellReading(
     const PD0Message::CellReading &reading);
 
-sonia_msgs::DeviceInfo BuildDeviceInfo(
+msg::DeviceInfo BuildDeviceInfo(
     const PD0Message::DeviceInfo &device_info);
 
-sonia_msgs::AcquisitionConfiguration BuildAcquisitionConfiguration(
+msg::AcquisitionConfiguration BuildAcquisitionConfiguration(
     const PD0Message::AcquisitionConfiguration &acquisition_conf);
 
-sonia_msgs::OutputConfiguration BuildOutputConfiguration(
+msg::OutputConfiguration BuildOutputConfiguration(
     const PD0Message::OutputConfiguration &output_conf);
 
-sonia_msgs::Status BuildStatus(const PD0Message::Status &status);
+msg::Status BuildStatus(const PD0Message::Status &status);
 
-sonia_msgs::CellReadings BuildCellReadings(
+msg::CellReadings BuildCellReadings(
     const PD0Message::CellReadings &cell_readings);
 
-sonia_msgs::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
+msg::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
     const PD0Message::BottomTrackingConfiguration &bottom_tracking_conf);
 
-sonia_msgs::BottomTracking BuildBottomTracking(
+msg::BottomTracking BuildBottomTracking(
     const PD0Message::BottomTracking &bottom_tracking);
 
 geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(

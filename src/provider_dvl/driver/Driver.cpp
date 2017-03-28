@@ -66,8 +66,8 @@ void Driver::open(std::string const &uri) {
 
 //------------------------------------------------------------------------------
 //
-bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
-                               sonia_msgs::SendDvlConfigFile::Response &res) {
+bool Driver::SendConfigFileSrv(msg::SendDvlConfigFile::Request &req,
+                               msg::SendDvlConfigFile::Response &res) {
   if (sendConfigurationFile(req.config_file)) {
     res.config_success = 1;
   } else {
@@ -80,8 +80,8 @@ bool Driver::SendConfigFileSrv(sonia_msgs::SendDvlConfigFile::Request &req,
 //------------------------------------------------------------------------------
 //
 bool Driver::SendConfigCommandSrv(
-    sonia_msgs::SendDvlConfigCommand::Request &req,
-    sonia_msgs::SendDvlConfigCommand::Response &res) {
+    msg::SendDvlConfigCommand::Request &req,
+    msg::SendDvlConfigCommand::Response &res) {
   res.config_success = 1;
 
   setConfigurationMode();
