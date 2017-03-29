@@ -1,0 +1,3 @@
+string config_command	# a dvl command
+---
+uint8 config_success	# 1 if config command succedded

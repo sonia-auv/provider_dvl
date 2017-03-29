@@ -1,0 +1,3 @@
+string config_file		#path to the config file
+---
+bool config_success	# 1 if config succeeded

@@ -47,8 +47,8 @@ namespace msg_builder {
 
 //------------------------------------------------------------------------------
 //
-msg::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
-  msg::Sensors msg;
+provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
+  provider_dvl::Sensors msg;
   msg.header.stamp = ros::Time::now();
   msg.calculates_speed_of_sound = sensors.calculates_speed_of_sound;
   msg.depth = sensors.depth;
@@ -63,9 +63,9 @@ msg::Sensors BuildSensors(const PD0Message::Sensors &sensors) {
 
 //------------------------------------------------------------------------------
 //
-msg::CellReading BuildCellReading(
+provider_dvl::CellReading BuildCellReading(
     const PD0Message::CellReading &reading) {
-  msg::CellReading msg;
+  provider_dvl::CellReading msg;
   msg.header.stamp = ros::Time::now();
 
   for (int i = 0; i < 4; ++i) {
@@ -80,9 +80,9 @@ msg::CellReading BuildCellReading(
 
 //------------------------------------------------------------------------------
 //
-msg::DeviceInfo BuildDeviceInfo(
+provider_dvl::DeviceInfo BuildDeviceInfo(
     const PD0Message::DeviceInfo &device_info) {
-  msg::DeviceInfo msg;
+  provider_dvl::DeviceInfo msg;
   msg.header.stamp = ros::Time::now();
 
   msg.fw_version = device_info.fw_version;
@@ -97,9 +97,9 @@ msg::DeviceInfo BuildDeviceInfo(
 
 //------------------------------------------------------------------------------
 //
-msg::AcquisitionConfiguration BuildAcquisitionConfiguration(
+provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(
     const PD0Message::AcquisitionConfiguration &acquisition_conf) {
-  msg::AcquisitionConfiguration msg;
+  provider_dvl::AcquisitionConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.used_sensors = BuildSensors(acquisition_conf.used_sensors);
@@ -135,9 +135,9 @@ msg::AcquisitionConfiguration BuildAcquisitionConfiguration(
 
 //------------------------------------------------------------------------------
 //
-msg::OutputConfiguration BuildOutputConfiguration(
+provider_dvl::OutputConfiguration BuildOutputConfiguration(
     const PD0Message::OutputConfiguration &output_conf) {
-  msg::OutputConfiguration msg;
+  provider_dvl::OutputConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.coordinate_system = output_conf.coordinate_system;
@@ -150,8 +150,8 @@ msg::OutputConfiguration BuildOutputConfiguration(
 
 //------------------------------------------------------------------------------
 //
-msg::Status BuildStatus(const PD0Message::Status &status) {
-  msg::Status msg;
+provider_dvl::Status BuildStatus(const PD0Message::Status &status) {
+  provider_dvl::Status msg;
   msg.header.stamp = ros::Time::now();
 
   msg.seq = status.seq;
@@ -183,9 +183,9 @@ msg::Status BuildStatus(const PD0Message::Status &status) {
 
 //------------------------------------------------------------------------------
 //
-msg::CellReadings BuildCellReadings(
+provider_dvl::CellReadings BuildCellReadings(
     const PD0Message::CellReadings &cell_readings) {
-  msg::CellReadings msg;
+  provider_dvl::CellReadings msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = cell_readings.time.microseconds;
@@ -199,9 +199,9 @@ msg::CellReadings BuildCellReadings(
 
 //------------------------------------------------------------------------------
 //
-msg::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
+provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
     const PD0Message::BottomTrackingConfiguration &bottom_tracking_conf) {
-  msg::BottomTrackingConfiguration msg;
+  provider_dvl::BottomTrackingConfiguration msg;
   msg.header.stamp = ros::Time::now();
 
   msg.ping_per_ensemble = bottom_tracking_conf.ping_per_ensemble;
@@ -219,9 +219,9 @@ msg::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
 
 //------------------------------------------------------------------------------
 //
-msg::BottomTracking BuildBottomTracking(
+provider_dvl::BottomTracking BuildBottomTracking(
     const PD0Message::BottomTracking &bottom_tracking) {
-  msg::BottomTracking msg;
+  provider_dvl::BottomTracking msg;
   msg.header.stamp = ros::Time::now();
 
   msg.time = bottom_tracking.time.microseconds;

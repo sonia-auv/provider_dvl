@@ -50,29 +50,29 @@ namespace msg_builder {
 
 // PD0Packet BuildPD0(const pd0_msg::PD0Packet &pd0_packet);
 
-msg::Sensors BuildSensors(const PD0Message::Sensors &sensors);
+provider_dvl::Sensors BuildSensors(const PD0Message::Sensors &sensors);
 
-msg::CellReading BuildCellReading(
+provider_dvl::CellReading BuildCellReading(
     const PD0Message::CellReading &reading);
 
-msg::DeviceInfo BuildDeviceInfo(
+provider_dvl::DeviceInfo BuildDeviceInfo(
     const PD0Message::DeviceInfo &device_info);
 
-msg::AcquisitionConfiguration BuildAcquisitionConfiguration(
+provider_dvl::AcquisitionConfiguration BuildAcquisitionConfiguration(
     const PD0Message::AcquisitionConfiguration &acquisition_conf);
 
-msg::OutputConfiguration BuildOutputConfiguration(
+provider_dvl::OutputConfiguration BuildOutputConfiguration(
     const PD0Message::OutputConfiguration &output_conf);
 
-msg::Status BuildStatus(const PD0Message::Status &status);
+provider_dvl::Status BuildStatus(const PD0Message::Status &status);
 
-msg::CellReadings BuildCellReadings(
+provider_dvl::CellReadings BuildCellReadings(
     const PD0Message::CellReadings &cell_readings);
 
-msg::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
+provider_dvl::BottomTrackingConfiguration BuildBottomTrackingConfiguration(
     const PD0Message::BottomTrackingConfiguration &bottom_tracking_conf);
 
-msg::BottomTracking BuildBottomTracking(
+provider_dvl::BottomTracking BuildBottomTracking(
     const PD0Message::BottomTracking &bottom_tracking);
 
 geometry_msgs::TwistWithCovarianceStamped BuildTwistWithCovariance(

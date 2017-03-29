@@ -65,6 +65,12 @@ add_message_files(
         Status.msg
 )
 
+add_service_files(
+        FILES
+        SendDvlConfigCommand.srv
+        SendDvlConfigFile.srv
+        )
+
 generate_messages(
         DEPENDENCIES
         std_msgs

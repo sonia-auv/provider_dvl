@@ -29,8 +29,8 @@
 #include <ros/forwards.h>
 #include <ros/service_server.h>
 #include <ros/node_handle.h>
-#include <msg/SendDvlConfigFile.h>
-#include <msg/SendDvlConfigCommand.h>
+#include <provider_dvl/SendDvlConfigFile.h>
+#include <provider_dvl/SendDvlConfigCommand.h>
 #include <provider_dvl/base/Driver.hpp>
 #include <provider_dvl/driver/PD0Parser.hpp>
 
@@ -109,11 +109,11 @@ class Driver : public iodrivers_base::Driver, public PD0Parser {
    */
   void setDeviceBaudrate(int rate);
 
-  bool SendConfigFileSrv(msg::SendDvlConfigFile::Request &req,
-                         msg::SendDvlConfigFile::Response &res);
+  bool SendConfigFileSrv(provider_dvl::SendDvlConfigFile::Request &req,
+                         provider_dvl::SendDvlConfigFile::Response &res);
 
-  bool SendConfigCommandSrv(msg::SendDvlConfigCommand::Request &req,
-                            msg::SendDvlConfigCommand::Response &res);
+  bool SendConfigCommandSrv(provider_dvl::SendDvlConfigCommand::Request &req,
+                            provider_dvl::SendDvlConfigCommand::Response &res);
 
   //============================================================================
   // P R I V A T E   M E M B E R S

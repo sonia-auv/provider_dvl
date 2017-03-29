@@ -34,7 +34,7 @@
 #include <provider_dvl/PD0Packet.h>
 #include <fstream>
 #include <provider_dvl/driver/Driver.hpp>
-//#include <provider_dvl/message_builder.hpp>
+#include <provider_dvl/message_builder.hpp>
 #include <provider_dvl/base/Float.hpp>
 
 using namespace dvl_teledyne;
@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
   twist_pub_ = n->advertise<geometry_msgs::TwistWithCovarianceStamped>("twist", 100);
   pd0_pub_ = n->advertise<provider_dvl::PD0Packet>("pd0_packet", 100);
   acquisition_conf_pub_ = n->advertise<provider_dvl::AcquisitionConfiguration>("acquisition_conf", 100);
-  output_conf_pub_ = n->advertise<provder_dvl::OutputConfiguration>("output_conf", 100);
+  output_conf_pub_ = n->advertise<provider_dvl::OutputConfiguration>("output_conf", 100);
   status_pub_ = n->advertise<provider_dvl::Status>("status", 100);
   cell_readings_pub_ = n->advertise<provider_dvl::CellReadings>("cell_readings", 100);
   bottom_tracking_conf_pub_ = n->advertise<provider_dvl::BottomTrackingConfiguration>("bottom_tracking_conf", 100);
@@ -80,23 +80,23 @@ int main(int argc, char *argv[]) {
 
   while (ros::ok()) {
     driver.read();
-    msg::PD0Packet pd0Packet;
-    msg::Sensors sensors;
-    msg::DeviceInfo deviceInfo =
+    provider_dvl::PD0Packet pd0Packet;
+    provider_dvl::Sensors sensors;
+    provider_dvl::DeviceInfo deviceInfo =
         provider_dvl::msg_builder::BuildDeviceInfo(driver.deviceInfo);
-    msg::AcquisitionConfiguration acquisitionConfiguration =
+    provider_dvl::AcquisitionConfiguration acquisitionConfiguration =
         provider_dvl::msg_builder::BuildAcquisitionConfiguration(
             driver.acqConf);
-    msg::OutputConfiguration outputConfiguration =
+    provider_dvl::OutputConfiguration outputConfiguration =
         provider_dvl::msg_builder::BuildOutputConfiguration(driver.outputConf);
-    msg::Status status =
+    provider_dvl::Status status =
         provider_dvl::msg_builder::BuildStatus(driver.status);
-    msg::CellReadings cellReadings =
+    provider_dvl::CellReadings cellReadings =
         provider_dvl::msg_builder::BuildCellReadings(driver.cellReadings);
-    msg::BottomTrackingConfiguration bottomTrackingConfiguration =
+    provider_dvl::BottomTrackingConfiguration bottomTrackingConfiguration =
         provider_dvl::msg_builder::BuildBottomTrackingConfiguration(
             driver.bottomTrackingConf);
-    msg::BottomTracking bottomTracking =
+    provider_dvl::BottomTracking bottomTracking =
         provider_dvl::msg_builder::BuildBottomTracking(driver.bottomTracking);
     geometry_msgs::TwistWithCovarianceStamped twistWithCovarianceStamped =
         provider_dvl::msg_builder::BuildTwistWithCovariance(

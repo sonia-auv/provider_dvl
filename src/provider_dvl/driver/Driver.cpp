@@ -66,8 +66,8 @@ void Driver::open(std::string const &uri) {
 
 //------------------------------------------------------------------------------
 //
-bool Driver::SendConfigFileSrv(msg::SendDvlConfigFile::Request &req,
-                               msg::SendDvlConfigFile::Response &res) {
+bool Driver::SendConfigFileSrv(provider_dvl::SendDvlConfigFile::Request &req,
+                               provider_dvl::SendDvlConfigFile::Response &res) {
   if (sendConfigurationFile(req.config_file)) {
     res.config_success = 1;
   } else {
@@ -80,8 +80,8 @@ bool Driver::SendConfigFileSrv(msg::SendDvlConfigFile::Request &req,
 //------------------------------------------------------------------------------
 //
 bool Driver::SendConfigCommandSrv(
-    msg::SendDvlConfigCommand::Request &req,
-    msg::SendDvlConfigCommand::Response &res) {
+    provider_dvl::SendDvlConfigCommand::Request &req,
+    provider_dvl::SendDvlConfigCommand::Response &res) {
   res.config_success = 1;
 
   setConfigurationMode();
