@@ -2,34 +2,25 @@
 <package>
   <name>provider_dvl</name>
   <version>1.0.0</version>
-  <description>
-    The provider_dvl package provide the raw data accessible through
-    the pd0 package of the Teledyne Explorer DVL
-  </description>
+  <description>The provider_dvl package</description>
 
-  <author>Jeremie St Jules Prevost</author>
-  <author>Alexis Demers</author>
+  <author>Francis Masse</author>
 
-  <maintainer email="jeremie.st.jules.prevost@gmail.com">jeremie</maintainer>
-  <maintainer email="alexidemers@gmail.com">alexis</maintainer>
-
+  <maintainer email="francis.masse05@gmail.com">Francis Masse</maintainer>
   <license>GPLv3</license>
 
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>roscpp</build_depend>
   <build_depend>std_msgs</build_depend>
-  <build_depend>sensor_msgs</build_depend>
   <build_depend>geometry_msgs</build_depend>
+  <build_depend>sensors_msgs</build_depend>
   <build_depend>message_generation</build_depend>
-  <build_depend>msg</build_depend>
-  <build_depend>lib_atlas</build_depend>
 
   <run_depend>roscpp</run_depend>
   <run_depend>std_msgs</run_depend>
-  <run_depend>sensor_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
+  <run_depend>sensors_msgs</run_depend>
   <run_depend>message_runtime</run_depend>
-  <run_depend>msg</run_depend>
-  <run_depend>lib_atlas</run_depend>
+
 </package>
