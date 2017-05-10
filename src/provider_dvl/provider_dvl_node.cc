@@ -56,13 +56,14 @@ ProviderDvlNode::~ProviderDvlNode() {}
 //
 void ProviderDvlNode::Spin() {
   ros::Rate r(15);  // 15 hz
-  while (ros::ok()) {
-    timestamp_ = ros::Time::now();
 
+  while (ros::ok()) {
+    ros::spinOnce();
+
+    timestamp_ = ros::Time::now();
     FillTwistMessage(timestamp_);
     FillFluidPressureMessage(timestamp_);
 
-    ros::spinOnce();
     r.sleep();
   }
 }
@@ -73,6 +74,7 @@ void ProviderDvlNode::FillTwistMessage(ros::Time timestamp) {
   geometry_msgs::TwistStamped message;
 
   message.header.stamp = timestamp;
+  message.header.frame_id = "/base_link";
   message.twist.linear = linear_velocity_;
 
   dvl_twist_publisher_.publish(message);
@@ -84,6 +86,7 @@ void ProviderDvlNode::FillFluidPressureMessage(ros::Time timestamp) {
   sensor_msgs::FluidPressure message;
 
   message.header.stamp = timestamp;
+  message.header.frame_id = "/base_link";
   message.fluid_pressure = pressure_;
 
   dvl_fluid_pressure_publisher_.publish(message);

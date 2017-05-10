@@ -43,32 +43,31 @@ EthernetSocket::~EthernetSocket() {}
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Connect(std::string address, int port) {
-  int socket_desc;
   struct sockaddr_in server;
-  char *message, server_reply[2000];
 
-  //Create socket
-  socket_desc = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_desc == -1) {
+  socket_ = socket(AF_INET, SOCK_STREAM, 0);
+  if (socket_ == -1) {
     ROS_DEBUG("Could not create socket");
   }
 
-  server.sin_addr.s_addr = inet_addr("192.168.0.240");
+  server.sin_addr.s_addr = inet_addr(address.c_str());
   server.sin_family = AF_INET;
-  server.sin_port = htons(9002);
+  server.sin_port = htons(port);
 
-  //Connect to remote server
-  if (connect(socket_desc, (struct sockaddr *) &server, sizeof(server)) < 0) {
-    ROS_DEBUG("connect error");
+  if (connect(socket_, (struct sockaddr *) &server, sizeof(server)) < 0) {
+    ROS_DEBUG("Connect error");
     return;
   }
 
   ROS_DEBUG("Connected\n");
+}
 
-  //Receive a reply from the server
-  if (recv(socket_desc, server_reply, 2000, 0) < 0) {
-    ROS_DEBUG("recv failed");
+//------------------------------------------------------------------------------
+//
+void EthernetSocket::Receive() {
+  if (recv(socket_, dvl_data_, 2048, 0) < 0) {
+    ROS_DEBUG("Receive failed");
   }
-  ROS_DEBUG("Reply received\n");
-  ROS_DEBUG(server_reply);
+  ROS_DEBUG("Reply received");
+  ROS_DEBUG(dvl_data_);
 }

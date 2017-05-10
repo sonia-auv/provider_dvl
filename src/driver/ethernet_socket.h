@@ -43,13 +43,15 @@ class EthernetSocket {
   // P U B L I C   M E T H O D S
 
   void Connect(std::string address, int port);
+  void Receive();
 
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::string address_;
-  int port_;
+  int socket_;
+  char dvl_data_[2048];
+
 };
 
 #endif //ETHERNET_SOCKET_H
