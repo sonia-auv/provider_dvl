@@ -24,6 +24,7 @@
  */
 
 #include "provider_dvl/provider_dvl_node.h"
+#include "dvl_data.h"
 
 namespace provider_dvl {
 
@@ -60,10 +61,18 @@ void ProviderDvlNode::Spin() {
   while (ros::ok()) {
     ros::spinOnce();
 
-    timestamp_ = ros::Time::now();
-    FillTwistMessage(timestamp_);
-    FillFluidPressureMessage(timestamp_);
+    socket_.Receive();
 
+    dvl_data_ = *(DVLformat21_t*)(socket_.GetRawData());
+
+    if (dvl_data_.header.sync == 0xA5) {
+      if (calculateChecksum((unsigned short *) &dvl_data_.data, dvl_data_.header.dataSize)
+          == dvl_data_.header.dataChecksum) {
+        timestamp_ = ros::Time::now();
+        FillTwistMessage(timestamp_);
+        FillFluidPressureMessage(timestamp_);
+      }
+    }
     r.sleep();
   }
 }
@@ -71,6 +80,10 @@ void ProviderDvlNode::Spin() {
 //------------------------------------------------------------------------------
 //
 void ProviderDvlNode::FillTwistMessage(ros::Time timestamp) {
+  linear_velocity_.x = dvl_data_.data.velX;
+  linear_velocity_.y = dvl_data_.data.velY;
+  linear_velocity_.z = dvl_data_.data.velZ1;
+
   geometry_msgs::TwistStamped message;
 
   message.header.stamp = timestamp;

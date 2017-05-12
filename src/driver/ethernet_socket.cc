@@ -65,9 +65,15 @@ void EthernetSocket::Connect(std::string address, int port) {
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Receive() {
-  if (recv(socket_, dvl_data_, 2048, 0) < 0) {
+  if (recv(socket_, data_, 2048, 0) < 0) {
     ROS_DEBUG("Receive failed");
   }
   ROS_DEBUG("Reply received");
-  ROS_DEBUG(dvl_data_);
 }
+
+//------------------------------------------------------------------------------
+//
+char* EthernetSocket::GetRawData() {
+    return data_;
+}
+

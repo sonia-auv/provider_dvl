@@ -44,13 +44,14 @@ class EthernetSocket {
 
   void Connect(std::string address, int port);
   void Receive();
+  char* GetRawData();
 
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
   int socket_;
-  char dvl_data_[2048];
+  char data_[2048];
 
 };
 
