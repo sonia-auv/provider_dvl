@@ -37,7 +37,7 @@ ProviderDvlNode::ProviderDvlNode(const ros::NodeHandlePtr &nh) :
     nh_(nh),
     socket_()
 {
-  std::string hostname = "192.168.0.240";
+  std::string hostname = "192.168.1.240";
   socket_.Connect(hostname, 9002);
 
   dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>
