@@ -80,15 +80,14 @@ void ProviderDvlNode::Spin() {
 //------------------------------------------------------------------------------
 //
 void ProviderDvlNode::FillTwistMessage(ros::Time timestamp) {
-  linear_velocity_.x = dvl_data_.data.velX;
-  linear_velocity_.y = dvl_data_.data.velY;
-  linear_velocity_.z = dvl_data_.data.velZ1;
-
   geometry_msgs::TwistStamped message;
 
   message.header.stamp = timestamp;
   message.header.frame_id = "/base_link";
-  message.twist.linear = linear_velocity_;
+
+  message.twist.linear.x = dvl_data_.data.velX;
+  message.twist.linear.y = dvl_data_.data.velY;
+  message.twist.linear.z = dvl_data_.data.velZ1;
 
   dvl_twist_publisher_.publish(message);
 }
@@ -100,7 +99,7 @@ void ProviderDvlNode::FillFluidPressureMessage(ros::Time timestamp) {
 
   message.header.stamp = timestamp;
   message.header.frame_id = "/base_link";
-  message.fluid_pressure = pressure_;
+  message.fluid_pressure = dvl_data_.data.pressure;
 
   dvl_fluid_pressure_publisher_.publish(message);
 }

@@ -68,9 +68,6 @@ class ProviderDvlNode {
   ros::Time timestamp_;
   ros::Publisher dvl_twist_publisher_;
   ros::Publisher dvl_fluid_pressure_publisher_;
-
-  geometry_msgs::Vector3 linear_velocity_;
-  double pressure_ = 0.0;
 };
 
 } // namespace provider_dvl
