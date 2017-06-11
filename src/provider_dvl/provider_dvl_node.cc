@@ -83,7 +83,7 @@ void ProviderDvlNode::FillTwistMessage(ros::Time timestamp) {
   geometry_msgs::TwistStamped message;
 
   message.header.stamp = timestamp;
-  message.header.frame_id = "/NED";
+  message.header.frame_id = "/ENU";
 
   message.twist.linear.x = dvl_data_.data.velX;
   message.twist.linear.y = dvl_data_.data.velY;
@@ -98,7 +98,7 @@ void ProviderDvlNode::FillFluidPressureMessage(ros::Time timestamp) {
   sensor_msgs::FluidPressure message;
 
   message.header.stamp = timestamp;
-  message.header.frame_id = "/NED";
+  message.header.frame_id = "/ENU";
   message.fluid_pressure = dvl_data_.data.pressure;
 
   dvl_fluid_pressure_publisher_.publish(message);
