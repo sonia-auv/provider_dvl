@@ -37,7 +37,7 @@ namespace provider_dvl {
         nh_(nh),
         socket_()
     {
-        std::string hostname = "192.168.1.240";
+        std::string hostname = "192.168.0.240";
         socket_.Connect(hostname, 9002);
 
         dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>("/provider_dvl/dvl_twist", 1000);
