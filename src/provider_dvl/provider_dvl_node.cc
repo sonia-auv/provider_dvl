@@ -42,7 +42,7 @@ namespace provider_dvl {
 
         dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>("/provider_dvl/dvl_twist", 1000);
         dvl_fluid_pressure_publisher_ = nh_->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 1000);
-        dvl_bottom_tracking_publisher_ = nh_->advertise<BottomTracking>("/provider_dvl/dvl_data", 1000);
+        dvl_bottom_tracking_publisher_ = nh_->advertise<provider_dvl::BottomTracking>("/provider_dvl/dvl_data", 1000);
     }
 
     //------------------------------------------------------------------------------
@@ -112,7 +112,7 @@ namespace provider_dvl {
 
     void ProviderDvlNode::FillBottomTracking(ros::Time timestamp)
     {
-        BottomTracking message;
+        provider_dvl::BottomTracking message;
 
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
