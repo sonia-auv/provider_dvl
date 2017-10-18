@@ -45,6 +45,14 @@ typedef struct
   unsigned long procIdle12 : 1;
   unsigned long _empty1 : 5;
   unsigned long wakeupstate : 4;
+} t_DVLstatus;
+
+// use of union to acess the bit field as a unsigned long
+
+typedef union
+{
+    t_DVLstatus bit_field;
+    unsigned long integer;
 } DVLstatus;
 
 typedef struct
