@@ -45,13 +45,12 @@ typedef struct
   uint32_t procIdle12 : 1;
   uint32_t _empty1 : 5;
   uint32_t wakeupstate : 4;
-} t_DVLstatus;
+} DVLstatus_t;
 
-// use of union to acess the bit field as a unsigned long
-
+// use of union to acess the bit field as a uint32_t
 typedef union
 {
-    t_DVLstatus bit_field;
+    DVLstatus_t bit_field;
     uint32_t integer;
 } DVLstatus;
 

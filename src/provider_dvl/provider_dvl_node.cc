@@ -63,7 +63,7 @@ namespace provider_dvl {
 
             socket_.Receive();
 
-            dvl_data_ = *(DVLformat21_t*)(socket_.GetRawData());
+            dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
 
             if (dvl_data_.header.sync == 0xA5)
             {
