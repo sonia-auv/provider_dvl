@@ -55,7 +55,7 @@ namespace provider_dvl {
     //------------------------------------------------------------------------------
     //
     void ProviderDvlNode::Spin() {
-        ros::Rate r(15);  // 15 hz
+        // ros::Rate r(100);  // 100 hz
 
         while (ros::ok())
         {
@@ -75,7 +75,7 @@ namespace provider_dvl {
                     FillBottomTracking(timestamp_);
                 }
             }
-            r.sleep();
+            //r.sleep();
         }
     }
 
