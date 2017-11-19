@@ -21,7 +21,7 @@
  uint16 microSeconds100
  uint16 nbBeams
  uint64 error
- uint64 status
+ uint32 status
  float64 sound_speed  # m/s
  float64 temperature  # celsius
  float64 pressure  # Bar

@@ -52,7 +52,7 @@ typedef struct
 typedef union
 {
     t_DVLstatus bit_field;
-    unsigned long integer;
+    uint32_t integer;
 } DVLstatus;
 
 typedef struct
