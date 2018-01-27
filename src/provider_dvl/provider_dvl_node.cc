@@ -87,9 +87,30 @@ namespace provider_dvl {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
 
-        message.twist.linear.x = dvl_data_.data.velX;
-        message.twist.linear.y = dvl_data_.data.velY;
-        message.twist.linear.z = dvl_data_.data.velZ1;
+        if(dvl_data_.data.status.bit_field.xVelValid == 0)
+        {
+            message.twist.linear.x = 0;
+        }
+        else
+        {
+            message.twist.linear.x = dvl_data_.data.velX;
+        }
+        if(dvl_data_.data.status.bit_field.yVelValid == 0)
+        {
+            message.twist.linear.y = 0;
+        }
+        else
+        {
+            message.twist.linear.y = dvl_data_.data.velY;
+        }
+        if(dvl_data_.data.status.bit_field.z1VelValid == 0)
+        {
+            message.twist.linear.z = 0;
+        }
+        else
+        {
+            message.twist.linear.z = dvl_data_.data.velZ1;
+        }
 
         message.twist.angular.x = dvl_data_.data.timeVelEstX;
         message.twist.angular.y = dvl_data_.data.timeVelEstY;
