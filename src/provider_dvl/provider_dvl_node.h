@@ -31,6 +31,7 @@
 #include <ros/node_handle.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <sensor_msgs/FluidPressure.h>
+#include <provider_dvl/BottomTracking.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
@@ -38,36 +39,38 @@
 namespace provider_dvl {
 
 class ProviderDvlNode {
- public:
-  //==========================================================================
-  // P U B L I C   C / D T O R S
+public:
+    //==========================================================================
+    // P U B L I C   C / D T O R S
 
-  ProviderDvlNode(const ros::NodeHandlePtr &nh);
-  ~ProviderDvlNode();
+    ProviderDvlNode(const ros::NodeHandlePtr &nh);
+    ~ProviderDvlNode();
 
-  //==========================================================================
-  // P U B L I C   M E T H O D S
+    //==========================================================================
+    // P U B L I C   M E T H O D S
 
-  void Spin();
+    void Spin();
 
- private:
+private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-  void FillTwistMessage(ros::Time timestamp);
-  void FillFluidPressureMessage(ros::Time timestamp);
+    void FillTwistMessage(ros::Time timestamp);
+    void FillFluidPressureMessage(ros::Time timestamp);
+    void FillBottomTracking(ros::Time timestamp);
 
-  //==========================================================================
-  // P R I V A T E   M E M B E R S
+    //==========================================================================
+    // P R I V A T E   M E M B E R S
 
-  ros::NodeHandlePtr nh_;
-  EthernetSocket socket_;
+    ros::NodeHandlePtr nh_;
+    EthernetSocket socket_;
 
-  DVLformat21_t dvl_data_;
+    DVLformat21_t dvl_data_;
 
-  ros::Time timestamp_;
-  ros::Publisher dvl_twist_publisher_;
-  ros::Publisher dvl_fluid_pressure_publisher_;
+    ros::Time timestamp_;
+    ros::Publisher dvl_twist_publisher_;
+    ros::Publisher dvl_fluid_pressure_publisher_;
+    ros::Publisher dvl_bottom_tracking_publisher_;
 };
 
 } // namespace provider_dvl

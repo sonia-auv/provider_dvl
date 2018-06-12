@@ -9,58 +9,65 @@
 
 typedef struct
 {
-  unsigned char sync;
-  unsigned char hdrSize;
-  unsigned char ID;
-  unsigned char family;
-  unsigned short dataSize;
-  unsigned short dataChecksum;
-  unsigned short hdrChecksum;
+  uint8_t sync;
+  uint8_t hdrSize;
+  uint8_t ID;
+  uint8_t family;
+  uint16_t dataSize;
+  uint16_t dataChecksum;
+  uint16_t hdrChecksum;
 } DVLHeader;
 
 typedef struct
 {
-  unsigned long beam1VelValid : 1;
-  unsigned long beam2VelValid : 1;
-  unsigned long beam3VelValid : 1;
-  unsigned long beam4VelValid : 1;
-  unsigned long beam1DistValid : 1;
-  unsigned long beam2DistValid : 1;
-  unsigned long beam3DistValid : 1;
-  unsigned long beam4DistValid : 1;
-  unsigned long beam1FOMValid : 1;
-  unsigned long beam2FOMValid : 1;
-  unsigned long beam3FOMValid : 1;
-  unsigned long beam4FOMValid : 1;
-  unsigned long xVelValid : 1;
-  unsigned long yVelValid : 1;
-  unsigned long z1VelValid : 1;
-  unsigned long z2VelValid : 1;
-  unsigned long xFOMValid : 1;
-  unsigned long yFOMValid : 1;
-  unsigned long z1FOMValid : 1;
-  unsigned long z2FOMValid : 1;
-  unsigned long procIdle3 : 1;
-  unsigned long procIdle6 : 1;
-  unsigned long procIdle12 : 1;
-  unsigned long _empty1 : 5;
-  unsigned long wakeupstate : 4;
+  uint32_t beam1VelValid : 1;
+  uint32_t beam2VelValid : 1;
+  uint32_t beam3VelValid : 1;
+  uint32_t beam4VelValid : 1;
+  uint32_t beam1DistValid : 1;
+  uint32_t beam2DistValid : 1;
+  uint32_t beam3DistValid : 1;
+  uint32_t beam4DistValid : 1;
+  uint32_t beam1FOMValid : 1;
+  uint32_t beam2FOMValid : 1;
+  uint32_t beam3FOMValid : 1;
+  uint32_t beam4FOMValid : 1;
+  uint32_t xVelValid : 1;
+  uint32_t yVelValid : 1;
+  uint32_t z1VelValid : 1;
+  uint32_t z2VelValid : 1;
+  uint32_t xFOMValid : 1;
+  uint32_t yFOMValid : 1;
+  uint32_t z1FOMValid : 1;
+  uint32_t z2FOMValid : 1;
+  uint32_t procIdle3 : 1;
+  uint32_t procIdle6 : 1;
+  uint32_t procIdle12 : 1;
+  uint32_t _empty1 : 5;
+  uint32_t wakeupstate : 4;
+} DVLstatus_t;
+
+// use of union to acess the bit field as a uint32_t
+typedef union
+{
+    DVLstatus_t bit_field;
+    uint32_t integer;
 } DVLstatus;
 
 typedef struct
 {
-  unsigned char version;
-  unsigned char offsetOfData;
-  unsigned long serialNumber;
-  unsigned char year;
-  unsigned char month;
-  unsigned char day;
-  unsigned char hour;
-  unsigned char minute;
-  unsigned char seconds;
-  unsigned short microSeconds100;
-  unsigned short nBeams;
-  unsigned long error;
+  uint8_t version;
+  uint8_t offsetOfData;
+  uint32_t serialNumber;
+  uint8_t year;
+  uint8_t month;
+  uint8_t day;
+  uint8_t hour;
+  uint8_t minute;
+  uint8_t seconds;
+  uint16_t microSeconds100;
+  uint16_t nBeams;
+  uint32_t error;
   DVLstatus status;
   float soundSpeed;
   float temperature;
