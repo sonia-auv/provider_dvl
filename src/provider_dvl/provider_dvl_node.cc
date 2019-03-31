@@ -93,7 +93,7 @@ namespace provider_dvl {
         }
         else
         {
-            message.twist.linear.x = dvl_data_.data.velX;
+            message.twist.linear.x = -dvl_data_.data.velX;
         }
         if(dvl_data_.data.status.bit_field.yVelValid == 0)
         {
@@ -101,7 +101,7 @@ namespace provider_dvl {
         }
         else
         {
-            message.twist.linear.y = dvl_data_.data.velY;
+            message.twist.linear.y = -dvl_data_.data.velY;
         }
         if(dvl_data_.data.status.bit_field.z1VelValid == 0)
         {
@@ -112,8 +112,8 @@ namespace provider_dvl {
             message.twist.linear.z = dvl_data_.data.velZ1;
         }
 
-        message.twist.angular.x = dvl_data_.data.timeVelEstX;
-        message.twist.angular.y = dvl_data_.data.timeVelEstY;
+        message.twist.angular.x = -dvl_data_.data.timeVelEstX;
+        message.twist.angular.y = -dvl_data_.data.timeVelEstY;
 
         dvl_twist_publisher_.publish(message);
     }
@@ -188,23 +188,23 @@ namespace provider_dvl {
         message.timeVelEstBeam3  = dvl_data_.data.timeVelEstBeam[2];
         message.timeVelEstBeam4  = dvl_data_.data.timeVelEstBeam[3];
         message.velX = -dvl_data_.data.velX;
-        message.velY = dvl_data_.data.velY;
+        message.velY = -dvl_data_.data.velY;
         message.velZ1 = dvl_data_.data.velZ1;
         message.velZ2 = dvl_data_.data.velZ2;
         message.fomX = -dvl_data_.data.fomX;
-        message.fomY = dvl_data_.data.fomY;
+        message.fomY = -dvl_data_.data.fomY;
         message.fomZ1 = dvl_data_.data.fomZ1;
         message.fomZ2 = dvl_data_.data.fomZ2;
         message.timeDiff1X = -dvl_data_.data.timeDiff1X;
-        message.timeDiff1Y = dvl_data_.data.timeDiff1Y;
+        message.timeDiff1Y = -dvl_data_.data.timeDiff1Y;
         message.timeDiff1Z1 = dvl_data_.data.timeDiff1Z1;
         message.timeDiff1Z2 = dvl_data_.data.timeDiff1Z2;
         message.timeDiff2X = -dvl_data_.data.timeDiff2X;
-        message.timeDiff2Y = dvl_data_.data.timeDiff2Y;
+        message.timeDiff2Y = -dvl_data_.data.timeDiff2Y;
         message.timeDiff2Z1 = dvl_data_.data.timeDiff2Z1;
         message.timeDiff2Z2 = dvl_data_.data.timeDiff2Z2;
         message.timeVelEstX = -dvl_data_.data.timeVelEstX;
-        message.timeVelEstY = dvl_data_.data.timeVelEstY;
+        message.timeVelEstY = -dvl_data_.data.timeVelEstY;
         message.timeVelEstZ1 = dvl_data_.data.timeVelEstZ1;
         message.timeVelEstZ2 = dvl_data_.data.timeVelEstZ2;
 
