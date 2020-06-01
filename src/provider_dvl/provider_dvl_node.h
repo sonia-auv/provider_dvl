@@ -31,7 +31,7 @@
 #include <ros/node_handle.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <sensor_msgs/FluidPressure.h>
-#include <provider_dvl/BottomTracking.h>
+#include <sonia_msgs/BottomTracking.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
