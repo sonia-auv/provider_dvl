@@ -1,29 +1,84 @@
-[![S.O.N.I.A. Logo](http://sonia.etsmtl.ca/wp-content/uploads/logo.jpg)](http://sonia.etsmtl.ca/en/)
+# PROVIDER_DVL
+*Please read the instructions and fill in the blanks*
+One Paragraph of project description goes here
 
-[![Build Status](https://travis-ci.org/sonia-auv/provider_dvl.svg?branch=develop)](https://travis-ci.org/sonia-auv/provider_dvl)
+## Getting Started
 
-:zap: *A software developed by S.O.N.I.A. team from ETS Montreal* :zap:
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-## Installation
+**IMPORTANT :** *If you have just imported your repository, please follow the instructions in* [BOOTSTRAP.md](BOOTSTRAP.md) (Once the bootstrap completed, you can remove this comment from the README)
 
-???
+### Prerequisites
 
-## Launch
+First and foremost to run the module you will need to have [docker](https://www.docker.com/get-started?utm_source=google&utm_medium=cpc&utm_campaign=getstarted&utm_content=sitelink&utm_term=getstarted&utm_budget=growth&gclid=CjwKCAjw57b3BRBlEiwA1Imytuv9VRFX5Z0INBaD3JJNSUmadgQh7ZYWTw_r-yFn2S4XjZTsLbNnnBoCPsIQAvD_BwE) installed.
 
-???
+To validate your installation of docker, simply type in
 
-## Directory Structure
+```
+docker -v
+```
 
-???
+If you receive an output in the likes of : 
+```
+Docker version 19.03.5, build 633a0ea
+```
 
-## Documentation
+It means you have it installed. If not follow instructions on how to install it for your OS.
 
-???
+### Installing
 
-## Contribute
+A step by step series of examples that tell you how to get a development env running
 
-???
+Say what the step will be
+
+```
+Give the example
+```
+
+And repeat
+
+```
+until finished
+```
+
+End with an example of getting some data out of the system or using it for a little demo
+
+## Running the tests
+
+Explain how to run the automated tests for this system
+
+### Break down into end to end tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+### And coding style tests
+
+Explain what these tests test and why
+
+```
+Give an example
+```
+
+## Deployment
+
+Add additional notes about how to deploy this on a live system
+
+## Built With
+
+The following packages are examples they should be replaced with project dependencies
+
+* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+
+## Versioning
+
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags).
 
 ## License
 
-???
+This project is licensed under the GNU License - see the [LICENSE](LICENSE) file for details
