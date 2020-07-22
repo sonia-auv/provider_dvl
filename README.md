@@ -1,13 +1,20 @@
-# PROVIDER_DVL
-*Please read the instructions and fill in the blanks*
-One Paragraph of project description goes here
+# provider_dvl
+
+Data aquisition node for DVL(Doppler Velocity Log)
+
+![Docker Image CI - Master Branch](https://github.com/sonia-auv/provider_dvl/workflows/Docker%20Image%20CI%20-%20Master%20Branch/badge.svg)
+![Docker Image CI - Develop Branch](https://github.com/sonia-auv/provider_dvl/workflows/Docker%20Image%20CI%20-%20Develop%20Branch/badge.svg?branch=develop)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/sonia-auv/provider_dvl)
+![Average time to resolve an issue](https://isitmaintained.com/badge/resolution/sonia-auv/provider_dvl.svg)
 
 ## Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
 
-**IMPORTANT :** *If you have just imported your repository, please follow the instructions in* [BOOTSTRAP.md](BOOTSTRAP.md) (Once the bootstrap completed, you can remove this comment from the README)
-
+Clone current project by using following command :
+```bash
+    git clone git@github.com:sonia-auv/provider_dvl.git
+```
 ### Prerequisites
 
 First and foremost to run the module you will need to have [docker](https://www.docker.com/get-started?utm_source=google&utm_medium=cpc&utm_campaign=getstarted&utm_content=sitelink&utm_term=getstarted&utm_budget=growth&gclid=CjwKCAjw57b3BRBlEiwA1Imytuv9VRFX5Z0INBaD3JJNSUmadgQh7ZYWTw_r-yFn2S4XjZTsLbNnnBoCPsIQAvD_BwE) installed.
@@ -18,7 +25,7 @@ To validate your installation of docker, simply type in
 docker -v
 ```
 
-If you receive an output in the likes of : 
+If you receive an output in the likes of :
 ```
 Docker version 19.03.5, build 633a0ea
 ```
@@ -69,11 +76,10 @@ Add additional notes about how to deploy this on a live system
 
 ## Built With
 
-The following packages are examples they should be replaced with project dependencies
+Add additional project dependencies
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [ROS](http://wiki.ros.org/) - ROS robotic framework
+
 
 ## Versioning
 
