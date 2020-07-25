@@ -15,14 +15,16 @@
 		"ms-iot.vscode-ros"
 	],
 	"runArgs": [
-        	"--rm",
-        	"--network",
-        	"host"
-    	],
-    	"mounts": [
-        	"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
-    	],
+		"--cap-add=SYS_PTRACE",
+		"--security-opt",
+		"seccomp=unconfined",
+		"--rm",
+		"--network",
+		"host"
+	],
+	"mounts": [
+		"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
+	],
 	"workspaceMount": "target=/home/sonia/ros_sonia_ws/src/provider_dvl,type=volume",
 	"workspaceFolder": "/home/sonia/ros_sonia_ws/src/provider_dvl"
 }
-
