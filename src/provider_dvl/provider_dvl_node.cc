@@ -65,9 +65,10 @@ namespace provider_dvl {
 
             dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
 
-            if (dvl_data_.header.sync == 0xA5)
+            if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
-                if (calculateChecksum((unsigned short *) &dvl_data_.data, dvl_data_.header.dataSize) == dvl_data_.header.dataChecksum)
+                //if (calculateChecksum((uint32_t *) &dvl_data_) == dvl_data_.pd5.checksum)
+                if(confirmChecksum(&dvl_data_))
                 {
                     timestamp_ = ros::Time::now();
                     FillTwistMessage(timestamp_);
@@ -209,6 +210,23 @@ namespace provider_dvl {
         message.timeVelEstZ2 = dvl_data_.data.timeVelEstZ2;
 
         dvl_bottom_tracking_publisher_.publish(message);
+    }
+
+    uint16_t ProviderDVLNode::calculateChecksum(uint8_t *data)
+    {
+        uint16_t checksum = 0;
+
+        for(uint8_t i=0; i < data.size()-2; ++i) //Removing checksum value from array
+        {
+            checksum += data[i];
+        }
+        return checksum;
+    }
+
+    bool ProviderDvlNode::confirmChecksum(DVLformat21_t dvlData)
+    {
+        uint16_t calculatedChecksum = calculateChecksum(*(uint8_t *) dvlData);
+        return originalChecksum == calculatedChecksum;
     }
 
 } // namespace provider_dvl
