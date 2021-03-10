@@ -41,7 +41,7 @@ namespace provider_dvl {
         socket_.Connect(hostname, 9002);
 
         //dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>("/provider_dvl/dvl_twist", 1000);
-        dvl_velocity_publisher_ = nh_->adverstise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
+        dvl_velocity_publisher_ = nh_->advertise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         //dvl_fluid_pressure_publisher_ = nh_->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 1000);
         //dvl_bottom_tracking_publisher_ = nh_->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 1000);
     }
