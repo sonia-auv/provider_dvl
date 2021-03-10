@@ -111,7 +111,7 @@ namespace provider_dvl {
 
     void ProviderDvlNode::LeakSensorMessage()
     {
-        std_msgs::Bool leakDetected.data = false;
+        std_msgs::Bool leakDetected;
 
         if(dvl_data_.pd4.statusLeakSensors == 0b01 || dvl_data_.pd4.statusLeakSensors == 0b0100 || dvl_data_.pd4.statusLeakSensors == 0b0101)
         {
