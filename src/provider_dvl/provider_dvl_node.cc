@@ -233,7 +233,7 @@ namespace provider_dvl {
     {
         uint16_t checksum = 0;
 
-        for(uint8_t i=0; i < data.size()-2; ++i) //Removing checksum value from array
+        for(uint8_t i=0; i < (sizeof(data)/sizeof(uint8_t))-2; ++i) //Removing checksum value from array
         {
             checksum += data[i];
         }
