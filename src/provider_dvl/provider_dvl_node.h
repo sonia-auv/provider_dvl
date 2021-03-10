@@ -29,9 +29,8 @@
 #include <string>
 
 #include <ros/node_handle.h>
-//#include <geometry_msgs/TwistStamped.h>
-//#include <sensor_msgs/FluidPressure.h>
 #include <sonia_common/RelativeVelocityDVL.h>
+#include <sonia_common/PositionDVL.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
@@ -55,10 +54,8 @@ private:
   //==========================================================================
   // P R I V A T E   M E T H O D S
 
-    //void FillTwistMessage(ros::Time timestamp);
     void FillVelocityMessage(ros::Time timestamp);
-    //void FillFluidPressureMessage(ros::Time timestamp);
-    //void FillBottomTracking(ros::Time timestamp);
+    void FillPositionDVLMessage(ros::Time timestamp);
     uint16_t calculateChecksum(uint8_t *data);
     bool confirmChecksum(DVLformat21_t *dvlData);
 
@@ -71,10 +68,8 @@ private:
     DVLformat21_t dvl_data_;
 
     ros::Time timestamp_;
-    //ros::Publisher dvl_twist_publisher_;
     ros::Publisher dvl_velocity_publisher_;
-    //ros::Publisher dvl_fluid_pressure_publisher_;
-    //ros::Publisher dvl_bottom_tracking_publisher_;
+    ros::Publisher dvl_position_publisher_;
 };
 
 } // namespace provider_dvl

@@ -42,8 +42,8 @@ typedef struct
 {
   uint8_t salinity;
   uint16_t depth;
-  uint16_t pitch;
-  uint16_t roll;
+  int16_t pitch;
+  int16_t roll;
   uint16_t heading;
   uint32_t distanceMadeGoodBtmEast;
   uint32_t distanceMadeGoodBtmNorth;
