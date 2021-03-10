@@ -60,7 +60,7 @@ private:
     //void FillFluidPressureMessage(ros::Time timestamp);
     //void FillBottomTracking(ros::Time timestamp);
     uint16_t calculateChecksum(uint8_t *data);
-    bool confirmChecksum(DVLformat21_t *pData);
+    bool confirmChecksum(DVLformat21_t *dvlData);
 
     //==========================================================================
     // P R I V A T E   M E M B E R S

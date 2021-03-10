@@ -240,7 +240,7 @@ namespace provider_dvl {
         return checksum;
     }
 
-    bool ProviderDvlNode::confirmChecksum(DVLformat21_t dvlData)
+    bool ProviderDvlNode::confirmChecksum(DVLformat21_t *dvlData)
     {
         uint16_t calculatedChecksum = calculateChecksum(*(uint8_t *) dvlData);
         return originalChecksum == calculatedChecksum;
