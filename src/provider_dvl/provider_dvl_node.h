@@ -29,9 +29,9 @@
 #include <string>
 
 #include <ros/node_handle.h>
-#include <geometry_msgs/TwistStamped.h>
-#include <sensor_msgs/FluidPressure.h>
-#include <sonia_common/BottomTracking.h>
+//#include <geometry_msgs/TwistStamped.h>
+//#include <sensor_msgs/FluidPressure.h>
+#include <sonia_common/RelativeVelocityDVL.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
