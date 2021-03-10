@@ -42,6 +42,7 @@ namespace provider_dvl {
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::PositionDVL>("/provider_dvl/dvl_position", 100);
+        dvl_leak_sensor_publisher_ = nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
     }
 
     //------------------------------------------------------------------------------
@@ -70,6 +71,8 @@ namespace provider_dvl {
                 {
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
+                    FillPositionDVLMessage(timestamp_);
+                    LeakSensorMessage();
                 }
             }
             r.sleep();
@@ -104,6 +107,23 @@ namespace provider_dvl {
         message.position.YAW = dvl_data_.pd5.heading;
 
         dvl_position_publisher_.publish(message);
+    }
+
+    void ProviderDvlNode::LeakSensorMessage(void)
+    {
+        std_msgs::Bool leakDetected = false;
+
+        if(dvl_data_.pd4.statusLeakSensor == 0b01 || dvl_data_.pd4.statusLeakSensor == 0b0100 || dvl_data_.pd4.statusLeakSensor == 0b0101)
+        {
+            ROS_INFO("Leak detected in the pathfinder!!!!!!");
+            leakDetected = true;
+        }
+        else
+        {
+            leakDetected = false;
+        }
+
+        dvl_leak_sensor_publisher_.publish(leakDetected);
     }
 
     uint16_t ProviderDvlNode::calculateChecksum(uint8_t *data)

@@ -31,6 +31,7 @@
 #include <ros/node_handle.h>
 #include <sonia_common/RelativeVelocityDVL.h>
 #include <sonia_common/PositionDVL.h>
+#include <std_msgs/Bool.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
@@ -56,6 +57,7 @@ private:
 
     void FillVelocityMessage(ros::Time timestamp);
     void FillPositionDVLMessage(ros::Time timestamp);
+    void LeakSensorMessage(void);
     uint16_t calculateChecksum(uint8_t *data);
     bool confirmChecksum(DVLformat21_t *dvlData);
 
@@ -70,6 +72,7 @@ private:
     ros::Time timestamp_;
     ros::Publisher dvl_velocity_publisher_;
     ros::Publisher dvl_position_publisher_;
+    ros::Publisher dvl_leak_sensor_publisher_;
 };
 
 } // namespace provider_dvl
