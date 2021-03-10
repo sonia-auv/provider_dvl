@@ -37,12 +37,13 @@ namespace provider_dvl {
         nh_(nh),
         socket_()
     {
-        std::string hostname = "192.168.0.240";
+        std::string hostname = "192.168.0.240"; // To change
         socket_.Connect(hostname, 9002);
 
-        dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>("/provider_dvl/dvl_twist", 1000);
-        dvl_fluid_pressure_publisher_ = nh_->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 1000);
-        dvl_bottom_tracking_publisher_ = nh_->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 1000);
+        //dvl_twist_publisher_ = nh_->advertise<geometry_msgs::TwistStamped>("/provider_dvl/dvl_twist", 1000);
+        dvl_velocity_publisher_ = nh_->adverstise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
+        //dvl_fluid_pressure_publisher_ = nh_->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 1000);
+        //dvl_bottom_tracking_publisher_ = nh_->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 1000);
     }
 
     //------------------------------------------------------------------------------
@@ -71,16 +72,32 @@ namespace provider_dvl {
                 if(confirmChecksum(&dvl_data_))
                 {
                     timestamp_ = ros::Time::now();
-                    FillTwistMessage(timestamp_);
-                    FillFluidPressureMessage(timestamp_);
-                    FillBottomTracking(timestamp_);
+                    FillVelocityMessage(timestamp_);
+                    //FillTwistMessage(timestamp_);
+                    //FillFluidPressureMessage(timestamp_);
+                    //FillBottomTracking(timestamp_);
                 }
             }
             r.sleep();
         }
     }
 
-    //------------------------------------------------------------------------------
+    void ProviderDvlNode::FillVelocityMessage(ros::Time timestamp)
+    {
+        sonia_common::RelativeVelocityDVL message;
+
+        message.header.stamp = timestamp;
+        message.header.frame_id = "/ENU";
+
+        message.xVelBtm = dvl_data_.pd4.xVelBtm;
+        message.yVelBtm = dvl_data_.pd4.yVelBtm;
+        message.zVelBtm = dvl_data_.pd4.zVelBtm;
+        message.eVelBtm = dvl_data_.pd4.eVelBtm;
+
+        dvl_velocity_publisher_.publish(message);
+    }
+
+    /*//------------------------------------------------------------------------------
     //
     void ProviderDvlNode::FillTwistMessage(ros::Time timestamp) {
         geometry_msgs::TwistStamped message;
@@ -210,7 +227,7 @@ namespace provider_dvl {
         message.timeVelEstZ2 = dvl_data_.data.timeVelEstZ2;
 
         dvl_bottom_tracking_publisher_.publish(message);
-    }
+    }*/
 
     uint16_t ProviderDVLNode::calculateChecksum(uint8_t *data)
     {

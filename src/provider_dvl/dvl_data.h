@@ -1,5 +1,5 @@
 //
-// Created by bullshark on 5/11/17.
+// Created by Francis Alonzo on 9/3/21.
 //
 
 #ifndef PROVIDER_DVL_DVL_DATA_H
@@ -13,10 +13,10 @@ typedef struct
   uint8_t dataStructure;
   uint16_t numberBytes;
   uint8_t systemConfig;
-  uint16_t xVelBtm;
-  uint16_t yVelBtm;
-  uint16_t zVelBtm;
-  uint16_t eVelBtm;
+  int16_t xVelBtm;
+  int16_t yVelBtm;
+  int16_t zVelBtm;
+  int16_t eVelBtm;
   uint16_t rngToBottomBm1;
   uint16_t rngToBottomBm2;
   uint16_t rngToBottomBm3;
@@ -62,23 +62,5 @@ typedef struct {
 } DVLformat21_t;
 
 #pragma pack(pop)
-
-/*inline unsigned short calculateChecksum(unsigned short *pData, unsigned short size)
-{
-  unsigned short checksum = 0xB58C;
-  unsigned short nbshorts = (size >> 1);
-  int i;
-  for (i = 0; i < nbshorts; i++)
-  {
-    checksum += *pData;
-    size -= 2;
-    pData++;
-  }
-  if (size > 0)
-  {
-    checksum += ((unsigned short)(*pData)) << 8;
-  }
-  return checksum;
-}*/
 
 #endif //PROVIDER_DVL_DVL_DATA_H
