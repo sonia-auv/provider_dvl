@@ -19,8 +19,11 @@
 		"--security-opt",
 		"seccomp=unconfined",
 		"--rm",
+		"--privileged",
 		"--network",
-		"host"
+		"host",
+		"-p",
+		"1034:1034/udp"
 	],
 	"mounts": [
 		"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
