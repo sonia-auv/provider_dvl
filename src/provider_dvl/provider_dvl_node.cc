@@ -111,9 +111,9 @@ namespace provider_dvl {
 
     void ProviderDvlNode::LeakSensorMessage(void)
     {
-        std_msgs::Bool leakDetected = false;
+        bool leakDetected = false;
 
-        if(dvl_data_.pd4.statusLeakSensor == 0b01 || dvl_data_.pd4.statusLeakSensor == 0b0100 || dvl_data_.pd4.statusLeakSensor == 0b0101)
+        if(dvl_data_.pd4.statusLeakSensors == 0b01 || dvl_data_.pd4.statusLeakSensors == 0b0100 || dvl_data_.pd4.statusLeakSensors == 0b0101)
         {
             ROS_INFO("Leak detected in the pathfinder!!!!!!");
             leakDetected = true;
