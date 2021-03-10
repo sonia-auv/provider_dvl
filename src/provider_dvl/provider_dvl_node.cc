@@ -103,7 +103,7 @@ namespace provider_dvl {
         message.position.PITCH = dvl_data_.pd5.pitch;
         message.position.YAW = dvl_data_.pd5.heading;
 
-        dvl_position_publisher_.publish(message)
+        dvl_position_publisher_.publish(message);
     }
 
     uint16_t ProviderDvlNode::calculateChecksum(uint8_t *data)
