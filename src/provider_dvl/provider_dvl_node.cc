@@ -229,7 +229,7 @@ namespace provider_dvl {
         dvl_bottom_tracking_publisher_.publish(message);
     }*/
 
-    uint16_t ProviderDVLNode::calculateChecksum(uint8_t *data)
+    uint16_t ProviderDvlNode::calculateChecksum(uint8_t *data)
     {
         uint16_t checksum = 0;
 
@@ -242,7 +242,7 @@ namespace provider_dvl {
 
     bool ProviderDvlNode::confirmChecksum(DVLformat21_t *dvlData)
     {
-        uint16_t calculatedChecksum = calculateChecksum(*(uint8_t *) dvlData);
+        uint16_t calculatedChecksum = calculateChecksum(*(uint8_t) dvlData);
         return dvlData.pd5.checksum == calculatedChecksum;
     }
 
