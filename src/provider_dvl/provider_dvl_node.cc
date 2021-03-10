@@ -109,18 +109,18 @@ namespace provider_dvl {
         dvl_position_publisher_.publish(message);
     }
 
-    void ProviderDvlNode::LeakSensorMessage(void)
+    void ProviderDvlNode::LeakSensorMessage()
     {
-        bool leakDetected = false;
+        std_msgs::Bool leakDetected.data = false;
 
         if(dvl_data_.pd4.statusLeakSensors == 0b01 || dvl_data_.pd4.statusLeakSensors == 0b0100 || dvl_data_.pd4.statusLeakSensors == 0b0101)
         {
             ROS_INFO("Leak detected in the pathfinder!!!!!!");
-            leakDetected = true;
+            leakDetected.data = true;
         }
         else
         {
-            leakDetected = false;
+            leakDetected.data = false;
         }
 
         dvl_leak_sensor_publisher_.publish(leakDetected);
