@@ -20,7 +20,9 @@
 		"seccomp=unconfined",
 		"--rm",
 		"--network",
-		"host"
+		"host",
+		"--publish",
+		"192.168.1.2:1034:1034"
 	],
 	"mounts": [
 		"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
