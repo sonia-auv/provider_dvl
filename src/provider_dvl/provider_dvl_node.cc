@@ -108,13 +108,18 @@ namespace provider_dvl {
 
     uint16_t ProviderDvlNode::calculateChecksum(uint8_t *data)
     {
-        uint16_t checksum = 0;
+        float_t checksum = 0, wholeChecksum, decimal;
 
         for(uint8_t i=0; i < (sizeof(data)/sizeof(uint8_t))-2; ++i) //Removing checksum value from array
         {
             checksum += data[i];
         }
-        return checksum;
+        
+        wholeChecksum = ceil(checksum/65536);
+        decimal = wholeChecksum-checksum/65536;
+        checksum = (1-decimal)*65536;
+
+        return (uint16_t)ceil(checksum);
     }
 
     bool ProviderDvlNode::confirmChecksum(DVLformat21_t *dvlData)
