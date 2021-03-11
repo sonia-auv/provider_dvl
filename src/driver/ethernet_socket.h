@@ -52,6 +52,7 @@ class EthernetSocket {
   // P R I V A T E   M E M B E R S
 
   int socket_;
+  sockaddr_in dvl_server_;
   char data_[4096];
 
 };

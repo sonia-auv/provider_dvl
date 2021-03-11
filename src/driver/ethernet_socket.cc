@@ -85,7 +85,10 @@ void EthernetSocket::ConnectUDP(int port) {
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Receive() {
-  if (recv(socket_, data_, sizeof(data_)), 0) < 0) {
+  struct sockaddr dvl_adress;
+  sockten_t addr_len = sizeof(dvl_adress);
+
+  if (recvfrom(socket_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_adress, &addr_len) < 0) {
     ROS_DEBUG("Receive failed");
   }
   ROS_DEBUG("Reply received");

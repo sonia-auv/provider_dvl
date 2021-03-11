@@ -22,7 +22,7 @@
 		"--privileged",
 		"--network",
 		"host",
-		"--expose",
+		"-p",
 		"1034:1034"
 	],
 	"mounts": [
