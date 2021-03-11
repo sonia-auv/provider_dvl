@@ -45,7 +45,7 @@ EthernetSocket::~EthernetSocket() {}
 void EthernetSocket::ConnectUDP(int port) {
   struct sockaddr_in server;
 
-  socket_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  socket_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (socket_ == -1) {
     ROS_DEBUG("Could not create socket");
   }
@@ -58,7 +58,6 @@ void EthernetSocket::ConnectUDP(int port) {
     ROS_DEBUG("Connect error");
     return;
   }
-
   ROS_DEBUG("Connected\n");
 }
 
