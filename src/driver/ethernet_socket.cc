@@ -45,14 +45,16 @@ EthernetSocket::~EthernetSocket() {}
 void EthernetSocket::ConnectUDP(int port) {
   struct sockaddr_in server;
 
+  bzero(&server, sizeof(server));
+  server.sin_addr.s_addr = htonl(INADDR_ANY);//inet_addr(address.c_str());
+  server.sin_family = AF_INET;
+  server.sin_port = htons(port);
+
   socket_ = socket(AF_INET, SOCK_DGRAM, 0);
   if (socket_ == -1) {
     ROS_DEBUG("Could not create socket");
   }
   //bind(socket_, (struct sockaddr*)&address, sizeof(address)); 
-  server.sin_addr.s_addr = INADDR_ANY;//inet_addr(address.c_str());
-  server.sin_family = AF_INET;
-  server.sin_port = htons(port);
 
   if (connect(socket_, (struct sockaddr *) &server, sizeof(server)) < 0) {
     ROS_DEBUG("Connect error");
@@ -84,9 +86,10 @@ void EthernetSocket::ConnectUDP(int port) {
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Receive() {
-  struct sockaddr dvl_adress;
-  socklen_t addr_len = sizeof(dvl_adress);
+  char *message = "0";
 
+  sendto(socket_, message, 4096, 0 (struct sockaddr*)NULL, sizeof(servaddr));
+  
   if (recvfrom(socket_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_adress, &addr_len) < 0) {
     ROS_DEBUG("Receive failed");
   }
