@@ -55,7 +55,7 @@ namespace provider_dvl {
     //------------------------------------------------------------------------------
     //
     void ProviderDvlNode::Spin() {
-        ros::Rate r(30);  // 30 hz
+        ros::Rate r(20);  // 20 hz
 
         while (ros::ok())
         {
