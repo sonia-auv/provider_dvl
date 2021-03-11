@@ -21,7 +21,9 @@
 		"--rm",
 		"--privileged",
 		"--network",
-		"host"
+		"host",
+		"--expose",
+		"1034:1034"
 	],
 	"mounts": [
 		"source=vscode-server-extension,target=/home/sonia/.vscode-server/extensions,type=volume"
