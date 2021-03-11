@@ -42,10 +42,10 @@ EthernetSocket::~EthernetSocket() {}
 
 //------------------------------------------------------------------------------
 //
-void EthernetSocket::Connect(std::string address, int port) {
+void EthernetSocket::ConnectUDP(int port) {
   struct sockaddr_in server;
 
-  socket_ = socket(AF_INET, SOCK_DGRAM, 0);
+  socket_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
   if (socket_ == -1) {
     ROS_DEBUG("Could not create socket");
   }
@@ -61,6 +61,26 @@ void EthernetSocket::Connect(std::string address, int port) {
 
   ROS_DEBUG("Connected\n");
 }
+
+/*void EthernetSocket::Connect(std::string address, int port) {
+  struct sockaddr_in server;
+
+  socket_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+  if (socket_ == -1) {
+    ROS_DEBUG("Could not create socket");
+  }
+  //bind(socket_, (struct sockaddr*)&address, sizeof(address)); 
+  server.sin_addr.s_addr = INADDR_ANY;//inet_addr(address.c_str());
+  server.sin_family = AF_INET;
+  server.sin_port = htons(port);
+
+  if (connect(socket_, (struct sockaddr *) &server, sizeof(server)) < 0) {
+    ROS_DEBUG("Connect error");
+    return;
+  }
+
+  ROS_DEBUG("Connected\n");
+}*/
 
 //------------------------------------------------------------------------------
 //

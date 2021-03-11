@@ -42,7 +42,8 @@ class EthernetSocket {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void Connect(std::string address, int port);
+  void ConnectUDP(int port);
+  //void ConnectTCP(std::string address, int port);
   void Receive();
   char* GetRawData();
 

@@ -38,7 +38,7 @@ namespace provider_dvl {
         socket_()
     {
         std::string hostname = "192.168.1.2"; // To change
-        socket_.Connect(hostname, 1034);
+        socket_.ConnectUDP(1034);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::PositionDVL>("/provider_dvl/dvl_position", 100);
@@ -64,7 +64,7 @@ namespace provider_dvl {
             socket_.Receive();
 
             dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
-
+            
             if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
                 if(confirmChecksum(&dvl_data_))
