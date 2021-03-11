@@ -37,7 +37,7 @@ namespace provider_dvl {
         nh_(nh),
         socket_()
     {
-        std::string hostname = "192.168.1.2"; // To change
+        //std::string hostname = "192.168.1.2"; // To change
         socket_.ConnectUDP(1034);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);

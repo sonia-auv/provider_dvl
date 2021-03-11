@@ -52,7 +52,7 @@ class EthernetSocket {
   // P R I V A T E   M E M B E R S
 
   int socket_;
-  char data_[2048];
+  char data_[4096];
 
 };
 
