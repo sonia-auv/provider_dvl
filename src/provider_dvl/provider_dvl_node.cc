@@ -67,7 +67,7 @@ namespace provider_dvl {
             
             if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
-                if(confirmChecksum(&dvl_data_))
+                if(confirmChecksum(dvl_data_))
                 {
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
@@ -126,13 +126,20 @@ namespace provider_dvl {
         dvl_leak_sensor_publisher_.publish(leakDetected);
     }
 
-    uint16_t ProviderDvlNode::calculateChecksum(uint8_t *data)
+    uint16_t ProviderDvlNode::calculateChecksum(DVLformat21_t dataDVL)
     {
+        union {
+            DVLformat21_t dataFromDVL;
+            uint8_t array[88];
+        } data_array;
+        
+        data_array.dataFromDVL = dataDVL;
         float_t checksum = 0, wholeChecksum, decimal;
+        uint8_t sizeTotal = (sizeof(data_array.array)/sizeof(uint8_t))-2;
 
-        for(uint8_t i=0; i < (sizeof(data)/sizeof(uint8_t))-2; ++i) //Removing checksum value from array
+        for(uint8_t i=0; i < sizeTotal; ++i) //Removing checksum value from array
         {
-            checksum += data[i];
+            checksum += data_array.array[i];
         }
         
         wholeChecksum = ceil(checksum/65536);
@@ -142,10 +149,11 @@ namespace provider_dvl {
         return (uint16_t)ceil(checksum);
     }
 
-    bool ProviderDvlNode::confirmChecksum(DVLformat21_t *dvlData)
+    bool ProviderDvlNode::confirmChecksum(DVLformat21_t dvlData)
     {
-        uint16_t calculatedChecksum = calculateChecksum((uint8_t*) &dvlData);
-        return dvlData->pd5.checksum == calculatedChecksum;
+        uint16_t calculatedChecksum = calculateChecksum(dvlData);
+        return dvlData.pd5.checksum == calculatedChecksum;
+
     }
 
 } // namespace provider_dvl

@@ -53,7 +53,7 @@ class EthernetSocket {
 
   int socket_;
   sockaddr_in server_, dvl_;
-  char data_[8]; //fix with real data
+  char data_[88];  //fix with real data
 
 };
 

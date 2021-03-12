@@ -58,8 +58,8 @@ private:
     void FillVelocityMessage(ros::Time timestamp);
     void FillPositionDVLMessage(ros::Time timestamp);
     void LeakSensorMessage();
-    uint16_t calculateChecksum(uint8_t *data);
-    bool confirmChecksum(DVLformat21_t *dvlData);
+    uint16_t calculateChecksum(DVLformat21_t dvlData);
+    bool confirmChecksum(DVLformat21_t dvlData);
 
     //==========================================================================
     // P R I V A T E   M E M B E R S
