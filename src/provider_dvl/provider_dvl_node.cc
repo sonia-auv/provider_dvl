@@ -40,8 +40,8 @@ namespace provider_dvl {
         //std::string hostname = "192.168.1.2"; // To change
         socket_.ConnectUDP(1034);
 
-        dvl_velocity_publisher_ = nh_->advertise<sonia_common::RelativeVelocityDVL>("/provider_dvl/dvl_velocity", 100);
-        dvl_position_publisher_ = nh_->advertise<sonia_common::PositionDVL>("/provider_dvl/dvl_position", 100);
+        dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
+        dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);
         dvl_leak_sensor_publisher_ = nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
     }
 
@@ -81,28 +81,41 @@ namespace provider_dvl {
 
     void ProviderDvlNode::FillVelocityMessage(ros::Time timestamp)
     {
-        sonia_common::RelativeVelocityDVL message;
+        sonia_common::BodyVelocityDVL message;
 
         message.header.stamp = timestamp;
-        message.header.frame_id = "/ENU";
+        message.header.frame_id = verifyFrameId(message.pd4.systemConfig);
 
-        message.xVelBtm = dvl_data_.pd4.xVelBtm;
-        message.yVelBtm = dvl_data_.pd4.yVelBtm;
-        message.zVelBtm = dvl_data_.pd4.zVelBtm;
-        message.eVelBtm = dvl_data_.pd4.eVelBtm;
+        message.xVelBtm = ((double_t)dvl_data_.pd4.xVelBtm)/1000.0;
+        message.yVelBtm = ((double_t)dvl_data_.pd4.yVelBtm)/1000.0;
+        message.zVelBtm = ((double_t)dvl_data_.pd4.zVelBtm)/1000.0;
+        message.eVelBtm = ((double_t)dvl_data_.pd4.eVelBtm)/1000.0;
 
         dvl_velocity_publisher_.publish(message);
     }
 
-    void ProviderDvlNode::FillPositionDVLMessage(ros::Time timestamp)
+    void ProviderDvlNode::FillAttitudeDVLMessage(ros::Time timestamp)
     {
-        sonia_common::PositionDVL message;
+        sonia_common::AttitudeDVL message;
 
         message.header.stamp = timestamp;
-        message.header.frame_id = "/ENU";
+        message.header.frame_id = verifyFrameId(message.pd4.systemConfig);
 
-        message.position.Z = dvl_data_.pd5.depth;
-        message.position.ROLL = dvl_data_.pd5.roll;
+        if(dvl_data_.pd5.depth >= 9999)
+            message.position.Z = 9999.0/10.0;
+        else if(dvl_data_.pd5.depth <= 1)
+            message.position.Z = 1.0/10.0;
+        else
+            message.position.Z = dvl_data_.pd5.depth/10.0;
+
+        if(dvl_data_.pd5.roll*ANGLE_LSD >= 20.0)
+            message.position.ROLL = 20.0;
+        else if(dvl_data_.pd5.roll*ANGLE_LSD <= -20.0)
+            message.position.ROLL = -20.0;
+        else
+            message.position.ROLL = dvl_data_.pd5.roll*ANGLE_LSD;
+
+        
         message.position.PITCH = dvl_data_.pd5.pitch;
         message.position.YAW = dvl_data_.pd5.heading;
 
@@ -154,6 +167,29 @@ namespace provider_dvl {
         uint16_t calculatedChecksum = calculateChecksum(dvlData);
         return dvlData.pd5.checksum == calculatedChecksum;
 
+    }
+
+    std::string verifyFrameId(uint8_t systemId)
+    {
+        uint8_t frameId = (systemId) >> 6;
+        switch (frameId)
+        {
+        case 0:
+            return "/NoTF";
+            break;
+        case 1:
+            return "/Instrument";
+            break;
+        case 2:
+            return "/Vessel";
+            break;
+        case 3:
+            return "/ENU";
+            break;
+        default:
+            return "/Error";
+            break;
+        }
     }
 
 } // namespace provider_dvl

@@ -36,6 +36,8 @@
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
 
+#define ANGLE_LSD 0.01
+
 namespace provider_dvl {
 
 class ProviderDvlNode {
@@ -56,10 +58,11 @@ private:
   // P R I V A T E   M E T H O D S
 
     void FillVelocityMessage(ros::Time timestamp);
-    void FillPositionDVLMessage(ros::Time timestamp);
+    void FillAttitudeDVLMessage(ros::Time timestamp);
     void LeakSensorMessage();
     uint16_t calculateChecksum(DVLformat21_t dvlData);
     bool confirmChecksum(DVLformat21_t dvlData);
+    std::string verifyFrameId(uint8_t systemId);
 
     //==========================================================================
     // P R I V A T E   M E M B E R S
