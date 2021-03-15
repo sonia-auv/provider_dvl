@@ -71,7 +71,7 @@ namespace provider_dvl {
                 {
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
-                    FillPositionDVLMessage(timestamp_);
+                    FillAttitudeDVLMessage(timestamp_);
                     LeakSensorMessage();
                 }
             }
@@ -84,7 +84,7 @@ namespace provider_dvl {
         sonia_common::BodyVelocityDVL message;
 
         message.header.stamp = timestamp;
-        message.header.frame_id = verifyFrameId(message.pd4.systemConfig);
+        message.header.frame_id = verifyFrameId(dvl_data_.pd4.systemConfig);
 
         message.xVelBtm = ((double_t)dvl_data_.pd4.xVelBtm)/1000.0;
         message.yVelBtm = ((double_t)dvl_data_.pd4.yVelBtm)/1000.0;
@@ -99,7 +99,7 @@ namespace provider_dvl {
         sonia_common::AttitudeDVL message;
 
         message.header.stamp = timestamp;
-        message.header.frame_id = verifyFrameId(message.pd4.systemConfig);
+        message.header.frame_id = verifyFrameId(dvl_data_.pd4.systemConfig);
 
         if(dvl_data_.pd5.depth >= 9999)
             message.position.Z = 9999.0/10.0;
@@ -169,7 +169,7 @@ namespace provider_dvl {
 
     }
 
-    std::string verifyFrameId(uint8_t systemId)
+    std::string ProviderDvlNode::verifyFrameId(uint8_t systemId)
     {
         uint8_t frameId = (systemId) >> 6;
         switch (frameId)

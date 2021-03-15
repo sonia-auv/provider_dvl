@@ -29,8 +29,8 @@
 #include <string>
 
 #include <ros/node_handle.h>
-#include <sonia_common/RelativeVelocityDVL.h>
-#include <sonia_common/PositionDVL.h>
+#include <sonia_common/BodyVelocityDVL.h>
+#include <sonia_common/AttitudeDVL.h>
 #include <std_msgs/Bool.h>
 
 #include "../driver/ethernet_socket.h"
