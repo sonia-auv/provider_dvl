@@ -67,7 +67,7 @@ namespace provider_dvl {
             
             if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
-                if(confirmChecksum(dvl_data_))
+                if(confirmChecksum((uint8_t *)&dvl_data_))
                 {
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
@@ -100,24 +100,34 @@ namespace provider_dvl {
 
         message.header.stamp = timestamp;
         message.header.frame_id = verifyFrameId(dvl_data_.pd4.systemConfig);
-
+        // DEPTH
         if(dvl_data_.pd5.depth >= 9999)
             message.position.Z = 9999.0/10.0;
         else if(dvl_data_.pd5.depth <= 1)
             message.position.Z = 1.0/10.0;
         else
             message.position.Z = dvl_data_.pd5.depth/10.0;
-
+        // ROLL
         if(dvl_data_.pd5.roll*ANGLE_LSD >= 20.0)
             message.position.ROLL = 20.0;
         else if(dvl_data_.pd5.roll*ANGLE_LSD <= -20.0)
             message.position.ROLL = -20.0;
         else
             message.position.ROLL = dvl_data_.pd5.roll*ANGLE_LSD;
-
-        
-        message.position.PITCH = dvl_data_.pd5.pitch;
-        message.position.YAW = dvl_data_.pd5.heading;
+        // PITCH
+        if(dvl_data_.pd5.pitch*ANGLE_LSD >= 20.0)
+            message.position.PITCH = 20.0;
+        else if(dvl_data_.pd5.pitch*ANGLE_LSD <= -20.0)
+            message.position.PITCH = -20.0;
+        else
+            message.position.PITCH = dvl_data_.pd5.pitch*ANGLE_LSD;
+        // YAW
+        if(dvl_data_.pd5.heading*ANGLE_LSD >= 360.0)
+            message.position.YAW = 360.0;
+        else if(dvl_data_.pd5.heading*ANGLE_LSD <= 0.0)
+            message.position.YAW = 0.0;
+        else
+            message.position.YAW = dvl_data_.pd5.heading*ANGLE_LSD;
 
         dvl_position_publisher_.publish(message);
     }
@@ -139,20 +149,14 @@ namespace provider_dvl {
         dvl_leak_sensor_publisher_.publish(leakDetected);
     }
 
-    uint16_t ProviderDvlNode::calculateChecksum(DVLformat21_t dataDVL)
+    uint16_t ProviderDvlNode::calculateChecksum(uint8_t *dataDVL)
     {
-        union {
-            DVLformat21_t dataFromDVL;
-            uint8_t array[88];
-        } data_array;
-        
-        data_array.dataFromDVL = dataDVL;
         float_t checksum = 0, wholeChecksum, decimal;
-        uint8_t sizeTotal = (sizeof(data_array.array)/sizeof(uint8_t))-2;
+        uint8_t sizeTotal = (sizeof(DVLformat21_t)/sizeof(uint8_t))-2; //Removing checksum value from array (-2)
 
-        for(uint8_t i=0; i < sizeTotal; ++i) //Removing checksum value from array
+        for(uint8_t i=0; i < sizeTotal; ++i)
         {
-            checksum += data_array.array[i];
+            checksum += dataDVL[i];
         }
         
         wholeChecksum = ceil(checksum/65536);
@@ -162,12 +166,11 @@ namespace provider_dvl {
         return (uint16_t)ceil(checksum);
     }
 
-    bool ProviderDvlNode::confirmChecksum(DVLformat21_t dvlData)
+    bool ProviderDvlNode::confirmChecksum(uint8_t *dvlData)
     {
         uint16_t calculatedChecksum = calculateChecksum(dvlData);
-        return dvlData.pd5.checksum == calculatedChecksum;
-
-    }
+        return dvl_data_.pd5.checksum == calculatedChecksum;
+    } 
 
     std::string ProviderDvlNode::verifyFrameId(uint8_t systemId)
     {
