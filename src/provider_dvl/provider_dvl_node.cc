@@ -55,7 +55,7 @@ namespace provider_dvl {
     //------------------------------------------------------------------------------
     //
     void ProviderDvlNode::Spin() {
-        ros::Rate r(20);  // 20 hz
+        ros::Rate r(1);  // 20 hz
 
         while (ros::ok())
         {
@@ -63,12 +63,18 @@ namespace provider_dvl {
 
             socket_.Receive();
 
+            ROS_INFO("Data received");
+
             dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
+
+            ROS_INFO("Data obtained");
             
             if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
+                ROS_INFO("ID correct");
                 if(confirmChecksum((uint8_t *)&dvl_data_))
                 {
+                    ROS_INFO("Checksum passed");
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
                     FillAttitudeDVLMessage(timestamp_);
