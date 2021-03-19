@@ -45,54 +45,24 @@ EthernetSocket::~EthernetSocket() {}
 void EthernetSocket::ConnectUDP(int port) {
 
   bzero(&server_, sizeof(server_));
-  server_.sin_addr.s_addr = htonl(INADDR_ANY);//inet_addr(address.c_str());
+  server_.sin_addr.s_addr = htonl(INADDR_ANY);
   server_.sin_family = AF_INET;
   server_.sin_port = htons(port);
 
   socket_ = socket(AF_INET, SOCK_DGRAM, 0);
-  if (socket_ == -1) {
-    ROS_DEBUG("Could not create socket");
-  }
+  ROS_ASSERT(socket_ != -1);
   
-  bind(socket_, (struct sockaddr*)&server_, sizeof(server_)); 
+  ROS_ASSERT(bind(socket_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
 
-  /*if (connect(socket_, (struct sockaddr *) &server_, sizeof(server_)) < 0) {
-    ROS_DEBUG("Connect error");
-    return;
-  }*/
   ROS_DEBUG("Connected\n");
-
-  /*char *message = "startSend";
-
-  sendto(socket_, message, 9, 0, (struct sockaddr*)NULL, sizeof(server_));*/
 }
-
-/*void EthernetSocket::Connect(std::string address, int port) {
-  struct sockaddr_in server;
-
-  socket_ = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-  if (socket_ == -1) {
-    ROS_DEBUG("Could not create socket");
-  }
-  //bind(socket_, (struct sockaddr*)&address, sizeof(address)); 
-  server.sin_addr.s_addr = INADDR_ANY;//inet_addr(address.c_str());
-  server.sin_family = AF_INET;
-  server.sin_port = htons(port);
-
-  if (connect(socket_, (struct sockaddr *) &server, sizeof(server)) < 0) {
-    ROS_DEBUG("Connect error");
-    return;
-  }
-
-  ROS_DEBUG("Connected\n");
-}*/
 
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Receive() {
   socklen_t len = sizeof(dvl_);
   if (recvfrom(socket_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
-    ROS_DEBUG("Receive failed");
+    ROS_INFO("Receive failed");
   }
   ROS_DEBUG("Reply received");
 }
