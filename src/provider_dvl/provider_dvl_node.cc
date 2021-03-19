@@ -63,23 +63,31 @@ namespace provider_dvl {
 
             socket_.Receive();
 
-            ROS_INFO("Data received");
+            ROS_DEBUG("Data received");
 
             dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
 
-            ROS_INFO("Data obtained");
+            ROS_DEBUG("Data obtained");
             
             if (dvl_data_.pd4.pathfinderDataId == 0x7D)
             {
-                ROS_INFO("ID correct");
+                ROS_DEBUG("ID correct");
                 if(confirmChecksum((uint8_t *)&dvl_data_))
                 {
-                    ROS_INFO("Checksum passed");
+                    ROS_DEBUG("Checksum passed");
                     timestamp_ = ros::Time::now();
                     FillVelocityMessage(timestamp_);
                     FillAttitudeDVLMessage(timestamp_);
                     LeakSensorMessage();
                 }
+                else
+                {
+                    ROS_INFO("Checksum failed");
+                }
+            }
+            else
+            {
+                ROS_INFO("Pathfinder ID didn't egal : %d", 0x7D);
             }
             r.sleep();
         }
