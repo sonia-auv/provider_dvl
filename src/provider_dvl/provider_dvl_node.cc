@@ -92,10 +92,10 @@ namespace provider_dvl {
         message.header.stamp = timestamp;
         message.header.frame_id = verifyFrameId(dvl_data_.pd4.systemConfig);
 
-        message.xVelBtm = ((double_t)dvl_data_.pd4.xVelBtm)/1000.0;
-        message.yVelBtm = ((double_t)dvl_data_.pd4.yVelBtm)/1000.0;
-        message.zVelBtm = ((double_t)dvl_data_.pd4.zVelBtm)/1000.0;
-        message.eVelBtm = ((double_t)dvl_data_.pd4.eVelBtm)/1000.0;
+        message.xVelBtm = ((double_t)dvl_data_.pd4.velocity1)/1000.0;
+        message.yVelBtm = ((double_t)dvl_data_.pd4.velocity2)/1000.0;
+        message.zVelBtm = ((double_t)dvl_data_.pd4.velocity3)/1000.0;
+        message.eVelBtm = ((double_t)dvl_data_.pd4.velocity4)/1000.0;
 
         dvl_velocity_publisher_.publish(message);
     }
