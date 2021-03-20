@@ -72,10 +72,10 @@ TP00:00.00
 ; processing.
 ;
 ; Disable Water-Mass Layer Mode (default)
-;#BK0
+#BK1
 ; Set Water-Mass Layer parameters to minimum 20 meters,
 ; near 80 meters, far 160 meters (600kHz default).
-;#BL20,80,160
+;#BL020,080,0160
 ; Turnkey mode on (default) - PathfinderDVL will ping when power turned on.
 CT 2 5
 ; Environmental Data Output – sets specialized attitude data types
