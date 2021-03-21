@@ -104,6 +104,11 @@ namespace provider_dvl {
         message.zVelBtm = ((double_t)dvl_data_.pd4.zVelBtm)/1000.0;
         message.eVelBtm = ((double_t)dvl_data_.pd4.eVelBtm)/1000.0;
 
+        message.velocity1 = ((double_t)dvl_data_.pd4.velocity1)/1000.0;
+        message.velocity2 = ((double_t)dvl_data_.pd4.velocity2)/1000.0;
+        message.velocity3 = ((double_t)dvl_data_.pd4.velocity3)/1000.0;
+        message.velocity4 = ((double_t)dvl_data_.pd4.velocity4)/1000.0;
+
         dvl_velocity_publisher_.publish(message);
     }
 

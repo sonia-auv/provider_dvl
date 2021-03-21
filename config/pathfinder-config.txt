@@ -1,6 +1,6 @@
 ;--------------------------------------------------------------------------
 ; 600 kHz PathfinderDVL 
-; Type: ??khz PathfinderDVL
+; Type: 600khz PathfinderDVL
 ; Setup name: pathfinder-config.txt
 ; Setup type: 
 ;
@@ -71,7 +71,7 @@ TP00:00.00
 ; be the wrong format, bad, and/or uncorrectable even in post
 ; processing.
 ;
-; Disable Water-Mass Layer Mode (default)
+; Enable Water-Mass Layer Mode with each bottom tracking pings
 #BK1
 ; Set Water-Mass Layer parameters to minimum 20 meters,
 ; near 80 meters, far 160 meters (600kHz default).
