@@ -8,7 +8,7 @@
 ;
 ; NOTE: Any line beginning with a semicolon in the first column is
 ; treated as a comment and is ignored by the software.
-; Modified Last: 14 march 2021
+; Modified Last: 20 march 2021
 ;-------------------------------------------------------------------------
 ; **************************************
 ; PathfinderDVL Basic Setup Commands
