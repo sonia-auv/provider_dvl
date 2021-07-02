@@ -20,8 +20,8 @@ CF11110
 ; **************************************
 ; ExplorerDVL Bottom Track Setup Commands
 ; **************************************
-; Average of 10 pings for bottom track,
-BP010
+; No average for bottom track,
+BP001
 ; Set maximum bottom search depth to 100 meters
 BX01000
 ; **************************************
