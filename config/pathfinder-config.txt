@@ -22,8 +22,8 @@ CF11110
 ; **************************************
 ; No average for bottom track,
 BP001
-; Set maximum bottom search depth to 100 meters
-BX01000
+; Set maximum bottom search depth to 31 meters (maximum pool depth for competition)
+BX03100
 ; **************************************
 ; PathfinderDVL Environment Setup Commands
 ; **************************************
