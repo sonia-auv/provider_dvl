@@ -35,7 +35,7 @@ BX03100
 ; the right thing
 EA+04500
 ; Set manual transducer depth in case depth sensor fails
-;ED0000
+ED0000
 ; Set Salinity to saltwater
 ES35
 ; Output ship coordinates, use tilts, allow 3 beam
