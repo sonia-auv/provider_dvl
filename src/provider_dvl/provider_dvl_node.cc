@@ -42,6 +42,10 @@ namespace provider_dvl {
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);
         dvl_leak_sensor_publisher_ = nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
+
+        enableDisablePingSub = nh->subscribe("/provider_dvl/enable_disable_ping", 100, &ProviderDvlNode::enableDisablePingCallback, this);
+        setAnglesSub = nh->subscribe("/provider_dvl/set_angles", 100, &ProviderDvlNode::setAnglesCallback, this);
+        setDepthSub = nh->subscribe("/provider_dvl/set_depth", 100, &ProviderDvlNode::setDepthCallback, this);
     }
 
     //------------------------------------------------------------------------------
@@ -213,4 +217,19 @@ namespace provider_dvl {
         }
     }
 
+
+    void ProviderDvlNode::enableDisablePingCallback(const std_msgs::Bool& msg)
+    {
+        // Do something
+    }
+
+    void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
+    {
+        // Do something
+    }
+
+    void ProviderDvlNode::setDepthCallback(const std_msgs::Float64& msg)
+    {
+        // Do something
+    }
 } // namespace provider_dvl
