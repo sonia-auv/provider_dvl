@@ -45,6 +45,7 @@ class EthernetSocket {
   void ConnectUDP(int port);
   void ConnectTCP(int port);
   void Receive();
+  void Send(char *data);
   char* GetRawData();
 
  private:

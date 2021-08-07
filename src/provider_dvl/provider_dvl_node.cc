@@ -38,6 +38,7 @@ namespace provider_dvl {
         socket_()
     {
         socket_.ConnectUDP(1034);
+        socket_.ConnectTCP(1033);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);

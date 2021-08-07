@@ -57,6 +57,8 @@ void EthernetSocket::ConnectUDP(int port) {
   ROS_DEBUG("Connected\n");
 }
 
+//------------------------------------------------------------------------------
+//
 void EthernetSocket::ConnectTCP(int port) {
 
   bzero(&server_tcp_, sizeof(server_tcp_));
@@ -76,9 +78,17 @@ void EthernetSocket::Receive() {
   if (recvfrom(socket_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
     ROS_INFO("Receive failed");
   }
-  ROS_DEBUG("Reply received");
+  ROS_DEBUG("Receive successed");
 }
 
+//------------------------------------------------------------------------------
+//
+void EthernetSocket::Send(char *data) {
+  if(send(socket_, data, strlen(data), 0) < 0) {
+    ROS_INFO("Send failed");
+  }
+  ROS_DEBUG("Send successed");
+}
 //------------------------------------------------------------------------------
 //
 char* EthernetSocket::GetRawData() {
