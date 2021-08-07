@@ -32,51 +32,63 @@
 #include <sonia_common/BodyVelocityDVL.h>
 #include <sonia_common/AttitudeDVL.h>
 #include <std_msgs/Bool.h>
+#include <geometry_msgs/Vector3.h>
+#include <std_msgs/Float64.h>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
 
 #define ANGLE_LSD 0.01
 
-namespace provider_dvl {
+namespace provider_dvl {ERROR: for ros-master  Get https://registry-1.docker.io/v2/: net/http: TLS handshake timeout
+
 
 class ProviderDvlNode {
-public:
+  public:
+      //==========================================================================
+      // P U B L I C   C / D T O R S
+
+      ProviderDvlNode(const ros::NodeHandlePtr &nh);
+      ~ProviderDvlNode();
+
+      //==========================================================================
+      // P U B L I C   M E T H O D S
+
+      void Spin();
+      
+
+  private:
     //==========================================================================
-    // P U B L I C   C / D T O R S
+    // P R I V A T E   M E T H O D S
 
-    ProviderDvlNode(const ros::NodeHandlePtr &nh);
-    ~ProviderDvlNode();
+      void FillVelocityMessage(ros::Time timestamp);
+      void FillAttitudeDVLMessage(ros::Time timestamp);
+      void LeakSensorMessage();
+      uint16_t calculateChecksum(uint8_t *dvlData);
+      bool confirmChecksum(uint8_t *dvlData);
+      std::string verifyFrameId(uint8_t systemId);
 
-    //==========================================================================
-    // P U B L I C   M E T H O D S
+      void enableDisablePingCallback(const std_msgs::Bool& msg);
+      void setAnglesCallback(const geometry_msgs::Vector3& msg);
+      void setDepthCallback(const std_msgs::Float64& msg);
 
-    void Spin();
+      //==========================================================================
+      // P R I V A T E   M E M B E R S
 
-private:
-  //==========================================================================
-  // P R I V A T E   M E T H O D S
+      ros::NodeHandlePtr nh_;
+      EthernetSocket socket_;
 
-    void FillVelocityMessage(ros::Time timestamp);
-    void FillAttitudeDVLMessage(ros::Time timestamp);
-    void LeakSensorMessage();
-    uint16_t calculateChecksum(uint8_t *dvlData);
-    bool confirmChecksum(uint8_t *dvlData);
-    std::string verifyFrameId(uint8_t systemId);
+      DVLformat21_t dvl_data_;
 
-    //==========================================================================
-    // P R I V A T E   M E M B E R S
-
-    ros::NodeHandlePtr nh_;
-    EthernetSocket socket_;
-
-    DVLformat21_t dvl_data_;
-
-    ros::Time timestamp_;
-    ros::Publisher dvl_velocity_publisher_;
-    ros::Publisher dvl_position_publisher_;
-    ros::Publisher dvl_leak_sensor_publisher_;
-};
+      ros::Time timestamp_;
+      ros::Publisher dvl_velocity_publisher_;
+      ros::Publisher dvl_position_publisher_;
+      ros::Publisher dvl_leak_sensor_publisher_;
+      
+      ros::Subscriber enableDisablePingSub;
+      ros::Subscriber setAnglesSub;
+      ros::Subscriber setDepthSub;
+  };
 
 } // namespace provider_dvl
 
