@@ -40,7 +40,7 @@
 
 #define ANGLE_LSD 0.01
 
-namespace provider_dvl {ERROR: for ros-master  Get https://registry-1.docker.io/v2/: net/http: TLS handshake timeout
+namespace provider_dvl {
 
 
 class ProviderDvlNode {
