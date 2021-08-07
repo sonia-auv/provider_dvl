@@ -35,10 +35,11 @@ namespace provider_dvl {
 //
     ProviderDvlNode::ProviderDvlNode(const ros::NodeHandlePtr &nh) :
         nh_(nh),
-        socket_()
+        socketUDP_(),
+        socketTCP_()
     {
-        socket_.ConnectUDP(1034);
-        socket_.ConnectTCP(1033);
+        socketUDP_.ConnectUDP(1034);
+        socketTCP_.ConnectTCP(1033);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);
@@ -65,11 +66,11 @@ namespace provider_dvl {
         {
             ros::spinOnce();
 
-            socket_.Receive();
+            socketUDP_.Receive();
 
             ROS_DEBUG("Data received");
 
-            dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
+            dvl_data_ = *((DVLformat21_t*)(socketUDP_.GetRawData()));
 
             ROS_DEBUG("Data obtained");
             

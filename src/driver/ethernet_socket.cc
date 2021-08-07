@@ -44,15 +44,15 @@ EthernetSocket::~EthernetSocket() {}
 //
 void EthernetSocket::ConnectUDP(int port) {
 
-  bzero(&server_udp_, sizeof(server_udp_));
-  server_udp_.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_udp_.sin_family = AF_INET;
-  server_udp_.sin_port = htons(port);
+  bzero(&server_, sizeof(server_));
+  server_.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_.sin_family = AF_INET;
+  server_.sin_port = htons(port);
 
-  socket_ = socket(AF_INET, SOCK_DGRAM, 0);
-  ROS_ASSERT(socket_ != -1);
+  socketUDP_ = socket(AF_INET, SOCK_DGRAM, 0);
+  ROS_ASSERT(socketUDP_ != -1);
   
-  ROS_ASSERT(bind(socket_, (struct sockaddr*)&server_udp_, sizeof(server_udp_)) != -1);
+  ROS_ASSERT(bind(socketUDP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
 
   ROS_DEBUG("Connected\n");
 }
@@ -61,12 +61,23 @@ void EthernetSocket::ConnectUDP(int port) {
 //
 void EthernetSocket::ConnectTCP(int port) {
 
-  bzero(&server_tcp_, sizeof(server_tcp_));
-  server_tcp_.sin_addr.s_addr = inet_addr(hostname_.c_str());
-  server_tcp_.sin_family = AF_INET;
-  server_tcp_.sin_port = htons(port);
+  socklen_t clilen;
 
-  ROS_ASSERT(connect(socket_, (struct sockaddr *) &server_tcp_, sizeof(server_tcp_)) != -1);
+  bzero(&server_, sizeof(server_));
+  server_.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_.sin_family = AF_INET;
+  server_.sin_port = htons(port);
+
+  socketTCP_ = socket(AF_INET, SOCK_STREAM, 0);
+  ROS_ASSERT(socketTCP_ != -1);
+
+  ROS_ASSERT(bind(socketTCP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
+
+  listen(socketTCP_, 5);
+  
+  clilen = sizeof(cli_addr_);
+  cli_socket_ = accept(socketTCP_, (struct sockaddr*)&cli_addr_, &clilen);
+  ROS_ASSERT(cli_socket_ != -1);
 
   ROS_DEBUG("Connected\n");
 }
@@ -75,7 +86,7 @@ void EthernetSocket::ConnectTCP(int port) {
 //
 void EthernetSocket::Receive() {
   socklen_t len = sizeof(dvl_);
-  if (recvfrom(socket_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
+  if (recvfrom(socketUDP_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
     ROS_INFO("Receive failed");
   }
   ROS_DEBUG("Receive successed");
@@ -84,7 +95,7 @@ void EthernetSocket::Receive() {
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Send(char *data) {
-  if(send(socket_, data, strlen(data), 0) < 0) {
+  if(send(cli_socket_, data, strlen(data), 0) < 0) {
     ROS_INFO("Send failed");
   }
   ROS_DEBUG("Send successed");

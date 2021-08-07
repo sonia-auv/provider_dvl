@@ -76,7 +76,7 @@ class ProviderDvlNode {
       // P R I V A T E   M E M B E R S
 
       ros::NodeHandlePtr nh_;
-      EthernetSocket socket_;
+      EthernetSocket socketUDP_, socketTCP_;
 
       DVLformat21_t dvl_data_;
 

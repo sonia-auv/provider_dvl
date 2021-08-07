@@ -52,12 +52,9 @@ class EthernetSocket {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  std::string hostname_ = "192.168.0.32";
-
-  int socket_;
-  sockaddr_in server_udp_, server_tcp_, dvl_;
+  int socketUDP_, socketTCP_, cli_socket_;
+  sockaddr_in server_, cli_addr_, dvl_;
   char data_[88];  //fix with real data
-
 };
 
 #endif //ETHERNET_SOCKET_H
