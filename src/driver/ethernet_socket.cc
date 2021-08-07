@@ -44,15 +44,27 @@ EthernetSocket::~EthernetSocket() {}
 //
 void EthernetSocket::ConnectUDP(int port) {
 
-  bzero(&server_, sizeof(server_));
-  server_.sin_addr.s_addr = htonl(INADDR_ANY);
-  server_.sin_family = AF_INET;
-  server_.sin_port = htons(port);
+  bzero(&server_udp_, sizeof(server_udp_));
+  server_udp_.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_udp_.sin_family = AF_INET;
+  server_udp_.sin_port = htons(port);
 
   socket_ = socket(AF_INET, SOCK_DGRAM, 0);
   ROS_ASSERT(socket_ != -1);
   
-  ROS_ASSERT(bind(socket_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
+  ROS_ASSERT(bind(socket_, (struct sockaddr*)&server_udp_, sizeof(server_udp_)) != -1);
+
+  ROS_DEBUG("Connected\n");
+}
+
+void EthernetSocket::ConnectTCP(int port) {
+
+  bzero(&server_tcp_, sizeof(server_tcp_));
+  server_tcp_.sin_addr.s_addr = inet_addr(hostname_.c_str());
+  server_tcp_.sin_family = AF_INET;
+  server_tcp_.sin_port = htons(port);
+
+  ROS_ASSERT(connect(socket_, (struct sockaddr *) &server_tcp_, sizeof(server_tcp_)) != -1);
 
   ROS_DEBUG("Connected\n");
 }
