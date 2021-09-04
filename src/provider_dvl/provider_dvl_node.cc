@@ -87,7 +87,7 @@ namespace provider_dvl {
                 }
                 else
                 {
-                    ROS_INFO("Checksum failed");
+                    ROS_INFO_STREAM("Checksum failed");
                 }
             }
             else
@@ -162,7 +162,7 @@ namespace provider_dvl {
 
         if(dvl_data_.pd4.statusLeakSensors == 0b01 || dvl_data_.pd4.statusLeakSensors == 0b0100 || dvl_data_.pd4.statusLeakSensors == 0b0101)
         {
-            ROS_INFO("Leak detected in the pathfinder!!!!!!");
+            ROS_INFO_STREAM("Leak detected in the pathfinder!!!!!!");
             leakDetected.data = true;
         }
         else
@@ -223,12 +223,14 @@ namespace provider_dvl {
     void ProviderDvlNode::enableDisablePingCallback(const std_msgs::Bool& msg)
     {
         if(msg.data == true)
-        {
-            // Activate DVL
+        {   
+            str = "CS";
+            socketTCP_.Send(&str[0]);
         }
         else if(msg.data == false)
         {
-            // Deactivate DVL
+            str = "===";
+            socketTCP_.Send(&str[0]);
         }
         else
         {
