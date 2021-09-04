@@ -54,7 +54,7 @@ void EthernetSocket::ConnectUDP(int port) {
   
   ROS_ASSERT(bind(socketUDP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
 
-  ROS_INFO_STREAM("Connected\n");
+  ROS_INFO_STREAM("Connected UDP\n");
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void EthernetSocket::ConnectTCP(int port) {
   cli_socket_ = accept(socketTCP_, (struct sockaddr*)&cli_addr_, &clilen);
   ROS_ASSERT(cli_socket_ != -1);
 
-  ROS_INFO_STREAM("Connected\n");
+  ROS_INFO_STREAM("Connected TCP\n");
 }
 
 //------------------------------------------------------------------------------
