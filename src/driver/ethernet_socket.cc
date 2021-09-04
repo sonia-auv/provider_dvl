@@ -71,18 +71,20 @@ void EthernetSocket::ConnectTCP(int port) {
   socketTCP_ = socket(AF_INET, SOCK_STREAM, 0);
   ROS_ASSERT(socketTCP_ != -1);
 
-  ROS_ASSERT(bind(socketTCP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
+  //ROS_ASSERT(bind(socketTCP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
 
-  listen(socketTCP_, 5);
+  //listen(socketTCP_, 5);
   
-  clilen = sizeof(cli_addr_);
+  //clilen = sizeof(cli_addr_);
 
-  ROS_INFO_STREAM("Sizeof client address");
+  //cli_socket_ = accept(socketTCP_, (struct sockaddr*)&cli_addr_, &clilen);
 
-  cli_socket_ = accept(socketTCP_, (struct sockaddr*)&cli_addr_, &clilen);
+  //ROS_INFO_STREAM("Connection accepted");
+  //ROS_ASSERT(cli_socket_ != -1);
 
-  ROS_INFO_STREAM("Connection accepted");
-  ROS_ASSERT(cli_socket_ != -1);
+  ROS_INFO_STREAM("Try to connect to the server");
+
+  ROS_ASSERT(connect(socketTCP_, (struct sockaddr *) &server_, sizeof(server_)) != -1);
 
   ROS_INFO_STREAM("Connected TCP\n");
 }
