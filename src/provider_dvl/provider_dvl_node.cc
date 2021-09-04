@@ -222,7 +222,18 @@ namespace provider_dvl {
 
     void ProviderDvlNode::enableDisablePingCallback(const std_msgs::Bool& msg)
     {
-        // Do something
+        if(msg.data == true)
+        {
+            // Activate DVL
+        }
+        else if(msg.data == false)
+        {
+            // Deactivate DVL
+        }
+        else
+        {
+            ROS_WARN_STREAM("Message isn't boolean");
+        }
     }
 
     void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
