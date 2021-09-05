@@ -282,13 +282,13 @@ namespace provider_dvl {
 
         if(depth < 0 && depth > 65535)
         {
-            std::string depth_str = std::to_string(depth);
-            str_ed += depth_str + "/n";
-            socket_.Send(&str_ed[0]);
+            ROS_WARN_STREAM("Depth out of bounds");
         }
         else
         {
-            ROS_WARN_STREAM("Depth out of bounds");
+            std::string depth_str = std::to_string(depth);
+            str_ed += depth_str + "/n";
+            socket_.Send(&str_ed[0]);   
         }
     }
 } // namespace provider_dvl
