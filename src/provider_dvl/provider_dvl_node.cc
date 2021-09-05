@@ -245,9 +245,9 @@ namespace provider_dvl {
 
     void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
     {
-        uint16_t roll = (uint16_t) msg.x*100.0; // Proc nav sends data already in the right frame
-        uint16_t pitch = (uint16_t) msg.y*100.0;
-        uint16_t yaw = (uint16_t) msg.z*100.0;
+        int16_t roll = (int16_t) msg.x*100.0; // Proc nav sends data already in the right frame
+        int16_t pitch = (int16_t) msg.y*100.0;
+        int32_t yaw = (int32_t) msg.z*100.0;
         std::string str_ep = "EP";
         std::string str_eh = "EH";
 
@@ -264,13 +264,13 @@ namespace provider_dvl {
             ROS_INFO_STREAM(str_ep);
 
         }
-        if(yaw < 0 && yaw > 35999)
+        if(yaw < -17999 && yaw > 18000)
         {
             ROS_WARN_STREAM("IMU angle out of bounds");
         }
         else
         {
-            std::string yaw_str = std::to_string(yaw);
+            std::string yaw_str = std::to_string(yaw+18000);
 
             str_eh += yaw_str + ",1";
             ROS_INFO_STREAM(str_eh);
