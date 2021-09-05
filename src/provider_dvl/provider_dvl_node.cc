@@ -225,6 +225,8 @@ namespace provider_dvl {
 
     void ProviderDvlNode::enableDisablePingCallback(const std_msgs::Bool& msg)
     {
+        std::string str;
+        
         if(msg.data == true)
         {   
             str = "CS";

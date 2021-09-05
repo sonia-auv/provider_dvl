@@ -88,8 +88,6 @@ class ProviderDvlNode {
       ros::Subscriber enableDisablePingSub;
       ros::Subscriber setAnglesSub;
       ros::Subscriber setDepthSub;
-
-      std::string str;
   };
 
 } // namespace provider_dvl
