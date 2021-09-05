@@ -245,9 +245,9 @@ namespace provider_dvl {
 
     void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
     {
-        int16_t roll = (msg.x*100.0); // Proc nav sends data already in the right frame
-        int16_t pitch = (msg.y*100.0);
-        int32_t yaw = (msg.z*100.0);
+        int16_t roll = msg.x*100.0; // Proc nav sends data already in the right frame
+        int16_t pitch = msg.y*100.0;
+        int32_t yaw = msg.z*100.0;
         std::string str_ep = "EP";
         std::string str_eh = "EH";
 
