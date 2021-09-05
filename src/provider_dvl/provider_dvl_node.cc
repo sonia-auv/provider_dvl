@@ -247,12 +247,13 @@ namespace provider_dvl {
     {
         uint16_t roll = (uint16_t) msg.x*100.0; // Proc nav sends data already in the right frame
         uint16_t pitch = (uint16_t) msg.y*100.0;
-        float_t yaw = msg.z;
-        std::string str = "EP";
+        uint16_t yaw = (uint16_t) msg.z*100.0;
+        std::string str_ep = "EP";
+        std::string str_eh = "EH";
 
         ROS_INFO("ROLL angle %d", roll);
 
-        if(roll <= -17999 && roll >= 18000 && pitch <= -17999 && pitch >= 18000)
+        if(roll < -17999 && roll > 18000 && pitch < -17999 && pitch > 18000)
         {
             ROS_WARN_STREAM("IMU angle out of bounds");
         }
@@ -261,9 +262,16 @@ namespace provider_dvl {
             std::string roll_str = std::to_string(roll);
             std::string pitch_str = std::to_string(pitch);
 
-            str += pitch_str + "," + roll_str + ",1";
-            ROS_INFO_STREAM(str);
+            str_ep += pitch_str + "," + roll_str + ",1";
+            ROS_INFO_STREAM(str_ep);
 
+        }
+        if(yaw < 0 && yaw > 35999)
+        {
+            ROS_WARN_STREAM("IMU angle out of bounds");
+        }
+        else
+        {
         }
     }
 
