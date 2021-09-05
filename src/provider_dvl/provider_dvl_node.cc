@@ -251,8 +251,6 @@ namespace provider_dvl {
         std::string str_ep = "EP";
         std::string str_eh = "EH";
 
-        ROS_INFO("ROLL angle %d", roll);
-
         if(roll < -17999 && roll > 18000 && pitch < -17999 && pitch > 18000)
         {
             ROS_WARN_STREAM("IMU angle out of bounds");
