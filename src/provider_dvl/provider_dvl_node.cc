@@ -261,7 +261,7 @@ namespace provider_dvl {
             std::string pitch_str = std::to_string(pitch);
 
             str_ep += pitch_str + "," + roll_str + ",1";
-            ROS_INFO_STREAM(str_ep);
+            //ROS_INFO_STREAM(str_ep);
             socket_.Send(&str_ep[0]);
 
         }
@@ -274,7 +274,7 @@ namespace provider_dvl {
             std::string yaw_str = std::to_string(yaw+18000);
 
             str_eh += yaw_str + ",1";
-            ROS_INFO_STREAM(str_eh);
+            //ROS_INFO_STREAM(str_eh);
             socket_.Send(&str_eh[0]);
         }
     }
