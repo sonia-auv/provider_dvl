@@ -272,6 +272,10 @@ namespace provider_dvl {
         }
         else
         {
+            std::string yaw_str = std::to_string(yaw);
+
+            str_eh += yaw_str + ",1";
+            ROS_INFO_STREAM(str_eh);
         }
     }
 
