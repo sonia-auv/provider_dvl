@@ -248,8 +248,8 @@ namespace provider_dvl {
         int16_t roll = (msg.x*100.0); // Proc nav sends data already in the right frame
         int16_t pitch = (msg.y*100.0);
         int32_t yaw = (msg.z*100.0);
-        std::string str_ep = "EP ";
-        std::string str_eh = "EH ";
+        std::string str_ep = "EP";
+        std::string str_eh = "EH";
 
         if(roll < -17999 && roll > 18000 && pitch < -17999 && pitch > 18000)
         {
@@ -260,7 +260,7 @@ namespace provider_dvl {
             std::string roll_str = std::to_string(roll);
             std::string pitch_str = std::to_string(pitch);
 
-            str_ep += pitch_str + ", " + roll_str + ", 1";
+            str_ep += pitch_str + "," + roll_str + ",1";
             ROS_INFO_STREAM(str_ep);
             socket_.Send(&str_ep[0]);
 
@@ -273,7 +273,7 @@ namespace provider_dvl {
         {
             std::string yaw_str = std::to_string(yaw+18000); // DVL wants 0 deg to 359 deg instead of -179 deg to 180 deg
 
-            str_eh += yaw_str + ", 1";
+            str_eh += yaw_str + ",1";
             ROS_INFO_STREAM(str_eh);
             socket_.Send(&str_eh[0]);
         }
