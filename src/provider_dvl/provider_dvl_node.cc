@@ -262,6 +262,7 @@ namespace provider_dvl {
 
             str_ep += pitch_str + "," + roll_str + ",1";
             ROS_INFO_STREAM(str_ep);
+            socket_.Send(&str_ep[0]);
 
         }
         if(yaw < -17999 && yaw > 18000)
@@ -274,6 +275,7 @@ namespace provider_dvl {
 
             str_eh += yaw_str + ",1";
             ROS_INFO_STREAM(str_eh);
+            socket_.Send(&str_eh[0]);
         }
     }
 
