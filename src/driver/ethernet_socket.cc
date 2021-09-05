@@ -71,14 +71,8 @@ void EthernetSocket::ConnectTCP(std::string addr, int port) {
   server_.sin_family = AF_INET;
   server_.sin_port = htons(port);
 
-  ROS_INFO_STREAM("Trying to create the socket");
-
   socketTCP_ = socket(AF_INET, SOCK_STREAM, 0);
   ROS_ASSERT(socketTCP_ != -1);
-
-  ROS_INFO_STREAM("Socket created");
-
-  ROS_INFO_STREAM("Try to connect to the server");
 
   ROS_ASSERT(connect(socketTCP_, (struct sockaddr *) &server_, sizeof(server_)) != -1);
 

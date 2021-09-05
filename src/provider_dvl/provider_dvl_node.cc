@@ -231,11 +231,13 @@ namespace provider_dvl {
         {   
             str = "CS";
             socket_.Send(&str[0]);
+            ROS_INFO_STREAM("DVL has been started");
         }
         else if(msg.data == false)
         {
             str = "===";
             socket_.Send(&str[0]);
+            ROS_INFO_STREAM("DVL has been stopped");
         }
         else
         {
