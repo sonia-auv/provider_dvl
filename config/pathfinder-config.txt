@@ -76,8 +76,8 @@ TP00:00.00
 ; Set Water-Mass Layer parameters to minimum 20 meters,
 ; near 80 meters, far 160 meters (600kHz default).
 ;#BL020,080,0160
-; Turnkey mode on (default) - PathfinderDVL will ping when power turned on.
-CT 2 5
+; Turnkey mode off (default) - PathfinderDVL will not ping when power turned on.
+CT 0
 ; Environmental Data Output – sets specialized attitude data types
 ; Piston transducer default, for Phased Array transducer use #EE0000111
 ;#EE0000101
