@@ -271,7 +271,7 @@ namespace provider_dvl {
         }
         else
         {
-            std::string yaw_str = std::to_string(yaw+18000);
+            std::string yaw_str = std::to_string(yaw+18000); // DVL wants 0 deg to 359 deg instead of -179 deg to 180 deg
 
             str_eh += yaw_str + ",1";
             //ROS_INFO_STREAM(str_eh);
