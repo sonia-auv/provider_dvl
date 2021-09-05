@@ -35,11 +35,11 @@ namespace provider_dvl {
 //
     ProviderDvlNode::ProviderDvlNode(const ros::NodeHandlePtr &nh) :
         nh_(nh),
-        socketUDP_(),
-        socketTCP_()
+        socket_()
     {
-        socketUDP_.ConnectUDP(1034);
-        socketTCP_.ConnectTCP(1033);
+        std::string hostname = "192.168.0.32";
+        socket_.ConnectUDP(1034);
+        socket_.ConnectTCP(hostname, 1033);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
         dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);
@@ -52,7 +52,10 @@ namespace provider_dvl {
 
     //------------------------------------------------------------------------------
     //
-    ProviderDvlNode::~ProviderDvlNode() {}
+    ProviderDvlNode::~ProviderDvlNode() 
+    {
+        socket_.~EthernetSocket();
+    }
 
     //==============================================================================
     // M E T H O D   S E C T I O N
@@ -66,11 +69,11 @@ namespace provider_dvl {
         {
             ros::spinOnce();
 
-            socketUDP_.Receive();
+            socket_.Receive();
 
             ROS_DEBUG("Data received");
 
-            dvl_data_ = *((DVLformat21_t*)(socketUDP_.GetRawData()));
+            dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
 
             ROS_DEBUG("Data obtained");
             
@@ -225,12 +228,12 @@ namespace provider_dvl {
         if(msg.data == true)
         {   
             str = "CS";
-            socketTCP_.Send(&str[0]);
+            socket_.Send(&str[0]);
         }
         else if(msg.data == false)
         {
             str = "===";
-            socketTCP_.Send(&str[0]);
+            socket_.Send(&str[0]);
         }
         else
         {

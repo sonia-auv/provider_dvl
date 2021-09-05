@@ -43,7 +43,7 @@ class EthernetSocket {
   // P U B L I C   M E T H O D S
 
   void ConnectUDP(int port);
-  void ConnectTCP(int port);
+  void ConnectTCP(std::string addr, int port);
   void Receive();
   void Send(char *data);
   char* GetRawData();
@@ -52,8 +52,8 @@ class EthernetSocket {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  int socketUDP_, socketTCP_, cli_socket_;
-  sockaddr_in server_, cli_addr_, dvl_;
+  int socketUDP_, socketTCP_;
+  sockaddr_in server_, dvl_;
   char data_[88];  //fix with real data
 };
 

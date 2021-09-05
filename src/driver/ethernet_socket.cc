@@ -35,7 +35,11 @@ EthernetSocket::EthernetSocket() {}
 
 //------------------------------------------------------------------------------
 //
-EthernetSocket::~EthernetSocket() {}
+EthernetSocket::~EthernetSocket() 
+{
+  close(socketTCP_);
+  close(socketUDP_);
+}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -59,34 +63,26 @@ void EthernetSocket::ConnectUDP(int port) {
 
 //------------------------------------------------------------------------------
 //
-void EthernetSocket::ConnectTCP(int port) {
-
-  socklen_t clilen;
+void EthernetSocket::ConnectTCP(std::string addr, int port) {
 
   bzero(&server_, sizeof(server_));
-  server_.sin_addr.s_addr = htonl(INADDR_ANY);
+
+  server_.sin_addr.s_addr = inet_addr(addr.c_str());
   server_.sin_family = AF_INET;
   server_.sin_port = htons(port);
+
+  ROS_INFO_STREAM("Trying to create the socket");
 
   socketTCP_ = socket(AF_INET, SOCK_STREAM, 0);
   ROS_ASSERT(socketTCP_ != -1);
 
-  //ROS_ASSERT(bind(socketTCP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
-
-  //listen(socketTCP_, 5);
-  
-  //clilen = sizeof(cli_addr_);
-
-  //cli_socket_ = accept(socketTCP_, (struct sockaddr*)&cli_addr_, &clilen);
-
-  //ROS_INFO_STREAM("Connection accepted");
-  //ROS_ASSERT(cli_socket_ != -1);
+  ROS_INFO_STREAM("Socket created");
 
   ROS_INFO_STREAM("Try to connect to the server");
 
   ROS_ASSERT(connect(socketTCP_, (struct sockaddr *) &server_, sizeof(server_)) != -1);
 
-  ROS_INFO_STREAM("Connected TCP\n");
+  ROS_INFO_STREAM("Connected TCP");
 }
 
 //------------------------------------------------------------------------------
@@ -102,7 +98,7 @@ void EthernetSocket::Receive() {
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Send(char *data) {
-  if(send(cli_socket_, data, strlen(data), 0) < 0) {
+  if(send(socketTCP_, data, strlen(data), 0) < 0) {
     ROS_INFO("Send failed");
   }
   ROS_DEBUG("Send successed");
