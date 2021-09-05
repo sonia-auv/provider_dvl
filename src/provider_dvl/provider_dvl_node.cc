@@ -231,13 +231,11 @@ namespace provider_dvl {
         {   
             str = "CS";
             socket_.Send(&str[0]);
-            ROS_INFO_STREAM("DVL has been started");
         }
         else if(msg.data == false)
         {
             str = "===";
             socket_.Send(&str[0]);
-            ROS_INFO_STREAM("DVL has been stopped");
         }
         else
         {
@@ -247,7 +245,26 @@ namespace provider_dvl {
 
     void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
     {
-        // Do something
+        uint16_t roll = (uint16_t) msg.x*100.0; // Proc nav sends data already in the right frame
+        uint16_t pitch = (uint16_t) msg.y*100.0;
+        float_t yaw = msg.z;
+        std::string str = "EP";
+
+        ROS_INFO("ROLL angle %d", roll);
+
+        if(roll <= -17999 && roll >= 18000 && pitch <= -17999 && pitch >= 18000)
+        {
+            ROS_WARN_STREAM("IMU angle out of bounds");
+        }
+        else
+        {
+            std::string roll_str = std::to_string(roll);
+            std::string pitch_str = std::to_string(pitch);
+
+            str += pitch_str + "," + roll_str + ",1";
+            ROS_INFO_STREAM(str);
+
+        }
     }
 
     void ProviderDvlNode::setDepthCallback(const std_msgs::Float64& msg)
