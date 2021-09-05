@@ -277,6 +277,18 @@ namespace provider_dvl {
 
     void ProviderDvlNode::setDepthCallback(const std_msgs::Float64& msg)
     {
-        // Do something
+        uint16_t depth = msg.data*10.0;
+        std::string str_ed = "ED";
+
+        if(depth < 0 && depth > 65535)
+        {
+            std::string depth_str = std::to_string(depth);
+            str_ed += depth_str + "/n";
+            socket_.Send(&str_ed[0]);
+        }
+        else
+        {
+            ROS_WARN_STREAM("Depth out of bounds");
+        }
     }
 } // namespace provider_dvl
