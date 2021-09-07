@@ -287,7 +287,7 @@ namespace provider_dvl {
         else
         {
             std::string depth_str = std::to_string(depth);
-            str_ed += depth_str + "/n";
+            str_ed += depth_str + "\n";
             socket_.Send(&str_ed[0]);   
         }
     }
