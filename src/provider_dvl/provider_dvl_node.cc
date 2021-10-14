@@ -229,6 +229,9 @@ namespace provider_dvl {
         
         if(msg.data == true)
         {   
+            str = "===";
+            socket_.Send(&str[0]);
+            ros::Duration(1).sleep();
             str = "CT 2 10\n";
             socket_.Send(&str[0]);
         }
