@@ -229,19 +229,19 @@ namespace provider_dvl {
         
         if(msg.data == true)
         {   
-            str = "===\n";
+            str = "===";
             socket_.Send(&str[0]);
             ros::Duration(1).sleep();
-            str = "CT 2 10\n";
+            str = "CS\n";
             socket_.Send(&str[0]);
         }
         else if(msg.data == false)
         {
-            str = "===\n";
+            str = "===";
             socket_.Send(&str[0]);
-            ros::Duration(1).sleep();
+            /*ros::Duration(1).sleep();
             str = "CT 0\n";
-            socket_.Send(&str[0]);
+            socket_.Send(&str[0]);*/
         }
         else
         {
