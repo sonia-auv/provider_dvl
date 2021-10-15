@@ -225,15 +225,15 @@ namespace provider_dvl {
 
     void ProviderDvlNode::enableDisablePingCallback(const std_msgs::Bool& msg)
     {
-        std::string str;
+        std::string str, cmd;
         
         if(msg.data == true)
         {   
             str = "===\n";
             socket_.Send(&str[0]);
             ros::Duration(1).sleep();
-            str = "CS\n";
-            socket_.Send(&str[0]);
+            cmd = "CS\n";
+            socket_.Send(&cmd[0]);
         }
         else if(msg.data == false)
         {
