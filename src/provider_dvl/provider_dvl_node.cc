@@ -229,7 +229,7 @@ namespace provider_dvl {
         
         if(msg.data == true)
         {   
-            str = "===";
+            str = "===\n";
             socket_.Send(&str[0]);
             ros::Duration(1).sleep();
             str = "CS\n";
@@ -237,7 +237,7 @@ namespace provider_dvl {
         }
         else if(msg.data == false)
         {
-            str = "===";
+            str = "===\n";
             socket_.Send(&str[0]);
             /*ros::Duration(1).sleep();
             str = "CT 0\n";
