@@ -16,7 +16,7 @@
 ; Restore factory default settings in the PathfinderDVL
 CR1
 ; Flow Control – set to default
-CF11110
+CF11100
 ; **************************************
 ; ExplorerDVL Bottom Track Setup Commands
 ; **************************************
@@ -35,7 +35,7 @@ BX03100
 ; the right thing
 EA+04500
 ; Set manual transducer depth in case depth sensor fails
-ED9900
+ED100
 ; Set Salinity to saltwater
 ES35
 ; Output ship coordinates, use tilts, allow 3 beam

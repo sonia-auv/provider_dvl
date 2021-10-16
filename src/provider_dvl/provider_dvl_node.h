@@ -34,6 +34,7 @@
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/Float64.h>
+#include <thread>
 
 #include "../driver/ethernet_socket.h"
 #include "dvl_data.h"
@@ -61,6 +62,8 @@ class ProviderDvlNode {
     //==========================================================================
     // P R I V A T E   M E T H O D S
 
+      void SendReceivedMessageThread();
+      
       void FillVelocityMessage(ros::Time timestamp);
       void FillAttitudeDVLMessage(ros::Time timestamp);
       void LeakSensorMessage();
@@ -88,6 +91,8 @@ class ProviderDvlNode {
       ros::Subscriber enableDisablePingSub;
       ros::Subscriber setAnglesSub;
       ros::Subscriber setDepthSub;
+
+      std::thread sendReceivedMessage;
   };
 
 } // namespace provider_dvl

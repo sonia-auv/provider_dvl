@@ -48,6 +48,8 @@ namespace provider_dvl {
         enableDisablePingSub = nh->subscribe("/provider_dvl/enable_disable_ping", 100, &ProviderDvlNode::enableDisablePingCallback, this);
         setAnglesSub = nh->subscribe("/provider_dvl/set_angles", 100, &ProviderDvlNode::setAnglesCallback, this);
         setDepthSub = nh->subscribe("/provider_dvl/set_depth", 100, &ProviderDvlNode::setDepthCallback, this);
+
+        sendReceivedMessage = std::thread(std::bind(&ProviderDvlNode::SendReceivedMessageThread, this));
     }
 
     //------------------------------------------------------------------------------
@@ -63,12 +65,21 @@ namespace provider_dvl {
     //------------------------------------------------------------------------------
     //
     void ProviderDvlNode::Spin() {
-        ros::Rate r(20);  // 20 hz
+        ros::Rate r(10);  // 10 hz
 
         while (ros::ok())
         {
             ros::spinOnce();
+            r.sleep();
+        }
+    }
 
+    void ProviderDvlNode::SendReceivedMessageThread()
+    {
+        ros::Rate r(20); // 20 Hz
+
+        while(!ros::isShuttingDown())
+        {
             socket_.Receive();
 
             ROS_DEBUG("Data received");
@@ -76,27 +87,27 @@ namespace provider_dvl {
             dvl_data_ = *((DVLformat21_t*)(socket_.GetRawData()));
 
             ROS_DEBUG("Data obtained");
-            
-            if (dvl_data_.pd4.pathfinderDataId == 0x7D)
-            {
-                ROS_DEBUG("ID correct");
-                if(confirmChecksum((uint8_t *)&dvl_data_))
+
+                if(dvl_data_.pd4.pathfinderDataId == 0x7D)
                 {
-                    ROS_DEBUG("Checksum passed");
-                    timestamp_ = ros::Time::now();
-                    FillVelocityMessage(timestamp_);
-                    FillAttitudeDVLMessage(timestamp_);
-                    LeakSensorMessage();
+                    ROS_DEBUG("ID correct");
+                    if(confirmChecksum((uint8_t *)&dvl_data_))
+                    {
+                        ROS_DEBUG("Checksum passed");
+                        timestamp_ = ros::Time::now();
+                        FillVelocityMessage(timestamp_);
+                        FillAttitudeDVLMessage(timestamp_);
+                        LeakSensorMessage();
+                    }
+                    else
+                    {
+                        ROS_INFO_STREAM("Checksum failed");
+                    }
                 }
                 else
                 {
-                    ROS_INFO_STREAM("Checksum failed");
+                    ROS_INFO("Pathfinder ID didn't egal in the data obtained : %d", 0x7D);
                 }
-            }
-            else
-            {
-                ROS_INFO("Pathfinder ID didn't egal in the data obtained : %d", 0x7D);
-            }
             r.sleep();
         }
     }
@@ -231,7 +242,7 @@ namespace provider_dvl {
         {   
             str = "===\n";
             socket_.Send(&str[0]);
-            ros::Duration(1).sleep();
+            ros::Duration(5).sleep();
             cmd = "CS\n";
             socket_.Send(&cmd[0]);
         }
