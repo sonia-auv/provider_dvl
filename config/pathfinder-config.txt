@@ -72,7 +72,7 @@ TP00:00.00
 ; processing.
 ;
 ; Enable Water-Mass Layer Mode with each bottom tracking pings
-#BK1
+#BK0
 ; Set Water-Mass Layer parameters to minimum 20 meters,
 ; near 80 meters, far 160 meters (600kHz default).
 ;#BL020,080,0160
