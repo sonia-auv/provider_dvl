@@ -8,22 +8,22 @@
 
 //------------------------------------------------------------------------------
 //
-ProviderDvlNode::ProviderDvlNode(const ros::NodeHandlePtr &nh, size_t pUDP, size_t pTCP, size_t rate )
-    : mNh(nh), mSocket()
+PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, size_t pUDP, size_t pTCP, size_t rate )
+    : mSocket()
 {
+  ProviderDvl::nh() = nh;
   ProviderDvl::portUDP() = pUDP;
   ProviderDvl::portTCP() = pTCP;
   ProviderDvl::rate() = rate;
   PathfinderDvl::connect();
-  PathfinderDvl::setupROSCommunication(nh);
+  PathfinderDvl::setupROSCommunication();
 
-  sendReceivedMessage =
-      std::thread(std::bind(&ProviderDvlNode::SendReceivedMessageThread, this));
+  mSendReceivedMessage =
+      std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
 }
-
 //------------------------------------------------------------------------------
 //
-ProviderDvlNode::~ProviderDvlNode() { socket_.~EthernetSocket(); }
+PathfinderDvl::~PathfinderDvl() { mSocket.~EthernetSocket(); }
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -31,28 +31,58 @@ ProviderDvlNode::~ProviderDvlNode() { socket_.~EthernetSocket(); }
 //------------------------------------------------------------------------------
 //
 
-void PathfinderDvl::setupROSCommunication(const ros::NodeHandlePtr &nh) {
 
-  dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>(
+void PathfinderDvl::setupROSCommunication() {
+
+  dvl_velocity_publisher_ = ProviderDvl::nh()->advertise<sonia_common::BodyVelocityDVL>(
       "/provider_dvl/dvl_velocity", 100);
-  dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>(
+  dvl_position_publisher_ = ProviderDvl::nh()->advertise<sonia_common::AttitudeDVL>(
       "/provider_dvl/dvl_attitude", 100);
   dvl_leak_sensor_publisher_ =
-      nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
+      ProviderDvl::nh()->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
 
   enableDisablePingSub =
-      nh->subscribe("/provider_dvl/enable_disable_ping", 100,
-                    &ProviderDvlNode::enableDisablePingCallback, this);
-  setAnglesSub = nh->subscribe("/provider_dvl/set_angles", 100,
-                               &ProviderDvlNode::setAnglesCallback, this);
-  setDepthSub = nh->subscribe("/provider_dvl/set_depth", 100,
-                              &ProviderDvlNode::setDepthCallback, this);
+      ProviderDvl::nh()->subscribe("/provider_dvl/enable_disable_ping", 100,
+                    &PathfinderDvl::enableDisablePingCallback, this);
 
 }
 
 void PathfinderDvl::connect() {
 
-  socket_.ConnectUDP(this->portUDP());
-  socket_.ConnectTCP(this->hostName(), this->portTCP);
-
+  mSocket.ConnectUDP(this->portUDP());
+  mSocket.ConnectTCP(this->hostName(), this->portTCP());
 }
+
+void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
+{
+    std::string str, cmd;
+    
+    if(msg.data == true)
+    {   
+        str = "===\n";
+        mSocket.Send(&str[0]);
+        ros::Duration(5).sleep();
+        cmd = "CS\n";
+        mSocket.Send(&cmd[0]);
+    }
+    else if(msg.data == false)
+    {
+        str = "===\n";
+        mSocket.Send(&str[0]);
+    }
+    else
+    {
+        ROS_WARN_STREAM("Message isn't boolean");
+    }
+}
+
+void ProviderDvl::SendReceivedMessageThread()
+    {
+        ros::Rate r(20); // 20 Hz
+
+        while(!ros::isShuttingDown())
+        {
+            
+            r.sleep();
+        }
+    }
