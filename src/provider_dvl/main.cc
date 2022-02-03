@@ -29,6 +29,7 @@
 int main(int argc, char *argv[]) {
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
-  provider_dvl::ProviderDvlNode provider_dvl_node{nh};
-  provider_dvl_node.Spin();
+  PathfinderDvl provider_dvl_Pathfinder;
+  //PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
+  //provider_dvl->Spin();
 }
