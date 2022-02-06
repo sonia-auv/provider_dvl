@@ -1,11 +1,3 @@
 <launch>
-    <node name="provider_dvl"
-        pkg="provider_dvl"
-        type="provider_dvl_node"
-	args="serial:///dev/ttyS0:115200"
-	output="log" />
-
-
-    <rosparam command="load"
-        file="$(find provider_dvl)/config/teledyne_conf.yaml"/>
+    <node name="provider_dvl" pkg="provider_dvl" type="provider_dvl_node" output="screen" />
 </launch>

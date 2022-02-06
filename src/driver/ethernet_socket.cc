@@ -35,42 +35,68 @@ EthernetSocket::EthernetSocket() {}
 
 //------------------------------------------------------------------------------
 //
-EthernetSocket::~EthernetSocket() {}
+EthernetSocket::~EthernetSocket() 
+{
+  close(socketTCP_);
+  close(socketUDP_);
+}
 
 //==============================================================================
 // M E T H O D   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-void EthernetSocket::Connect(std::string address, int port) {
-  struct sockaddr_in server;
+void EthernetSocket::ConnectUDP(int port) {
 
-  socket_ = socket(AF_INET, SOCK_STREAM, 0);
-  if (socket_ == -1) {
-    ROS_DEBUG("Could not create socket");
-  }
+  bzero(&server_, sizeof(server_));
+  server_.sin_addr.s_addr = htonl(INADDR_ANY);
+  server_.sin_family = AF_INET;
+  server_.sin_port = htons(port);
 
-  server.sin_addr.s_addr = inet_addr(address.c_str());
-  server.sin_family = AF_INET;
-  server.sin_port = htons(port);
+  socketUDP_ = socket(AF_INET, SOCK_DGRAM, 0);
+  ROS_ASSERT(socketUDP_ != -1);
+  
+  ROS_ASSERT(bind(socketUDP_, (struct sockaddr*)&server_, sizeof(server_)) != -1);
 
-  if (connect(socket_, (struct sockaddr *) &server, sizeof(server)) < 0) {
-    ROS_DEBUG("Connect error");
-    return;
-  }
+  ROS_INFO_STREAM("Connected UDP");
+}
 
-  ROS_DEBUG("Connected\n");
+//------------------------------------------------------------------------------
+//
+void EthernetSocket::ConnectTCP(std::string addr, int port) {
+
+  bzero(&server_, sizeof(server_));
+
+  server_.sin_addr.s_addr = inet_addr(addr.c_str());
+  server_.sin_family = AF_INET;
+  server_.sin_port = htons(port);
+
+  socketTCP_ = socket(AF_INET, SOCK_STREAM, 0);
+  ROS_ASSERT(socketTCP_ != -1);
+
+  ROS_ASSERT(connect(socketTCP_, (struct sockaddr *) &server_, sizeof(server_)) != -1);
+
+  ROS_INFO_STREAM("Connected TCP");
 }
 
 //------------------------------------------------------------------------------
 //
 void EthernetSocket::Receive() {
-  if (recv(socket_, data_, 2048, 0) < 0) {
-    ROS_DEBUG("Receive failed");
+  socklen_t len = sizeof(dvl_);
+  if (recvfrom(socketUDP_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
+    ROS_INFO_STREAM("Receive failed");
   }
-  ROS_DEBUG("Reply received");
+  ROS_DEBUG("Receive successed");
 }
 
+//------------------------------------------------------------------------------
+//
+void EthernetSocket::Send(char *data) {
+  if(send(socketTCP_, data, strlen(data), 0) < 0) {
+    ROS_INFO_STREAM("Send failed");
+  }
+  ROS_DEBUG("Send successed");
+}
 //------------------------------------------------------------------------------
 //
 char* EthernetSocket::GetRawData() {

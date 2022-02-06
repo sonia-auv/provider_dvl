@@ -42,17 +42,19 @@ class EthernetSocket {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void Connect(std::string address, int port);
+  void ConnectUDP(int port);
+  void ConnectTCP(std::string addr, int port);
   void Receive();
+  void Send(char *data);
   char* GetRawData();
 
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
-  int socket_;
-  char data_[2048];
-
+  int socketUDP_, socketTCP_;
+  sockaddr_in server_, dvl_;
+  char data_[88];  //fix with real data
 };
 
 #endif //ETHERNET_SOCKET_H

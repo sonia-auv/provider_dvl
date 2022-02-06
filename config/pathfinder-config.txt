@@ -1,0 +1,100 @@
+;--------------------------------------------------------------------------
+; 600 kHz PathfinderDVL 
+; Type: 600khz PathfinderDVL
+; Setup name: pathfinder-config.txt
+; Setup type: 
+;
+; Author : Francis Alonzo <francisalonzo29@gmail.com>
+;
+; NOTE: Any line beginning with a semicolon in the first column is
+; treated as a comment and is ignored by the software.
+; Modified Last: 20 march 2021
+;-------------------------------------------------------------------------
+; **************************************
+; PathfinderDVL Basic Setup Commands
+; **************************************
+; Restore factory default settings in the PathfinderDVL
+CR1
+; Flow Control – set to default
+CF11100
+; **************************************
+; ExplorerDVL Bottom Track Setup Commands
+; **************************************
+; No average for bottom track,
+BP001
+; Set maximum bottom search depth to 31 meters (maximum pool depth for competition)
+BX03100
+; **************************************
+; PathfinderDVL Environment Setup Commands
+; **************************************
+; Set Heading Alignment to 45 degrees
+; NOTE. If the PathfinderDVL is rotated +45 degrees starboard
+; (recommended alignment), set EA to EA+04500
+; NOTE : We should alway try to hit the 45 degrees mark. When
+; this is not possible, we need to change the 45 degrees to
+; the right thing
+EA+04500
+; Set manual transducer depth in case depth sensor fails
+ED100
+; Set Salinity to saltwater
+ES35
+; Output ship coordinates, use tilts, allow 3 beam
+; solutions and bin mapping
+EX10111
+; Set to use external sensors
+; We will not use any external sensor for the moment
+EZ10000010
+; **************************************
+; PathfinderDVL Timing Setup Commands
+; **************************************
+; Set Time between Ensembles to zero (PathfinderDVL will ping as fast as possible)
+TE00000000
+; Set Time between Pings to zero (PathfinderDVL will ping as fast as possible)
+TP00:00.00
+; **************************************
+; PathfinderDVL Water Profiling Setup Commands
+; **************************************
+; Note: By default, water profiling is turned off.
+; To use water profiling, set the WP command >0
+;WP00000
+; Bin size set to 200 cm
+;WS0200
+; Number of bins set to 30
+;WN030
+;
+; **************************************
+; PathfinderDVL Expert Command Section
+; **************************************
+;
+; CAUTION - Editing or adding expert commands to the command file will allow
+; you to set items that if set incorrectly can cause your data to
+; be the wrong format, bad, and/or uncorrectable even in post
+; processing.
+;
+; Enable Water-Mass Layer Mode with each bottom tracking pings
+#BK0
+; Set Water-Mass Layer parameters to minimum 20 meters,
+; near 80 meters, far 160 meters (600kHz default).
+;#BL020,080,0160
+; Turnkey mode off (default) - PathfinderDVL will not ping when power turned on.
+CT 0
+; Environmental Data Output – sets specialized attitude data types
+; Piston transducer default, for Phased Array transducer use #EE0000111
+;#EE0000101
+; Set Heading Bias to 0 degrees
+; NOTE. Set #EV = [(local magnetic declaration)*100] + (-4500)
+; to compensate for the transducer misalignment (if used).
+#EV00000
+; Set output data format to #PD5
+#PD5
+; **************************************
+; PathfinderDVL Sensor Setup Commands
+; **************************************
+; See the PathfinderDVL Operation Manual for details on the sensor commands.
+; If needed, add the commands here.
+;
+;-------------------------------------------------------------------------
+; Save this setup to non-volatile memory in the PathfinderDVL
+CK
+; Start pinging
+CS
