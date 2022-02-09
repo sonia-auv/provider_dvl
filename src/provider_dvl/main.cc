@@ -29,7 +29,7 @@
 int main(int argc, char *argv[]) {
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
-  PathfinderDvl provider_dvl_Pathfinder;
-  //PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
-  //provider_dvl->Spin();
+  PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1034, 1033, 20);
+  PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
+  provider_dvl->Spin();
 }

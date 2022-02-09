@@ -1,4 +1,3 @@
-#include <ros/ros.h>
 #include "provider_dvl/provider_dvl_node.h"
 
 
@@ -7,22 +6,21 @@
 
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, size_t pUDP, size_t pTCP, size_t rate )
-    : mSocket()
+PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate )
 {
   ProviderDvl::nh() = nh;
   ProviderDvl::portUDP() = pUDP;
   ProviderDvl::portTCP() = pTCP;
   ProviderDvl::rate() = rate;
+  ProviderDvl::hostName() = hostName;
   PathfinderDvl::connect();
   PathfinderDvl::setupROSCommunication();
-
   mSendReceivedMessage =
       std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
 }
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::~PathfinderDvl() { mSocket.~EthernetSocket(); }
+PathfinderDvl::~PathfinderDvl() { }
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -45,8 +43,8 @@ void PathfinderDvl::setupROSCommunication() {
 
 void PathfinderDvl::connect() {
 
-  mSocket.ConnectUDP(this->portUDP());
-  mSocket.ConnectTCP(this->hostName(), this->portTCP());
+  socket().ConnectUDP(this->portUDP());
+  socket().ConnectTCP(this->hostName(), this->portTCP());
 }
 
 void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
@@ -56,29 +54,18 @@ void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
     if(msg.data == true)
     {   
         str = "===\n";
-        mSocket.Send(&str[0]);
+        socket().Send(&str[0]);
         ros::Duration(5).sleep();
         cmd = "CS\n";
-        mSocket.Send(&cmd[0]);
+        socket().Send(&cmd[0]);
     }
     else if(msg.data == false)
     {
         str = "===\n";
-        mSocket.Send(&str[0]);
+        socket().Send(&str[0]);
     }
     else
     {
         ROS_WARN_STREAM("Message isn't boolean");
-    }
-}
-
-void ProviderDvl::SendReceivedMessageThread()
-{
-    ros::Rate r(20); // 20 Hz
-
-    while(!ros::isShuttingDown())
-    {
-        
-        r.sleep();
     }
 }

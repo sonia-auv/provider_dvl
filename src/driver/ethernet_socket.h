@@ -44,7 +44,7 @@ class EthernetSocket {
 
   void ConnectUDP(int port);
   void ConnectTCP(std::string addr, int port);
-  void Receive();
+  bool Receive();
   void Send(char *data);
   char* GetRawData();
 
