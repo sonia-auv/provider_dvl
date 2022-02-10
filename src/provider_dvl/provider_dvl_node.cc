@@ -42,7 +42,6 @@ namespace provider_dvl {
         socket_.ConnectTCP(hostname, 1033);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
-        dvl_position_publisher_ = nh_->advertise<sonia_common::AttitudeDVL>("/provider_dvl/dvl_attitude", 100);
         dvl_leak_sensor_publisher_ = nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
 
         enableDisablePingSub = nh->subscribe("/provider_dvl/enable_disable_ping", 100, &ProviderDvlNode::enableDisablePingCallback, this);
@@ -96,7 +95,6 @@ namespace provider_dvl {
                         ROS_DEBUG("Checksum passed");
                         timestamp_ = ros::Time::now();
                         FillVelocityMessage(timestamp_);
-                        FillAttitudeDVLMessage(timestamp_);
                         LeakSensorMessage();
                     }
                     else
@@ -130,44 +128,6 @@ namespace provider_dvl {
         message.velocity4 = ((double_t)dvl_data_.pd4.velocity4)/1000.0;
 
         dvl_velocity_publisher_.publish(message);
-    }
-
-    void ProviderDvlNode::FillAttitudeDVLMessage(ros::Time timestamp)
-    {
-        sonia_common::AttitudeDVL message;
-
-        message.header.stamp = timestamp;
-        message.header.frame_id = verifyFrameId(dvl_data_.pd4.systemConfig);
-        // DEPTH
-        if(dvl_data_.pd5.depth >= 9999)
-            message.position.Z = 9999.0/10.0;
-        else if(dvl_data_.pd5.depth <= 1)
-            message.position.Z = 1.0/10.0;
-        else
-            message.position.Z = dvl_data_.pd5.depth/10.0;
-        // ROLL
-        if(dvl_data_.pd5.roll*ANGLE_LSD >= 20.0)
-            message.position.ROLL = 20.0;
-        else if(dvl_data_.pd5.roll*ANGLE_LSD <= -20.0)
-            message.position.ROLL = -20.0;
-        else
-            message.position.ROLL = dvl_data_.pd5.roll*ANGLE_LSD;
-        // PITCH
-        if(dvl_data_.pd5.pitch*ANGLE_LSD >= 20.0)
-            message.position.PITCH = 20.0;
-        else if(dvl_data_.pd5.pitch*ANGLE_LSD <= -20.0)
-            message.position.PITCH = -20.0;
-        else
-            message.position.PITCH = dvl_data_.pd5.pitch*ANGLE_LSD;
-        // YAW
-        if(dvl_data_.pd5.heading*ANGLE_LSD >= 360.0)
-            message.position.YAW = 360.0;
-        else if(dvl_data_.pd5.heading*ANGLE_LSD <= 0.0)
-            message.position.YAW = 0.0;
-        else
-            message.position.YAW = dvl_data_.pd5.heading*ANGLE_LSD;
-
-        dvl_position_publisher_.publish(message);
     }
 
     void ProviderDvlNode::LeakSensorMessage()
@@ -250,9 +210,6 @@ namespace provider_dvl {
         {
             str = "===\n";
             socket_.Send(&str[0]);
-            /*ros::Duration(1).sleep();
-            str = "CT 0\n";
-            socket_.Send(&str[0]);*/
         }
         else
         {

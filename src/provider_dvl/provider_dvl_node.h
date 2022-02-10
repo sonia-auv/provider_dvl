@@ -30,7 +30,6 @@
 
 #include <ros/node_handle.h>
 #include <sonia_common/BodyVelocityDVL.h>
-#include <sonia_common/AttitudeDVL.h>
 #include <std_msgs/Bool.h>
 #include <geometry_msgs/Vector3.h>
 #include <std_msgs/Float64.h>
@@ -65,7 +64,6 @@ class ProviderDvlNode {
       void SendReceivedMessageThread();
       
       void FillVelocityMessage(ros::Time timestamp);
-      void FillAttitudeDVLMessage(ros::Time timestamp);
       void LeakSensorMessage();
       uint16_t calculateChecksum(uint8_t *dvlData);
       bool confirmChecksum(uint8_t *dvlData);
@@ -85,7 +83,6 @@ class ProviderDvlNode {
 
       ros::Time timestamp_;
       ros::Publisher dvl_velocity_publisher_;
-      ros::Publisher dvl_position_publisher_;
       ros::Publisher dvl_leak_sensor_publisher_;
       
       ros::Subscriber enableDisablePingSub;
