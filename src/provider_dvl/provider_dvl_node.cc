@@ -45,8 +45,6 @@ namespace provider_dvl {
         dvl_leak_sensor_publisher_ = nh_->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
 
         enableDisablePingSub = nh->subscribe("/provider_dvl/enable_disable_ping", 100, &ProviderDvlNode::enableDisablePingCallback, this);
-        setAnglesSub = nh->subscribe("/provider_dvl/set_angles", 100, &ProviderDvlNode::setAnglesCallback, this);
-        setDepthSub = nh->subscribe("/provider_dvl/set_depth", 100, &ProviderDvlNode::setDepthCallback, this);
 
         sendReceivedMessage = std::thread(std::bind(&ProviderDvlNode::SendReceivedMessageThread, this));
     }
@@ -167,7 +165,7 @@ namespace provider_dvl {
     bool ProviderDvlNode::confirmChecksum(uint8_t *dvlData)
     {
         uint16_t calculatedChecksum = calculateChecksum(dvlData);
-        return dvl_data_.pd5.checksum == calculatedChecksum;
+        return dvl_data_.pd4.checksum == calculatedChecksum;
     } 
 
     std::string ProviderDvlNode::verifyFrameId(uint8_t systemId)
@@ -214,55 +212,6 @@ namespace provider_dvl {
         else
         {
             ROS_WARN_STREAM("Message isn't boolean");
-        }
-    }
-
-    void ProviderDvlNode::setAnglesCallback(const geometry_msgs::Vector3& msg)
-    {
-        int16_t roll = msg.x*100.0; // Proc nav sends data already in the right frame
-        int16_t pitch = msg.y*100.0;
-        int32_t yaw = msg.z*100.0;
-        std::string str_ep = "#EP";
-        std::string str_eh = "#EH";
-
-        if(roll < -17999 && roll > 18000 && pitch < -17999 && pitch > 18000)
-        {
-            ROS_WARN_STREAM("IMU angle out of bounds");
-        }
-        else
-        {
-            std::string roll_str = std::to_string(roll);
-            std::string pitch_str = std::to_string(pitch);
-            str_ep += pitch_str + "," + roll_str + ",1\n";
-            socket_.Send(&str_ep[0]);
-
-        }
-        if(yaw < -17999 && yaw > 18000)
-        {
-            ROS_WARN_STREAM("IMU angle out of bounds");
-        }
-        else
-        {
-            std::string yaw_str = std::to_string(yaw+18000); // DVL wants 0 deg to 359 deg instead of -179 deg to 180 deg
-            str_eh += yaw_str + ",1\n";
-            socket_.Send(&str_eh[0]);
-        }
-    }
-
-    void ProviderDvlNode::setDepthCallback(const std_msgs::Float64& msg)
-    {
-        uint16_t depth = msg.data*10.0;
-        std::string str_ed = "ED";
-
-        if(depth < 0 && depth > 65535)
-        {
-            ROS_WARN_STREAM("Depth out of bounds");
-        }
-        else
-        {
-            std::string depth_str = std::to_string(depth);
-            str_ed += depth_str + "\n";
-            socket_.Send(&str_ed[0]);   
         }
     }
 } // namespace provider_dvl

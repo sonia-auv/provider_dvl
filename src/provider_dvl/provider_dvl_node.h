@@ -70,8 +70,6 @@ class ProviderDvlNode {
       std::string verifyFrameId(uint8_t systemId);
 
       void enableDisablePingCallback(const std_msgs::Bool& msg);
-      void setAnglesCallback(const geometry_msgs::Vector3& msg);
-      void setDepthCallback(const std_msgs::Float64& msg);
 
       //==========================================================================
       // P R I V A T E   M E M B E R S
@@ -86,8 +84,6 @@ class ProviderDvlNode {
       ros::Publisher dvl_leak_sensor_publisher_;
       
       ros::Subscriber enableDisablePingSub;
-      ros::Subscriber setAnglesSub;
-      ros::Subscriber setDepthSub;
 
       std::thread sendReceivedMessage;
   };

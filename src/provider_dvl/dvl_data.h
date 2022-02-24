@@ -36,29 +36,11 @@ typedef struct
   uint16_t statusLeakSensors;
   uint16_t speedOfSound;
   uint16_t temperature;
-} PD4;
-
-typedef struct
-{
-  uint8_t salinity;
-  uint16_t depth;
-  int16_t pitch;
-  int16_t roll;
-  uint16_t heading;
-  uint32_t distanceMadeGoodBtmEast;
-  uint32_t distanceMadeGoodBtmNorth;
-  uint32_t distanceMadeGoodBtmUp;
-  uint32_t distanceMadeGoodBtmError;
-  uint32_t distanceMadeGoodRefEast;
-  uint32_t distanceMadeGoodRefNorth;
-  uint32_t distanceMadeGoodRefUp;
-  uint32_t distanceMadeGoodRefError;
   uint16_t checksum;
-} PD5;
+} PD4;
 
 typedef struct {
   PD4 pd4;
-  PD5 pd5;
 } DVLformat21_t;
 
 #pragma pack(pop)

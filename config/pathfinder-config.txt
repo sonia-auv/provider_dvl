@@ -85,8 +85,8 @@ CT 0
 ; NOTE. Set #EV = [(local magnetic declaration)*100] + (-4500)
 ; to compensate for the transducer misalignment (if used).
 #EV00000
-; Set output data format to #PD5
-#PD5
+; Set output data format to #PD4
+#PD4
 ; **************************************
 ; PathfinderDVL Sensor Setup Commands
 ; **************************************

@@ -54,7 +54,7 @@ class EthernetSocket {
 
   int socketUDP_, socketTCP_;
   sockaddr_in server_, dvl_;
-  char data_[88];  //fix with real data
+  char data_[48];  //fix with real data
 };
 
 #endif //ETHERNET_SOCKET_H
