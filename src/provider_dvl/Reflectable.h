@@ -51,7 +51,6 @@ PAIR(x); \
 template<class Self> \
 struct field_data<i, Self> \
 { \
-using value_type = i; \
     Self & self; \
     field_data(Self & self) : self(self) {} \
     \

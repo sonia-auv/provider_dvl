@@ -29,7 +29,7 @@
 int main(int argc, char *argv[]) {
 
   DVLformat21_t p(argc);
-  auto m = generate_map(p);
+  // auto m = generate_map(p);
 
   //print_field(p,2);
 
