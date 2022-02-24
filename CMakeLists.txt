@@ -18,8 +18,8 @@ if (NOT CMAKE_BUILD_TYPE)
             FORCE)
 endif (NOT CMAKE_BUILD_TYPE)
 
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 -Wall")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 -O3 -s")
+set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++14 -Wall")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++14 -O3 -s")
 
 set(provider_dvl_SRC_DIR "src")
 
@@ -47,6 +47,12 @@ catkin_package(
 )
 
 
+set(Boost_USE_STATIC_LIBS ON) 
+set(Boost_USE_MULTITHREADED ON)  
+set(Boost_USE_STATIC_RUNTIME ON) 
+find_package(Boost 1.71.0 COMPONENTS preprocessor)
+find_package(Boost 1.71.0 COMPONENTS reflect) 
+
 
 #===============================================================================
 # I N C L U D E   F I L E S
@@ -61,6 +67,7 @@ list(REMOVE_ITEM provider_dvl_FILES
 include_directories(
         ${catkin_INCLUDE_DIRS}
         ${provider_dvl_SRC_DIR}
+        ${Boost_INCLUDE_DIRS}
 )
 
 #==========================================================================
@@ -70,6 +77,7 @@ add_executable(${PROJECT_NAME}_node ${provider_dvl_SRC_DIR}/${PROJECT_NAME}/main
 target_link_libraries(${PROJECT_NAME}_node
         ${catkin_LIBRARIES}
         yaml-cpp
+        ${Boost_LIBRARIES}
         )
 
 add_dependencies(${PROJECT_NAME}_node ${catkin_EXPORTED_TARGETS})

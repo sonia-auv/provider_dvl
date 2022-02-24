@@ -51,8 +51,9 @@ class ProviderDvl {
     FrameId & frameId() {return mFrameId;}
 
   protected:
-    void SendReceivedMessageThread();
     std::thread mSendReceivedMessage;
+    // void SendReceivedMessageThread();
+    // template<class T> void SendReceivedMessageThread(T rawData, std::vector<std::pair<size_t,size_t>> bitmap);
   private:
       FrameId mFrameId{};
       EthernetSocket mSocket;
@@ -62,10 +63,7 @@ class ProviderDvl {
       size_t mRate{};
 
       ros::NodeHandlePtr mNh;
-  };
-
-// template<type T>
-// void ProviderDvl::updateMyClassValue<short int>(T value) {
-//     objMyClass.var2 = value;
-//}
+    
+   
+};
   #endif // PROVIDER_DVL_H

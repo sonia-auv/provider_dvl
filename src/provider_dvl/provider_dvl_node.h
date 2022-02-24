@@ -35,7 +35,6 @@ class PathfinderDvl :  public ProviderDvl{
       //==========================================================================
       // P U B L I C   M E T H O D S
       void connect() override;
-
       void enableDisablePingCallback(const std_msgs::Bool& msg);
 
       private:

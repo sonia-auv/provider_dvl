@@ -22,14 +22,24 @@
  * You should have received a copy of the GNU General Public License
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
-
 #include <ros/ros.h>
 #include "provider_dvl/provider_dvl_node.h"
+#include "dvl_data.h"
 
 int main(int argc, char *argv[]) {
+
+  DVLformat21_t p(argc);
+  auto m = generate_map(p);
+
+  //print_field(p,2);
+
+  
+
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
   PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1034, 1033, 20);
   PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
   provider_dvl->Spin();
+
+  return 0;
 }

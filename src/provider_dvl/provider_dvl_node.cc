@@ -6,7 +6,7 @@
 
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate )
+PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate)
 {
   ProviderDvl::nh() = nh;
   ProviderDvl::portUDP() = pUDP;
@@ -15,8 +15,7 @@ PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName,
   ProviderDvl::hostName() = hostName;
   PathfinderDvl::connect();
   PathfinderDvl::setupROSCommunication();
-  mSendReceivedMessage =
-      std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
+  //mSendReceivedMessage = std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
 }
 //------------------------------------------------------------------------------
 //
@@ -42,9 +41,8 @@ void PathfinderDvl::setupROSCommunication() {
 }
 
 void PathfinderDvl::connect() {
-
-  socket().ConnectUDP(this->portUDP());
-  socket().ConnectTCP(this->hostName(), this->portTCP());
+  socket().ConnectUDP(portUDP());
+  socket().ConnectTCP(hostName(),  portTCP());
 }
 
 void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
