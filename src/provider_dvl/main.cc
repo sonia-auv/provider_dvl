@@ -32,9 +32,6 @@ int main(int argc, char *argv[]) {
   // auto m = generate_map(p);
 
   //print_field(p,2);
-
-  
-
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
   PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1034, 1033, 20);

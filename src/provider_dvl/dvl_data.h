@@ -8,13 +8,16 @@
 
 struct DVLformat21_t
 {
-    DVLformat21_t(int dummy)
+    //*****************
+    // a delete
+    DVLformat21_t(int dummy) 
     {
       pathfinderDataId = 0x76;
     }
     DVLformat21_t()
     : DVLformat21_t(9)
     {}
+    //******************
 private:
     REFLECTABLE
     (
