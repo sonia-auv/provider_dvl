@@ -1,17 +1,17 @@
 #include "provider_dvl/provider_dvl.h"
 
 
-// void ProviderDvl::SendReceivedMessageThread()
-// {
-//     ros::Rate r(mRate); 
+ProviderDvl::ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize)
+: mNh(nh),
+  mHostName(hostName),
+  mPortUDP{pUDP},
+  mPortTCP{pTCP},
+  mRate{mRate},
+  mFrameId{FrameId::ENU},
+  mSocket(dataSize)
+{
+}
 
-//     while(!ros::isShuttingDown())
-//     {
-//         if(mSocket.Receive()) ROS_DEBUG("Data received");
-        
-//         mDvl_data = *((DVLformat21_t*)(mSocket.GetRawData()));
-        
-//         r.sleep();
-//     }
-// }
+
+
 

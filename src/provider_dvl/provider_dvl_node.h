@@ -27,9 +27,12 @@ class PathfinderDvl :  public ProviderDvl{
       // P U B L I C   C / D T O R S
       PathfinderDvl() = default;
       PathfinderDvl(const ros::NodeHandlePtr& nh);
-      PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate);
-
+      PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize);
       ~PathfinderDvl();
+
+
+
+
       void setupROSCommunication() override;
 
       //==========================================================================

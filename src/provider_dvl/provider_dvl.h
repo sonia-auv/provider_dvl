@@ -19,7 +19,9 @@ class ProviderDvl {
   public:
     //==========================================================================
     // P U B L I C   C / D T O R S
-    ~ProviderDvl(){socket().~EthernetSocket();} // Close connection
+
+    ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize);
+    ~ProviderDvl(){mSocket.~EthernetSocket();} // Close connection
 
     //==========================================================================
     // P U B L I C  V I R T U A L   M E T H O D S
@@ -37,11 +39,6 @@ class ProviderDvl {
     //==========================================================================
     // P U B L I C   M E T H O D S
 
-    void buildMessage(const std::vector<size_t> & outputDataFormat) 
-    {
-      
-    };
-
     size_t & portUDP() { return mPortUDP;}
     size_t & portTCP() {return mPortTCP;}
     size_t & rate() {return mRate;}
@@ -52,17 +49,21 @@ class ProviderDvl {
 
   protected:
     std::thread mSendReceivedMessage;
-    // void SendReceivedMessageThread();
-    // template<class T> void SendReceivedMessageThread(T rawData, std::vector<std::pair<size_t,size_t>> bitmap);
-  private:
-      FrameId mFrameId{};
-      EthernetSocket mSocket;
-      std::string mHostName;
-      size_t mPortUDP{};
-      size_t mPortTCP{};
-      size_t mRate{};
 
+    template<class T>
+    void getData(T & x)
+    {
+      x = *((T*)(mSocket.GetRawData()));
+    }
+
+  private:
       ros::NodeHandlePtr mNh;
+      std::string mHostName;
+      size_t mPortUDP;
+      size_t mPortTCP;
+      size_t mRate;
+      FrameId mFrameId;
+      EthernetSocket mSocket;
     
    
 };
