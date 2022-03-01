@@ -37,6 +37,7 @@ class EthernetSocket {
   // P U B L I C   C / D T O R S
 
   EthernetSocket();
+  EthernetSocket(size_t dataSize);
   ~EthernetSocket();
 
   //==========================================================================
@@ -54,7 +55,7 @@ class EthernetSocket {
 
   int socketUDP_, socketTCP_;
   sockaddr_in server_, dvl_;
-  char data_[88];  //fix with real data
+  char* mData;
 };
 
 #endif //ETHERNET_SOCKET_H

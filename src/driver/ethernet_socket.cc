@@ -31,7 +31,20 @@
 
 //------------------------------------------------------------------------------
 //
-EthernetSocket::EthernetSocket() {}
+EthernetSocket::EthernetSocket()
+: mData{nullptr}
+{
+}
+
+EthernetSocket::EthernetSocket(size_t dataSize)
+: mData{new char[dataSize]}
+{
+  if (!mData) 
+  {
+    ROS_INFO_STREAM("Data container is empty, closing connection");
+    this->~EthernetSocket();
+  }
+}
 
 //------------------------------------------------------------------------------
 //
@@ -39,6 +52,7 @@ EthernetSocket::~EthernetSocket()
 {
   close(socketTCP_);
   close(socketUDP_);
+  delete(mData);
 }
 
 //==============================================================================
@@ -83,7 +97,7 @@ void EthernetSocket::ConnectTCP(std::string addr, int port) {
 //
 bool EthernetSocket::Receive() {
   socklen_t len = sizeof(dvl_);
-  if (recvfrom(socketUDP_, data_, sizeof(data_), 0, (struct sockaddr*) &dvl_, &len) < 0) {
+  if (recvfrom(socketUDP_, mData, sizeof(*mData), 0, (struct sockaddr*) &dvl_, &len) < 0) {
     ROS_INFO_STREAM("Receive failed");
     return false;
   }
@@ -102,6 +116,6 @@ void EthernetSocket::Send(char *data) {
 //------------------------------------------------------------------------------
 //
 char* EthernetSocket::GetRawData() {
-    return data_;
+    return mData;
 }
 
