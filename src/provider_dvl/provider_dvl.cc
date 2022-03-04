@@ -7,7 +7,6 @@ ProviderDvl::ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, siz
   mPortUDP{pUDP},
   mPortTCP{pTCP},
   mRate{mRate},
-  mFrameId{FrameId::ENU},
   mSocket(dataSize)
 {
 }

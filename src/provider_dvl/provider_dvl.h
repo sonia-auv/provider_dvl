@@ -13,8 +13,6 @@
 #include <ros/ros.h>
 
 
-enum class FrameId { NoTF, Instrument, Vessel, ENU, Error};
-
 class ProviderDvl {
   public:
     //==========================================================================
@@ -35,6 +33,7 @@ class ProviderDvl {
       }
     };
 
+    virtual void SendReceivedMessageThread() = 0;
     virtual void setupROSCommunication() = 0;
     //==========================================================================
     // P U B L I C   M E T H O D S
@@ -45,16 +44,34 @@ class ProviderDvl {
     std::string & hostName() {return mHostName;}
     ros::NodeHandlePtr & nh() {return mNh;}
     EthernetSocket & socket() {return mSocket;}
-    FrameId & frameId() {return mFrameId;}
 
   protected:
     std::thread mSendReceivedMessage;
 
     template<class T>
-    void getData(T & x)
+    inline void getData(T & x)
     {
       x = *((T*)(mSocket.GetRawData()));
     }
+
+    template<class T>
+    inline uint16_t calculateChecksum(uint8_t *dataDVL)
+    {
+        float_t checksum{}, wholeChecksum, decimal;
+        uint8_t sizeTotal {(sizeof(T)/sizeof(uint8_t))-2}; //Removing checksum value from array (-2)
+
+        for(uint8_t i{}; i < sizeTotal; ++i)
+        {
+            checksum += dataDVL[i];
+        }
+        
+        wholeChecksum = ceil(checksum/65536); // sizeof(uint16) = 2^16 = 65536
+        decimal = wholeChecksum-checksum/65536;
+        checksum = (1-decimal)*65536;
+
+        return (uint16_t)ceil(checksum);
+    }
+
 
   private:
       ros::NodeHandlePtr mNh;
@@ -62,9 +79,6 @@ class ProviderDvl {
       size_t mPortUDP;
       size_t mPortTCP;
       size_t mRate;
-      FrameId mFrameId;
       EthernetSocket mSocket;
-    
-   
 };
   #endif // PROVIDER_DVL_H
