@@ -64,3 +64,48 @@ void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
         ROS_WARN_STREAM("Message isn't boolean");
     }
 }
+
+void PathfinderDvl::SendReceivedMessageThread()
+{
+    ros::Rate r(20); // 20 Hz
+
+    while(!ros::isShuttingDown())
+    {
+        socket().Receive();
+
+        ROS_DEBUG("Data received");
+
+        getData<DVLformat21_t>(mDvl_data);
+
+        ROS_DEBUG("Data obtained");
+
+        if(mDvl_data.pd4.pathfinderDataId == 0x7D)
+        {
+            ROS_DEBUG("ID correct");
+            if(mDvl_data.pd4.checksum == calculateChecksum<DVLformat21_t>(reinterpret_cast<uint8_t*>(socket().GetRawData())))
+            {
+                sonia_common::BodyVelocityDVL message;
+
+                message.header.stamp = ros::Time::now();
+                message.header.frame_id = "\\ENU"; //PD4
+
+                message.xVelBtm = ((double_t)mDvl_data.pd4.xVelBtm)/1000.0;
+                message.yVelBtm = ((double_t)mDvl_data.pd4.yVelBtm)/1000.0;
+                message.zVelBtm = ((double_t)mDvl_data.pd4.zVelBtm)/1000.0;
+                message.eVelBtm = ((double_t)mDvl_data.pd4.eVelBtm)/1000.0;
+
+                message.velocity1 = ((double_t)mDvl_data.pd4.velocity1)/1000.0;
+                message.velocity2 = ((double_t)mDvl_data.pd4.velocity2)/1000.0;
+                message.velocity3 = ((double_t)mDvl_data.pd4.velocity3)/1000.0;
+                message.velocity4 = ((double_t)mDvl_data.pd4.velocity4)/1000.0;
+
+                dvl_velocity_publisher_.publish(message);
+            }
+        }
+        else
+        {
+            ROS_INFO("Pathfinder ID didn't egal in the data obtained : %d", 0x7D);
+        }
+        r.sleep();
+    }
+}
