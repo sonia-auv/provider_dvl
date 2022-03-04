@@ -34,7 +34,7 @@ class PathfinderDvl :  public ProviderDvl{
 
 
       void setupROSCommunication() override;
-
+      inline void SendReceivedMessageThread() override;
       //==========================================================================
       // P U B L I C   M E T H O D S
       void connect() override;
@@ -45,7 +45,6 @@ class PathfinderDvl :  public ProviderDvl{
       DVLformat21_t mDvl_data;
 
       ros::Publisher dvl_velocity_publisher_;
-      ros::Publisher dvl_position_publisher_;
       ros::Publisher dvl_leak_sensor_publisher_;
       
       ros::Subscriber enableDisablePingSub;
