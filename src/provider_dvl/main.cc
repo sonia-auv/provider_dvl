@@ -28,14 +28,11 @@
 
 int main(int argc, char *argv[]) {
 
-  DVLformat21_t p(argc);
-  // auto m = generate_map(p);
-
-  //print_field(p,2);
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
-  PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1034, 1033, 20);
+  PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1034, 1033, 20, sizeof(DVLformat21_t));
   PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
+  
   provider_dvl->Spin();
 
   return 0;
