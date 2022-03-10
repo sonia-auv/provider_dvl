@@ -28,17 +28,17 @@ class PathfinderDvl :  public ProviderDvl{
       PathfinderDvl() = default;
       PathfinderDvl(const ros::NodeHandlePtr& nh);
       PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize);
-      ~PathfinderDvl();
+      ~PathfinderDvl() = default;
 
 
 
 
-      void setupROSCommunication() override;
+      void SetupROSCommunication() override;
       inline void SendReceivedMessageThread() override;
       //==========================================================================
       // P U B L I C   M E T H O D S
-      void connect() override;
-      void enableDisablePingCallback(const std_msgs::Bool& msg);
+      void Connect() override;
+      void EnableDisablePingCallback(const std_msgs::Bool& msg);
 
       private:
       

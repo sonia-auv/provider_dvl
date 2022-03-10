@@ -15,13 +15,12 @@ PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName
 //   ProviderDvl::portTCP() = pTCP;
 //   ProviderDvl::rate() = rate;
 //   ProviderDvl::hostName() = hostName;
-  PathfinderDvl::connect();
-  PathfinderDvl::setupROSCommunication();
-  //mSendReceivedMessage = std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
+  PathfinderDvl::Connect();
+  PathfinderDvl::SetupROSCommunication();
+  mSendReceivedMessage = std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
 }
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::~PathfinderDvl() { }
 
 //==============================================================================
 // M E T H O D   S E C T I O N
@@ -30,19 +29,19 @@ PathfinderDvl::~PathfinderDvl() { }
 //
 
 
-void PathfinderDvl::setupROSCommunication() {
+void PathfinderDvl::SetupROSCommunication() {
 
   dvl_velocity_publisher_ = ProviderDvl::nh()->advertise<sonia_common::BodyVelocityDVL>( "/provider_dvl/dvl_velocity", 100);
   dvl_leak_sensor_publisher_ = ProviderDvl::nh()->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
-  enableDisablePingSub = ProviderDvl::nh()->subscribe("/provider_dvl/enable_disable_ping", 100, &PathfinderDvl::enableDisablePingCallback, this);
+  enableDisablePingSub = ProviderDvl::nh()->subscribe("/provider_dvl/enable_disable_ping", 100, &PathfinderDvl::EnableDisablePingCallback, this);
 }
 
-void PathfinderDvl::connect() {
+void PathfinderDvl::Connect() {
   socket().ConnectUDP(portUDP());
   socket().ConnectTCP(hostName(),  portTCP());
 }
 
-void PathfinderDvl::enableDisablePingCallback(const std_msgs::Bool& msg)
+void PathfinderDvl::EnableDisablePingCallback(const std_msgs::Bool& msg)
 {
     std::string str, cmd;
     
@@ -71,7 +70,7 @@ void PathfinderDvl::SendReceivedMessageThread()
 
     while(!ros::isShuttingDown())
     {
-        socket().Receive();
+        mSocket.Receive();
 
         ROS_DEBUG("Data received");
 
@@ -82,7 +81,7 @@ void PathfinderDvl::SendReceivedMessageThread()
         if(mDvl_data.pd4.pathfinderDataId == 0x7D)
         {
             ROS_DEBUG("ID correct");
-            if(mDvl_data.pd4.checksum == calculateChecksum<DVLformat21_t>(reinterpret_cast<uint8_t*>(socket().GetRawData())))
+            if(mDvl_data.pd4.checksum == CalculateChecksum<DVLformat21_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
             {
                 sonia_common::BodyVelocityDVL message;
 

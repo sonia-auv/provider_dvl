@@ -43,12 +43,12 @@ class EthernetSocket {
   //==========================================================================
   // P U B L I C   M E T H O D S
 
-  void ConnectUDP(int port);
-  void ConnectTCP(std::string addr, int port);
+  void ConnectUDP(int const port);
+  void ConnectTCP(std::string const addr, int const port);
   bool Receive();
   void Send(char *data);
   char* GetRawData();
-
+  
  private:
   //==========================================================================
   // P R I V A T E   M E M B E R S

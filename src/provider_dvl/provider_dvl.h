@@ -17,13 +17,13 @@ class ProviderDvl {
   public:
     //==========================================================================
     // P U B L I C   C / D T O R S
-
+    ProviderDvl() = delete;
     ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize);
     ~ProviderDvl(){mSocket.~EthernetSocket();} // Close connection
 
     //==========================================================================
     // P U B L I C  V I R T U A L   M E T H O D S
-    virtual void connect() = 0; // For TCP or Serial
+    virtual void Connect() = 0; // For TCP or Serial
     virtual void Spin()  {
       ros::Rate r(mRate);
 
@@ -34,15 +34,15 @@ class ProviderDvl {
     };
 
     virtual void SendReceivedMessageThread() = 0;
-    virtual void setupROSCommunication() = 0;
+    virtual void SetupROSCommunication() = 0;
     //==========================================================================
     // P U B L I C   M E T H O D S
 
-    size_t & portUDP() { return mPortUDP;}
-    size_t & portTCP() {return mPortTCP;}
-    size_t & rate() {return mRate;}
-    std::string & hostName() {return mHostName;}
-    ros::NodeHandlePtr & nh() {return mNh;}
+    size_t portUDP() const { return mPortUDP;}
+    size_t portTCP() const {return mPortTCP;}
+    size_t rate() const  {return mRate;}
+    std::string hostName() const {return mHostName;}
+    ros::NodeHandlePtr nh() const {return mNh;}
     EthernetSocket & socket() {return mSocket;}
 
   protected:
@@ -55,7 +55,7 @@ class ProviderDvl {
     }
 
     template<class T>
-    inline uint16_t calculateChecksum(uint8_t *dataDVL)
+    inline uint16_t CalculateChecksum(uint8_t *dataDVL)
     {
         float_t checksum{}, wholeChecksum, decimal;
         uint8_t sizeTotal {(sizeof(T)/sizeof(uint8_t))-2}; //Removing checksum value from array (-2)
@@ -72,6 +72,7 @@ class ProviderDvl {
         return (uint16_t)ceil(checksum);
     }
 
+      EthernetSocket mSocket;
 
   private:
       ros::NodeHandlePtr mNh;
@@ -79,6 +80,5 @@ class ProviderDvl {
       size_t mPortUDP;
       size_t mPortTCP;
       size_t mRate;
-      EthernetSocket mSocket;
 };
   #endif // PROVIDER_DVL_H
