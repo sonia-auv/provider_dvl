@@ -18,7 +18,7 @@ class ProviderDvl {
     //==========================================================================
     // P U B L I C   C / D T O R S
     ProviderDvl() = delete;
-    ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize);
+    ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize);
     ~ProviderDvl(){mSocket.~EthernetSocket();} // Close connection
 
     //==========================================================================
@@ -41,6 +41,7 @@ class ProviderDvl {
     size_t portUDP() const { return mPortUDP;}
     size_t portTCP() const {return mPortTCP;}
     size_t rate() const  {return mRate;}
+    void setRate(size_t rate) {mRate = rate;}
     std::string hostName() const {return mHostName;}
     ros::NodeHandlePtr nh() const {return mNh;}
     EthernetSocket & socket() {return mSocket;}

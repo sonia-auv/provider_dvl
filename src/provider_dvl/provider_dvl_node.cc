@@ -6,8 +6,8 @@
 
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pUDP, size_t pTCP,  size_t rate, size_t dataSize)
-: ProviderDvl(nh,hostName,pUDP, pTCP, rate,dataSize)
+PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize)
+: ProviderDvl(nh,hostName,pUDP, pTCP,dataSize)
 {
 
 //   ProviderDvl::nh() = nh;
@@ -17,6 +17,7 @@ PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName
 //   ProviderDvl::hostName() = hostName;
   PathfinderDvl::Connect();
   PathfinderDvl::SetupROSCommunication();
+  setRate(20);
   mSendReceivedMessage = std::thread(std::bind(&PathfinderDvl::SendReceivedMessageThread, this));
 }
 //------------------------------------------------------------------------------
@@ -52,11 +53,13 @@ void PathfinderDvl::EnableDisablePingCallback(const std_msgs::Bool& msg)
         ros::Duration(5).sleep();
         cmd = "CS\n";
         socket().Send(&cmd[0]);
+        ROS_INFO("Start Ping Sent");
     }
     else if(msg.data == false)
     {
         str = "===\n";
         socket().Send(&str[0]);
+        ROS_INFO("Stop Ping Sent");
     }
     else
     {
@@ -66,7 +69,7 @@ void PathfinderDvl::EnableDisablePingCallback(const std_msgs::Bool& msg)
 
 void PathfinderDvl::SendReceivedMessageThread()
 {
-    ros::Rate r(20); // 20 Hz
+    ros::Rate r(rate()); // 20 Hz
 
     while(!ros::isShuttingDown())
     {

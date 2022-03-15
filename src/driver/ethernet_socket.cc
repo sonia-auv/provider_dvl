@@ -32,12 +32,12 @@
 //------------------------------------------------------------------------------
 //
 EthernetSocket::EthernetSocket()
-: mData{nullptr}
+: mData{nullptr}, mSize{}
 {
 }
 
 EthernetSocket::EthernetSocket(size_t dataSize)
-: mData{new char[dataSize]}
+: mData{new char[dataSize]}, mSize{dataSize}
 {
   if (!mData) 
   {
@@ -97,7 +97,7 @@ void EthernetSocket::ConnectTCP(std::string addr, int port) {
 //
 bool EthernetSocket::Receive() {
   socklen_t len = sizeof(dvl_);
-  if (recvfrom(socketUDP_, mData, sizeof(*mData), 0, (struct sockaddr*) &dvl_, &len) < 0) {
+  if (recvfrom(socketUDP_, mData, sizeof(mData), 0, (struct sockaddr*) &dvl_, &len) < 0) {
     ROS_INFO_STREAM("Receive failed");
     return false;
   }
