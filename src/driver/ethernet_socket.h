@@ -56,7 +56,7 @@ class EthernetSocket {
   int socketUDP_, socketTCP_;
   sockaddr_in server_, dvl_;
   char* mData;
-  //char mData2[47];
+  char mData2[47];
   size_t mSize;
 };
 

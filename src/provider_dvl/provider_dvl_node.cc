@@ -88,8 +88,9 @@ void PathfinderDvl::SendReceivedMessageThread()
             {
                 sonia_common::BodyVelocityDVL message;
 
-                message.header.stamp = ros::Time::now();
-                message.header.frame_id = "\\ENU"; //PD4
+                message.header.stamp.sec = mDvl_data.pd4.secondFirstPing;
+                message.header.stamp.nsec = mDvl_data.pd4.hundredthFirstPing;
+                message.header.frame_id = "/ENU"; //PD4
 
                 message.xVelBtm = ((double_t)mDvl_data.pd4.xVelBtm)/1000.0;
                 message.yVelBtm = ((double_t)mDvl_data.pd4.yVelBtm)/1000.0;
@@ -106,7 +107,7 @@ void PathfinderDvl::SendReceivedMessageThread()
         }
         else
         {
-            ROS_INFO("Pathfinder ID didn't egal in the data obtained : %d", 0x7D);
+            ROS_INFO("Pathfinder ID mismatch : %d", 0x7D);
         }
         r.sleep();
     }
