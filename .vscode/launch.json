@@ -9,7 +9,7 @@
             "type": "ros",
             "request": "launch",
             "preLaunchTask": "build",
-            "target": "/home/sonia/catkin_ws/src/provider_dvl/launch/provider_dvl.launch",
+            "target": "/home/sonia/ros_sonia_ws/src/provider_dvl/launch/provider_dvl.launch",
         }
     ]
 }
