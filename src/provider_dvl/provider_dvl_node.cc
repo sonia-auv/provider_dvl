@@ -38,7 +38,7 @@ namespace provider_dvl {
         socket_()
     {
         std::string hostname = "192.168.0.32";
-        socket_.ConnectUDP(1034);
+        socket_.ConnectUDP(1035);
         socket_.ConnectTCP(hostname, 1033);
 
         dvl_velocity_publisher_ = nh_->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
