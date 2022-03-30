@@ -30,10 +30,10 @@ int main(int argc, char *argv[]) {
 
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
-  PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1035, 1033, sizeof(DVLformat21_t));
-  PathfinderDvl::ProviderDvl* provider_dvl = &provider_dvl_Pathfinder;
-  
-  provider_dvl->Spin();
+  // PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1035, 1033);
+  // provider_dvl_Pathfinder.Spin();sizeof(mDvl_data)
+  NortekDvl provider_dvl_Nortek(nh,"192.168.0.240", 9002);
+  provider_dvl_Nortek.Spin();
 
   return 0;
 }
