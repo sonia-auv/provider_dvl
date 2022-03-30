@@ -8,6 +8,9 @@
 #include <ros/node_handle.h>
 #include <sonia_common/BodyVelocityDVL.h>
 
+#include <sensor_msgs/FluidPressure.h>
+#include <sonia_common/BottomTracking.h>
+
 #include "dvl_data.h"
 #include <thread>
 #include <ros/ros.h>
@@ -44,7 +47,6 @@ class PathfinderDvl :  public ProviderDvl{
       inline void SendReceivedMessageThread() override;
       //==========================================================================
       // P U B L I C   M E T H O D S
-      void Connect() override;
       void EnableDisablePingCallback(const std_msgs::Bool& msg);
 
       private:
@@ -55,6 +57,32 @@ class PathfinderDvl :  public ProviderDvl{
       ros::Publisher dvl_leak_sensor_publisher_;
       
       ros::Subscriber enableDisablePingSub;
+};
+
+
+class NortekDvl :  public ProviderDvl{
+    public:
+      //==========================================================================
+      // P U B L I C   C / D T O R S
+      NortekDvl() = delete;
+      NortekDvl(const ros::NodeHandlePtr& nh);
+      NortekDvl(const ros::NodeHandlePtr &nh, std::string hostName,size_t pTCP, size_t dataSize);
+      ~NortekDvl() = default;
+
+      void SetupROSCommunication() override;
+      inline void SendReceivedMessageThread() override;
+      //==========================================================================
+      // P U B L I C   M E T H O D S
+      void EnableDisablePingCallback(const std_msgs::Bool& msg);
+
+  private:
+      
+      DVLformat21_t mDvl_data;
+
+      ros::Time timestamp_;
+      ros::Publisher dvl_speed_publisher_;
+      ros::Publisher dvl_fluid_pressure_publisher_;
+      ros::Publisher dvl_bottom_tracking_publisher_;
 };
 
 

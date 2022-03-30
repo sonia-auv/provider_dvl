@@ -23,9 +23,9 @@ class ProviderDvl {
 
     //==========================================================================
     // P U B L I C  V I R T U A L   M E T H O D S
-    virtual void Connect() = 0; // For TCP or Serial
+    void Connect(); // For TCP and/or Serial
     virtual void Spin()  {
-      ros::Rate r(mRate);
+      ros::Rate r(rate());
 
       while (ros::ok()) {
         ros::spinOnce();

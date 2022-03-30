@@ -11,6 +11,18 @@ ProviderDvl::ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, siz
     
 }
 
+void ProviderDvl::Connect() {
+
+    if(portUDP())
+    {
+        socket().ConnectUDP(portUDP());
+    }
+    if(portTCP()) // verif host name todo
+    {
+        socket().ConnectTCP(hostName(),  portTCP());
+    }
+}
+
 
 
 
