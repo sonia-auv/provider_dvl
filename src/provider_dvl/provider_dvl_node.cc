@@ -1,13 +1,13 @@
 #include "provider_dvl/provider_dvl_node.h"
 
-
+///Pathfinder Implementation
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize)
-: ProviderDvl(nh,hostName,pUDP, pTCP,dataSize)
+PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pUDP, size_t pTCP)
+: ProviderDvl(nh,hostName,pUDP, pTCP,sizeof(mDvl_data))
 {
   Connect();
   SetupROSCommunication();
@@ -66,14 +66,14 @@ void PathfinderDvl::SendReceivedMessageThread()
 
         ROS_DEBUG("Data received");
 
-        getData<DVLformat21_t>(mDvl_data);
+        getData<PathfinderFormat_t>(mDvl_data);
 
         ROS_DEBUG("Data obtained");
 
         if(mDvl_data.pd4.pathfinderDataId == 0x7D)
         {
             ROS_DEBUG("ID correct");
-            if(mDvl_data.pd4.checksum == CalculateChecksum<DVLformat21_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
+            if(mDvl_data.pd4.checksum == CalculateChecksum<PathfinderFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
             {
                 sonia_common::BodyVelocityDVL message;
 
@@ -103,14 +103,14 @@ void PathfinderDvl::SendReceivedMessageThread()
 }
 
 
-
+/// Nortek Implementation
 //==============================================================================
 // C / D T O R S   S E C T I O N
 
 //------------------------------------------------------------------------------
 //
-NortekDvl::NortekDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pTCP, size_t dataSize)
-: ProviderDvl(nh,hostName,0, pTCP,dataSize)
+NortekDvl::NortekDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pTCP)
+: ProviderDvl(nh,hostName,0, pTCP,sizeof(mDvl_data))
 {
   Connect();
   SetupROSCommunication();
@@ -143,20 +143,155 @@ void NortekDvl::SendReceivedMessageThread()
 
             ROS_DEBUG("Data received");
 
-            getData<DVLformat21_t>(mDvl_data);
+            getData<NortekFormat_t>(mDvl_data);
 
             ROS_DEBUG("Data obtained");
 
-            // if (dvl_data_.header.sync == 0xA5)
-            // {
-            //     if (calculateChecksum((unsigned short *) &dvl_data_.data, dvl_data_.header.dataSize) == dvl_data_.header.dataChecksum)
-            //     {
-            //         timestamp_ = ros::Time::now();
-            //         FillTwistMessage(timestamp_);
-            //         FillFluidPressureMessage(timestamp_);
-            //         FillBottomTracking(timestamp_);
-            //     }
-            // }
+            if (mDvl_data.header.sync == 0xA5)
+            {
+                if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
+                {
+                    timestamp_ = ros::Time::now();
+                    FillTwistMessage(timestamp_);
+                    FillFluidPressureMessage(timestamp_);
+                    FillBottomTracking(timestamp_);
+                }
+                else
+                {
+                    ROS_INFO("CheckSum error : %d != %d", mDvl_data.header.dataChecksum, CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())));
+                }
+            }
+            else
+            {
+                ROS_INFO("Nortek ID mismatch : %d != %d", 0xA5, mDvl_data.header.sync);
+            }
             r.sleep();
         }
 }
+
+void NortekDvl::FillTwistMessage(ros::Time timestamp) {
+        sonia_common::BodyVelocityDVL message;
+
+        message.header.stamp = timestamp;
+        message.header.frame_id = "/ENU";
+
+        if(mDvl_data.data.status.bit_field.xVelValid)
+        {
+            message.xVelBtm = ((double_t)mDvl_data.data.velX);
+        }
+        else
+        {
+            message.xVelBtm = 0.0;
+        }
+        if(mDvl_data.data.status.bit_field.yVelValid)
+        {
+            message.yVelBtm = ((double_t)mDvl_data.data.velY);
+        }
+        else
+        {
+            message.yVelBtm = 0.0;
+        }
+        if(mDvl_data.data.status.bit_field.z1VelValid)
+        {
+            message.zVelBtm = ((double_t)mDvl_data.data.velZ1);
+        }
+        else
+        {
+            message.zVelBtm = 0.0;
+        }
+
+        dvl_speed_publisher_.publish(message);
+    }
+
+    //------------------------------------------------------------------------------
+    //
+    void NortekDvl::FillFluidPressureMessage(ros::Time timestamp)
+    {
+        sensor_msgs::FluidPressure message;
+
+        message.header.stamp = timestamp;
+        message.header.frame_id = "/ENU";
+        message.fluid_pressure = mDvl_data.data.pressure;
+
+        dvl_fluid_pressure_publisher_.publish(message);
+    }
+
+    void NortekDvl::FillBottomTracking(ros::Time timestamp)
+    {
+        sonia_common::BottomTracking message;
+
+        message.header.stamp = timestamp;
+        message.header.frame_id = "/ENU";
+
+        message.sync = mDvl_data.header.sync;
+        message.hdrSize = mDvl_data.header.hdrSize;
+        message.ID = mDvl_data.header.ID;
+        message.family = mDvl_data.header.family;
+        message.datasize = mDvl_data.header.dataSize;
+        message.dataChecksum = mDvl_data.header.dataChecksum;
+        message.hdrCecksum = mDvl_data.header.hdrChecksum;
+
+
+        message.version = mDvl_data.data.version;
+        message.offsetOfData = mDvl_data.data.offsetOfData;
+        message.serial_number = mDvl_data.data.serialNumber;
+        message.year = mDvl_data.data.year;
+        message.month = mDvl_data.data.month;
+        message.day = mDvl_data.data.day;
+        message.hour = mDvl_data.data.hour;
+        message.minutes = mDvl_data.data.minute;
+        message.seconds = mDvl_data.data.seconds;
+        message.microSeconds100 = mDvl_data.data.microSeconds100;
+        message.nbBeams = mDvl_data.data.nBeams;
+        message.error = mDvl_data.data.error;
+        message.status = mDvl_data.data.status.integer;
+        message.sound_speed = mDvl_data.data.soundSpeed;
+        message.temperature  = mDvl_data.data.temperature;
+        message.pressure  = mDvl_data.data.pressure;
+        message.velBeam1  = mDvl_data.data.velBeam[0];
+        message.velBeam2  = mDvl_data.data.velBeam[1];
+        message.velBeam3  = mDvl_data.data.velBeam[2];
+        message.velBeam4  = mDvl_data.data.velBeam[3];
+        message.distBeam1  = mDvl_data.data.distBeam[0];
+        message.distBeam2 = mDvl_data.data.distBeam[1];
+        message.distBeam3 = mDvl_data.data.distBeam[2];
+        message.distBeam4 = mDvl_data.data.distBeam[3];
+        message.fomBeam1  = mDvl_data.data.fomBeam[0];
+        message.fomBeam2  = mDvl_data.data.fomBeam[1];
+        message.fomBeam3  = mDvl_data.data.fomBeam[2];
+        message.fomBeam4  = mDvl_data.data.fomBeam[3];
+        message.timeDiff1Beam1  = mDvl_data.data.timeDiff1Beam[0];
+        message.timeDiff1Beam2  = mDvl_data.data.timeDiff1Beam[1];
+        message.timeDiff1Beam3  = mDvl_data.data.timeDiff1Beam[2];
+        message.timeDiff1Beam4  = mDvl_data.data.timeDiff1Beam[3];
+        message.timeDiff2Beam1  = mDvl_data.data.timeDiff2Beam[0];
+        message.timeDiff2Beam2  = mDvl_data.data.timeDiff2Beam[1];
+        message.timeDiff2Beam3  = mDvl_data.data.timeDiff2Beam[2];
+        message.timeDiff2Beam4  = mDvl_data.data.timeDiff2Beam[3];
+        message.timeVelEstBeam1  = mDvl_data.data.timeVelEstBeam[0];
+        message.timeVelEstBeam2  = mDvl_data.data.timeVelEstBeam[1];
+        message.timeVelEstBeam3  = mDvl_data.data.timeVelEstBeam[2];
+        message.timeVelEstBeam4  = mDvl_data.data.timeVelEstBeam[3];
+        message.velX = mDvl_data.data.velX;
+        message.velY = mDvl_data.data.velY;
+        message.velZ1 = mDvl_data.data.velZ1;
+        message.velZ2 = mDvl_data.data.velZ2;
+        message.fomX = mDvl_data.data.fomX;
+        message.fomY = mDvl_data.data.fomY;
+        message.fomZ1 = mDvl_data.data.fomZ1;
+        message.fomZ2 = mDvl_data.data.fomZ2;
+        message.timeDiff1X = mDvl_data.data.timeDiff1X;
+        message.timeDiff1Y = mDvl_data.data.timeDiff1Y;
+        message.timeDiff1Z1 = mDvl_data.data.timeDiff1Z1;
+        message.timeDiff1Z2 = mDvl_data.data.timeDiff1Z2;
+        message.timeDiff2X = mDvl_data.data.timeDiff2X;
+        message.timeDiff2Y = mDvl_data.data.timeDiff2Y;
+        message.timeDiff2Z1 = mDvl_data.data.timeDiff2Z1;
+        message.timeDiff2Z2 = mDvl_data.data.timeDiff2Z2;
+        message.timeVelEstX = mDvl_data.data.timeVelEstX;
+        message.timeVelEstY = mDvl_data.data.timeVelEstY;
+        message.timeVelEstZ1 = mDvl_data.data.timeVelEstZ1;
+        message.timeVelEstZ2 = mDvl_data.data.timeVelEstZ2;
+
+        dvl_bottom_tracking_publisher_.publish(message);
+    }

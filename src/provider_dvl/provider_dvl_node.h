@@ -30,18 +30,8 @@ class PathfinderDvl :  public ProviderDvl{
       // P U B L I C   C / D T O R S
       PathfinderDvl() = delete;
       PathfinderDvl(const ros::NodeHandlePtr& nh);
-      PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize);
+      PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP);
       ~PathfinderDvl() = default;
-
-
-      void Spin() override  {
-      ros::Rate r(rate());
-
-      while (ros::ok()) {
-        ros::spinOnce();
-        r.sleep();
-      }
-    };
 
       void SetupROSCommunication() override;
       inline void SendReceivedMessageThread() override;
@@ -51,7 +41,7 @@ class PathfinderDvl :  public ProviderDvl{
 
       private:
       
-      DVLformat21_t mDvl_data;
+      PathfinderFormat_t mDvl_data;
 
       ros::Publisher dvl_velocity_publisher_;
       ros::Publisher dvl_leak_sensor_publisher_;
@@ -66,23 +56,26 @@ class NortekDvl :  public ProviderDvl{
       // P U B L I C   C / D T O R S
       NortekDvl() = delete;
       NortekDvl(const ros::NodeHandlePtr& nh);
-      NortekDvl(const ros::NodeHandlePtr &nh, std::string hostName,size_t pTCP, size_t dataSize);
+      NortekDvl(const ros::NodeHandlePtr &nh, std::string hostName,size_t pTCP);
       ~NortekDvl() = default;
 
       void SetupROSCommunication() override;
       inline void SendReceivedMessageThread() override;
       //==========================================================================
       // P U B L I C   M E T H O D S
-      void EnableDisablePingCallback(const std_msgs::Bool& msg);
 
   private:
       
-      DVLformat21_t mDvl_data;
+      NortekFormat_t mDvl_data;
 
       ros::Time timestamp_;
       ros::Publisher dvl_speed_publisher_;
       ros::Publisher dvl_fluid_pressure_publisher_;
       ros::Publisher dvl_bottom_tracking_publisher_;
+
+      void FillTwistMessage(ros::Time timestamp);
+      void FillFluidPressureMessage(ros::Time timestamp);
+      void FillBottomTracking(ros::Time timestamp);
 };
 
 

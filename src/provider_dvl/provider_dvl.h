@@ -19,7 +19,7 @@ class ProviderDvl {
     // P U B L I C   C / D T O R S
     ProviderDvl() = delete;
     ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize);
-    ~ProviderDvl(){mSocket.~EthernetSocket();} // Close connection
+    ~ProviderDvl() = default;
 
     //==========================================================================
     // P U B L I C  V I R T U A L   M E T H O D S
@@ -66,8 +66,8 @@ class ProviderDvl {
             checksum += dataDVL[i];
         }
         
-        wholeChecksum = ceil(checksum/65536); // sizeof(uint16) = 2^16 = 65536
-        decimal = wholeChecksum-checksum/65536;
+        wholeChecksum = ceil(checksum/65536.0f); // sizeof(uint16) = 2^16 = 65536
+        decimal = wholeChecksum-checksum/65536.0f;
         checksum = (1-decimal)*65536;
 
         return (uint16_t)ceil(checksum);
