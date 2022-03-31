@@ -26,6 +26,7 @@ PathfinderDvl::PathfinderDvl(const ros::NodeHandlePtr & nh, std::string hostName
 
 void PathfinderDvl::SetupROSCommunication() {
 
+
   dvl_velocity_publisher_ = nh()->advertise<sonia_common::BodyVelocityDVL>( "/provider_dvl/dvl_velocity", 100);
   dvl_leak_sensor_publisher_ = nh()->advertise<std_msgs::Bool>("/provider_dvl/dvl_leak_sensor", 100);
   enableDisablePingSub = nh()->subscribe("/provider_dvl/enable_disable_ping", 100, &PathfinderDvl::EnableDisablePingCallback, this);
@@ -110,7 +111,7 @@ void PathfinderDvl::SendReceivedMessageThread()
 //------------------------------------------------------------------------------
 //
 NortekDvl::NortekDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pTCP)
-: ProviderDvl(nh,hostName,0, pTCP,sizeof(mDvl_data))
+: ProviderDvl(nh,hostName,0, pTCP,sizeof(mDvl_data)), depthOffset_{}
 {
   Connect();
   SetupROSCommunication();
@@ -130,12 +131,15 @@ void NortekDvl::SetupROSCommunication()
 {
     dvl_speed_publisher_ = nh()->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
     dvl_fluid_pressure_publisher_ = nh()->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 100);
-    dvl_bottom_tracking_publisher_ = nh()->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 100);
+    dvl_temperature_publisher_ = nh()->advertise<sensor_msgs::Temperature>("/provider_dvl/dvl_water_temperature", 100);
+    dvl_relative_depth_publisher_ = nh()->advertise<std_msgs::Float32>("/provider_dvl/dvl_relative_depth", 100);
+    setDepthOffset = nh()->subscribe("/provider_dvl/setDepthOffset", 100, &NortekDvl::setDepthOffsetCallback, this);
+    //dvl_bottom_tracking_publisher_ = nh()->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 100);
 }
 
 void NortekDvl::SendReceivedMessageThread()
 {
-    ros::Rate r(rate()); // 20 Hz
+    ros::Rate r(rate()); // 20 HzFloat32
 
     while (ros::ok())
         {
@@ -154,7 +158,9 @@ void NortekDvl::SendReceivedMessageThread()
                     timestamp_ = ros::Time::now();
                     FillTwistMessage(timestamp_);
                     FillFluidPressureMessage(timestamp_);
-                    FillBottomTracking(timestamp_);
+                    FillTemperatureMessage(timestamp_);
+                    FillRelativeDepthMessage(timestamp_);
+                    // FillBottomTracking(timestamp_);
                 }
                 else
                 {
@@ -205,6 +211,28 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
 
     //------------------------------------------------------------------------------
     //
+    void NortekDvl::FillRelativeDepthMessage(ros::Time timestamp)
+    {
+        std_msgs::Float32 message; // remplacer avec header
+
+        //message.header.stamp = timestamp;
+        //message.header.frame_id = "/ENU";
+        message.data = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
+
+        dvl_fluid_pressure_publisher_.publish(message);
+    }
+
+    void NortekDvl::FillTemperatureMessage(ros::Time timestamp)
+    {
+        sensor_msgs::Temperature message; // remplacer avec header
+
+        message.header.stamp = timestamp;
+        message.header.frame_id = "/ENU";
+        message.temperature = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
+
+        dvl_fluid_pressure_publisher_.publish(message);
+    }
+
     void NortekDvl::FillFluidPressureMessage(ros::Time timestamp)
     {
         sensor_msgs::FluidPressure message;
@@ -216,82 +244,89 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         dvl_fluid_pressure_publisher_.publish(message);
     }
 
-    void NortekDvl::FillBottomTracking(ros::Time timestamp)
+    void NortekDvl::setDepthOffsetCallback(const std_msgs::Bool& msg)
     {
-        sonia_common::BottomTracking message;
-
-        message.header.stamp = timestamp;
-        message.header.frame_id = "/ENU";
-
-        message.sync = mDvl_data.header.sync;
-        message.hdrSize = mDvl_data.header.hdrSize;
-        message.ID = mDvl_data.header.ID;
-        message.family = mDvl_data.header.family;
-        message.datasize = mDvl_data.header.dataSize;
-        message.dataChecksum = mDvl_data.header.dataChecksum;
-        message.hdrCecksum = mDvl_data.header.hdrChecksum;
-
-
-        message.version = mDvl_data.data.version;
-        message.offsetOfData = mDvl_data.data.offsetOfData;
-        message.serial_number = mDvl_data.data.serialNumber;
-        message.year = mDvl_data.data.year;
-        message.month = mDvl_data.data.month;
-        message.day = mDvl_data.data.day;
-        message.hour = mDvl_data.data.hour;
-        message.minutes = mDvl_data.data.minute;
-        message.seconds = mDvl_data.data.seconds;
-        message.microSeconds100 = mDvl_data.data.microSeconds100;
-        message.nbBeams = mDvl_data.data.nBeams;
-        message.error = mDvl_data.data.error;
-        message.status = mDvl_data.data.status.integer;
-        message.sound_speed = mDvl_data.data.soundSpeed;
-        message.temperature  = mDvl_data.data.temperature;
-        message.pressure  = mDvl_data.data.pressure;
-        message.velBeam1  = mDvl_data.data.velBeam[0];
-        message.velBeam2  = mDvl_data.data.velBeam[1];
-        message.velBeam3  = mDvl_data.data.velBeam[2];
-        message.velBeam4  = mDvl_data.data.velBeam[3];
-        message.distBeam1  = mDvl_data.data.distBeam[0];
-        message.distBeam2 = mDvl_data.data.distBeam[1];
-        message.distBeam3 = mDvl_data.data.distBeam[2];
-        message.distBeam4 = mDvl_data.data.distBeam[3];
-        message.fomBeam1  = mDvl_data.data.fomBeam[0];
-        message.fomBeam2  = mDvl_data.data.fomBeam[1];
-        message.fomBeam3  = mDvl_data.data.fomBeam[2];
-        message.fomBeam4  = mDvl_data.data.fomBeam[3];
-        message.timeDiff1Beam1  = mDvl_data.data.timeDiff1Beam[0];
-        message.timeDiff1Beam2  = mDvl_data.data.timeDiff1Beam[1];
-        message.timeDiff1Beam3  = mDvl_data.data.timeDiff1Beam[2];
-        message.timeDiff1Beam4  = mDvl_data.data.timeDiff1Beam[3];
-        message.timeDiff2Beam1  = mDvl_data.data.timeDiff2Beam[0];
-        message.timeDiff2Beam2  = mDvl_data.data.timeDiff2Beam[1];
-        message.timeDiff2Beam3  = mDvl_data.data.timeDiff2Beam[2];
-        message.timeDiff2Beam4  = mDvl_data.data.timeDiff2Beam[3];
-        message.timeVelEstBeam1  = mDvl_data.data.timeVelEstBeam[0];
-        message.timeVelEstBeam2  = mDvl_data.data.timeVelEstBeam[1];
-        message.timeVelEstBeam3  = mDvl_data.data.timeVelEstBeam[2];
-        message.timeVelEstBeam4  = mDvl_data.data.timeVelEstBeam[3];
-        message.velX = mDvl_data.data.velX;
-        message.velY = mDvl_data.data.velY;
-        message.velZ1 = mDvl_data.data.velZ1;
-        message.velZ2 = mDvl_data.data.velZ2;
-        message.fomX = mDvl_data.data.fomX;
-        message.fomY = mDvl_data.data.fomY;
-        message.fomZ1 = mDvl_data.data.fomZ1;
-        message.fomZ2 = mDvl_data.data.fomZ2;
-        message.timeDiff1X = mDvl_data.data.timeDiff1X;
-        message.timeDiff1Y = mDvl_data.data.timeDiff1Y;
-        message.timeDiff1Z1 = mDvl_data.data.timeDiff1Z1;
-        message.timeDiff1Z2 = mDvl_data.data.timeDiff1Z2;
-        message.timeDiff2X = mDvl_data.data.timeDiff2X;
-        message.timeDiff2Y = mDvl_data.data.timeDiff2Y;
-        message.timeDiff2Z1 = mDvl_data.data.timeDiff2Z1;
-        message.timeDiff2Z2 = mDvl_data.data.timeDiff2Z2;
-        message.timeVelEstX = mDvl_data.data.timeVelEstX;
-        message.timeVelEstY = mDvl_data.data.timeVelEstY;
-        message.timeVelEstZ1 = mDvl_data.data.timeVelEstZ1;
-        message.timeVelEstZ2 = mDvl_data.data.timeVelEstZ2;
-
-        dvl_bottom_tracking_publisher_.publish(message);
+        depthOffset_ = mDvl_data.data.pressure;
     }
+
+
+    // Garder pour pfe capteur
+    // void NortekDvl::FillBottomTracking(ros::Time timestamp)
+    // {
+    //     sonia_common::BottomTracking message;
+
+    //     message.header.stamp = timestamp;
+    //     message.header.frame_id = "/ENU";
+
+    //     message.sync = mDvl_data.header.sync;
+    //     message.hdrSize = mDvl_data.header.hdrSize;
+    //     message.ID = mDvl_data.header.ID;
+    //     message.family = mDvl_data.header.family;
+    //     message.datasize = mDvl_data.header.dataSize;
+    //     message.dataChecksum = mDvl_data.header.dataChecksum;
+    //     message.hdrCecksum = mDvl_data.header.hdrChecksum;
+
+
+    //     message.version = mDvl_data.data.version;
+    //     message.offsetOfData = mDvl_data.data.offsetOfData;
+    //     message.serial_number = mDvl_data.data.serialNumber;
+    //     message.year = mDvl_data.data.year;
+    //     message.month = mDvl_data.data.month;
+    //     message.day = mDvl_data.data.day;
+    //     message.hour = mDvl_data.data.hour;
+    //     message.minutes = mDvl_data.data.minute;
+    //     message.seconds = mDvl_data.data.seconds;
+    //     message.microSeconds100 = mDvl_data.data.microSeconds100;
+    //     message.nbBeams = mDvl_data.data.nBeams;
+    //     message.error = mDvl_data.data.error;
+    //     message.status = mDvl_data.data.status.integer;
+    //     message.sound_speed = mDvl_data.data.soundSpeed;
+    //     message.temperature  = mDvl_data.data.temperature;
+    //     message.pressure  = mDvl_data.data.pressure;
+    //     message.velBeam1  = mDvl_data.data.velBeam[0];
+    //     message.velBeam2  = mDvl_data.data.velBeam[1];
+    //     message.velBeam3  = mDvl_data.data.velBeam[2];
+    //     message.velBeam4  = mDvl_data.data.velBeam[3];
+    //     message.distBeam1  = mDvl_data.data.distBeam[0];
+    //     message.distBeam2 = mDvl_data.data.distBeam[1];
+    //     message.distBeam3 = mDvl_data.data.distBeam[2];
+    //     message.distBeam4 = mDvl_data.data.distBeam[3];
+    //     message.fomBeam1  = mDvl_data.data.fomBeam[0];
+    //     message.fomBeam2  = mDvl_data.data.fomBeam[1];
+    //     message.fomBeam3  = mDvl_data.data.fomBeam[2];
+    //     message.fomBeam4  = mDvl_data.data.fomBeam[3];
+    //     message.timeDiff1Beam1  = mDvl_data.data.timeDiff1Beam[0];
+    //     message.timeDiff1Beam2  = mDvl_data.data.timeDiff1Beam[1];
+    //     message.timeDiff1Beam3  = mDvl_data.data.timeDiff1Beam[2];
+    //     message.timeDiff1Beam4  = mDvl_data.data.timeDiff1Beam[3];
+    //     message.timeDiff2Beam1  = mDvl_data.data.timeDiff2Beam[0];
+    //     message.timeDiff2Beam2  = mDvl_data.data.timeDiff2Beam[1];
+    //     message.timeDiff2Beam3  = mDvl_data.data.timeDiff2Beam[2];
+    //     message.timeDiff2Beam4  = mDvl_data.data.timeDiff2Beam[3];
+    //     message.timeVelEstBeam1  = mDvl_data.data.timeVelEstBeam[0];
+    //     message.timeVelEstBeam2  = mDvl_data.data.timeVelEstBeam[1];
+    //     message.timeVelEstBeam3  = mDvl_data.data.timeVelEstBeam[2];
+    //     message.timeVelEstBeam4  = mDvl_data.data.timeVelEstBeam[3];
+    //     message.velX = mDvl_data.data.velX;
+    //     message.velY = mDvl_data.data.velY;
+    //     message.velZ1 = mDvl_data.data.velZ1;
+    //     message.velZ2 = mDvl_data.data.velZ2;
+    //     message.fomX = mDvl_data.data.fomX;
+    //     message.fomY = mDvl_data.data.fomY;
+    //     message.fomZ1 = mDvl_data.data.fomZ1;
+    //     message.fomZ2 = mDvl_data.data.fomZ2;
+    //     message.timeDiff1X = mDvl_data.data.timeDiff1X;
+    //     message.timeDiff1Y = mDvl_data.data.timeDiff1Y;
+    //     message.timeDiff1Z1 = mDvl_data.data.timeDiff1Z1;
+    //     message.timeDiff1Z2 = mDvl_data.data.timeDiff1Z2;
+    //     message.timeDiff2X = mDvl_data.data.timeDiff2X;
+    //     message.timeDiff2Y = mDvl_data.data.timeDiff2Y;
+    //     message.timeDiff2Z1 = mDvl_data.data.timeDiff2Z1;
+    //     message.timeDiff2Z2 = mDvl_data.data.timeDiff2Z2;
+    //     message.timeVelEstX = mDvl_data.data.timeVelEstX;
+    //     message.timeVelEstY = mDvl_data.data.timeVelEstY;
+    //     message.timeVelEstZ1 = mDvl_data.data.timeVelEstZ1;
+    //     message.timeVelEstZ2 = mDvl_data.data.timeVelEstZ2;
+
+    //     dvl_bottom_tracking_publisher_.publish(message);
+    // }

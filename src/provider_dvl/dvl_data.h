@@ -7,6 +7,8 @@
 
 #pragma pack(push, 1)
 
+
+// Pathfinder
 typedef struct
 {
   uint8_t pathfinderDataId;
@@ -43,6 +45,10 @@ typedef struct {
   PD4 pd4;
 } PathfinderFormat_t;
 
+
+
+
+// Nortek
 typedef struct
 {
   uint8_t sync;

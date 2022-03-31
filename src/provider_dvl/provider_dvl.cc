@@ -1,5 +1,6 @@
 #include "provider_dvl/provider_dvl.h"
 
+const float ProviderDvl::dBAR_TO_METER_OF_WATER{1.01972f};
 
 ProviderDvl::ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize)
 : mSocket(dataSize),
@@ -21,6 +22,11 @@ void ProviderDvl::Connect() {
     {
         socket().ConnectTCP(hostName(),  portTCP());
     }
+}
+
+float ProviderDvl::convertDBarToMeters(float dBarValue)
+{
+    return dBarValue / dBAR_TO_METER_OF_WATER;
 }
 
 

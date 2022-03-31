@@ -46,6 +46,8 @@ class ProviderDvl {
     ros::NodeHandlePtr nh() const {return mNh;}
     EthernetSocket & socket() {return mSocket;}
 
+    static float convertDBarToMeters(float dBarValue);
+
   protected:
     std::thread mSendReceivedMessage;
 
@@ -76,6 +78,7 @@ class ProviderDvl {
       EthernetSocket mSocket;
 
   private:
+      static const float dBAR_TO_METER_OF_WATER;
       ros::NodeHandlePtr mNh;
       std::string mHostName;
       size_t mPortUDP;
