@@ -230,11 +230,11 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
 
     void NortekDvl::FillTemperatureMessage(ros::Time timestamp)
     {
-        sensor_msgs::Temperature message; // remplacer avec header
+        sensor_msgs::Temperature message; 
 
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
-        message.temperature = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
+        message.temperature = mDvl_data.data.temperature;
 
         dvl_fluid_pressure_publisher_.publish(message);
     }
