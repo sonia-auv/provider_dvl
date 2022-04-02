@@ -155,17 +155,11 @@ void NortekDvl::SendReceivedMessageThread()
             {
                 // if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
                 // {
-                    ROS_INFO("Start Com");
                     timestamp_ = ros::Time::now();
-                    ROS_INFO("Timer");
                     FillTwistMessage(timestamp_);
-                    ROS_INFO("Twist filled");
-                    FillFluidPressureMessage(timestamp_);
-                     ROS_INFO("pressure filled");
                     FillTemperatureMessage(timestamp_);
-                     ROS_INFO("temp filled");
                     FillRelativeDepthMessage(timestamp_);
-                     ROS_INFO("depth filled");
+                    FillFluidPressureMessage(timestamp_);
                     // FillBottomTracking(timestamp_);
                 // }
                 // else
@@ -187,6 +181,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
 
+        ROS_INFO_STREAM("xVelvalid: " << mDvl_data.data.status.bit_field.xVelValid);
         if(mDvl_data.data.status.bit_field.xVelValid)
         {
             message.xVelBtm = ((double_t)mDvl_data.data.velX);
@@ -224,7 +219,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         //message.header.stamp = timestamp;
         //message.header.frame_id = "/ENU";
         message.data = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
-
+        ROS_INFO_STREAM("rel depth" << message.data);
         dvl_fluid_pressure_publisher_.publish(message);
     }
 
@@ -235,7 +230,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
         message.temperature = mDvl_data.data.temperature;
-
+        ROS_INFO_STREAM("temp " << mDvl_data.data.temperature);
         dvl_fluid_pressure_publisher_.publish(message);
     }
 
@@ -246,7 +241,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
         message.fluid_pressure = mDvl_data.data.pressure;
-
+        ROS_INFO_STREAM("pressure " << mDvl_data.data.pressure);
         dvl_fluid_pressure_publisher_.publish(message);
     }
 
