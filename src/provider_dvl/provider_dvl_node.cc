@@ -170,7 +170,7 @@ void NortekDvl::SendReceivedMessageThread()
             }
             else
             {
-                ROS_INFO("Nortek ID mismatch : %d != %d", 0xA5, mDvl_data.header.sync);
+                ROS_INFO("Nortek ID mismatch : %d != %u", 0xA5, mDvl_data.header.sync);
             }
             r.sleep();
         }
