@@ -67,7 +67,7 @@ class ProviderDvl {
         {
             checksum += dataDVL[i];
         }
-        ROS_INFO_STREAM("Receive failed" << checksum);
+        ROS_INFO_STREAM("" << checksum);
         wholeChecksum = ceil(checksum/65536.0f); // sizeof(uint16) = 2^16 = 65536
         decimal = wholeChecksum-checksum/65536.0f;
         checksum = (1-decimal)*65536;

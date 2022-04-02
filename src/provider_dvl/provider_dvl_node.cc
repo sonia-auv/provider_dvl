@@ -150,25 +150,22 @@ void NortekDvl::SendReceivedMessageThread()
             getData<NortekFormat_t>(mDvl_data);
 
             ROS_DEBUG("Data obtained");
-            for (size_t x{}; x <= mSocket.size(); ++x)
-            {
-                ROS_INFO_STREAM(" " << ((uint8_t*)&mDvl_data)[x]);
-            }
+
             if (mDvl_data.header.sync == 0xA5)
             {
-                if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
-                {
+                // if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
+                // {
                     timestamp_ = ros::Time::now();
                     FillTwistMessage(timestamp_);
                     FillFluidPressureMessage(timestamp_);
                     FillTemperatureMessage(timestamp_);
                     FillRelativeDepthMessage(timestamp_);
                     // FillBottomTracking(timestamp_);
-                }
-                else
-                {
-                    ROS_INFO("CheckSum error : %d != %d", mDvl_data.header.dataChecksum, CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())));
-                }
+                // }
+                // else
+                // {
+                //     ROS_INFO("CheckSum error : %d != %d", mDvl_data.header.dataChecksum, CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())));
+                // }
             }
             else
             {
