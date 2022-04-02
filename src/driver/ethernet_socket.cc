@@ -98,12 +98,12 @@ void EthernetSocket::ConnectTCP(std::string addr, int port) {
 bool EthernetSocket::Receive() {
   socklen_t len = sizeof(dvl_);
   ssize_t x = recvfrom(socketUDP_, mData, mSize, 0, (struct sockaddr*) &dvl_, &len);
-  ROS_DEBUG("first data recvfrom %ld", x);
+  ROS_INFO_STREAM("first data recvfrom %ld", x);
   if ( x < 0) {
     ROS_INFO_STREAM("Receive failed");
     return false;
   }
-  ROS_DEBUG("first data Receive %u", mData[0]);
+  ROS_INFO_STREAM("first data Receive %u", mData[0]);
   ROS_DEBUG("Receive successed");
   return true;
 }
