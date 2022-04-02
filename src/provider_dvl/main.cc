@@ -45,7 +45,7 @@ int main(int argc, char *argv[]) {
   }
   else if(dvl_type == "Nortek")
   {
-      NortekDvl provider_dvl_Nortek(nh,"192.168.0.240", 9002);
+      NortekDvl provider_dvl_Nortek(nh,"192.168.0.12", 9002);
       provider_dvl_Nortek.Spin();
   }
   
