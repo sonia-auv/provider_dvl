@@ -145,21 +145,27 @@ void NortekDvl::SendReceivedMessageThread()
         {
             mSocket.Receive();
 
-            ROS_DEBUG("Data received");
+            ROS_INFO("Data received");
 
             getData<NortekFormat_t>(mDvl_data);
 
-            ROS_DEBUG("Data obtained");
+            ROS_INFO("Data obtained");
 
             if (mDvl_data.header.sync == 0xA5)
             {
                 // if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))
                 // {
+                    ROS_INFO("Start Com");
                     timestamp_ = ros::Time::now();
+                    ROS_INFO("Timer");
                     FillTwistMessage(timestamp_);
+                    ROS_INFO("Twist filled");
                     FillFluidPressureMessage(timestamp_);
+                     ROS_INFO("pressure filled");
                     FillTemperatureMessage(timestamp_);
+                     ROS_INFO("temp filled");
                     FillRelativeDepthMessage(timestamp_);
+                     ROS_INFO("depth filled");
                     // FillBottomTracking(timestamp_);
                 // }
                 // else
