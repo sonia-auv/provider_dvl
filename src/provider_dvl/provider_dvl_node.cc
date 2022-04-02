@@ -181,7 +181,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
 
-        ROS_INFO_STREAM("xVelvalid: " << mDvl_data.data.status.bit_field.xVelValid);
+        //ROS_INFO_STREAM("xVelvalid: " << mDvl_data.data.status.bit_field.xVelValid);
         if(mDvl_data.data.status.bit_field.xVelValid)
         {
             message.xVelBtm = ((double_t)mDvl_data.data.velX);
@@ -219,7 +219,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         //message.header.stamp = timestamp;
         //message.header.frame_id = "/ENU";
         message.data = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
-        ROS_INFO_STREAM("rel depth" << message.data);
+        //ROS_INFO_STREAM("rel depth" << message.data);
         dvl_relative_depth_publisher_.publish(message);
     }
 
@@ -230,7 +230,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
         message.temperature = mDvl_data.data.temperature;
-        ROS_INFO_STREAM("temp " << mDvl_data.data.temperature);
+        //ROS_INFO_STREAM("temp " << mDvl_data.data.temperature);
         dvl_temperature_publisher_.publish(message);
     }
 
@@ -241,7 +241,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.stamp = timestamp;
         message.header.frame_id = "/ENU";
         message.fluid_pressure = mDvl_data.data.pressure;
-        ROS_INFO_STREAM("pressure " << mDvl_data.data.pressure);
+        //ROS_INFO_STREAM("pressure " << mDvl_data.data.pressure);
         dvl_fluid_pressure_publisher_.publish(message);
     }
 
