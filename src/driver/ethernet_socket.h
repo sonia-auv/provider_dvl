@@ -48,6 +48,7 @@ class EthernetSocket {
   bool Receive();
   void Send(char *data);
   char* GetRawData();
+  size_t size() const {return mSize;}
   
  private:
   //==========================================================================
