@@ -67,7 +67,7 @@ void PathfinderDvl::SendReceivedMessageThread()
 
         ROS_DEBUG("Data received");
 
-        getData<PathfinderFormat_t>(mDvl_data);
+        getData<PathfinderFormat_t>(&mDvl_data);
 
         ROS_DEBUG("Data obtained");
 
@@ -147,10 +147,11 @@ void NortekDvl::SendReceivedMessageThread()
 
             ROS_DEBUG("Data received");
 
-            getData<NortekFormat_t>(mDvl_data);
+            getData<NortekFormat_t>(&mDvl_data);
 
             ROS_DEBUG("Data obtained");
-
+            
+            
             if (mDvl_data.header.sync == 0xA5)
             {
                 if (mDvl_data.header.dataChecksum == CalculateChecksum<NortekFormat_t>(reinterpret_cast<uint8_t*>(mSocket.GetRawData())))

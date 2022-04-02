@@ -52,9 +52,9 @@ class ProviderDvl {
     std::thread mSendReceivedMessage;
 
     template<class T>
-    inline void getData(T & x)
+    inline void getData(T *x)
     {
-      x = *((T*)(mSocket.GetRawData()));
+      x = (T*)(mSocket.GetRawData());
     }
 
     template<class T>
