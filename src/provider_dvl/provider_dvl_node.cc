@@ -220,7 +220,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         //message.header.frame_id = "/ENU";
         message.data = ProviderDvl::convertDBarToMeters(mDvl_data.data.pressure - depthOffset_);
         ROS_INFO_STREAM("rel depth" << message.data);
-        dvl_fluid_pressure_publisher_.publish(message);
+        dvl_relative_depth_publisher_.publish(message);
     }
 
     void NortekDvl::FillTemperatureMessage(ros::Time timestamp)
@@ -231,7 +231,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
         message.header.frame_id = "/ENU";
         message.temperature = mDvl_data.data.temperature;
         ROS_INFO_STREAM("temp " << mDvl_data.data.temperature);
-        dvl_fluid_pressure_publisher_.publish(message);
+        dvl_temperature_publisher_.publish(message);
     }
 
     void NortekDvl::FillFluidPressureMessage(ros::Time timestamp)
