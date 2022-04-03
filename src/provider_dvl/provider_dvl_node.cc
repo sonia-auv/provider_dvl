@@ -145,11 +145,11 @@ void NortekDvl::SendReceivedMessageThread()
         {
             mSocket.Receive();
 
-            ROS_INFO("Data received");
+            //ROS_INFO("Data received");
 
             getData<NortekFormat_t>(mDvl_data);
 
-            ROS_INFO("Data obtained");
+            //ROS_INFO("Data obtained");
 
             if (mDvl_data.header.sync == 0xA5)
             {
