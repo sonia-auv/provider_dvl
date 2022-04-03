@@ -65,7 +65,7 @@ class NortekDvl :  public ProviderDvl{
       inline void SendReceivedMessageThread() override;
       //==========================================================================
       // P U B L I C   M E T H O D S
-      void setDepthOffsetCallback(const std_msgs::Bool& msg);
+      void setDepthOffsetCallback(const std_msgs::Bool & msg);
 
   private:
       
