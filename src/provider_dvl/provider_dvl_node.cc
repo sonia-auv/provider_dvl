@@ -247,10 +247,7 @@ void NortekDvl::FillTwistMessage(ros::Time timestamp) {
 
     void NortekDvl::setDepthOffsetCallback(const std_msgs::Bool& msg)
     {
-        if(msg.data)
-        {
-            depthOffset_ = mDvl_data.data.pressure;
-        }
+        depthOffset_ = mDvl_data.data.pressure;
     }
 
 
