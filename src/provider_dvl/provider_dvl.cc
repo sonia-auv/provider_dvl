@@ -26,7 +26,7 @@ void ProviderDvl::Connect() {
 
 float ProviderDvl::convertDBarToMeters(float dBarValue)
 {
-    return dBarValue / dBAR_TO_METER_OF_WATER;
+    return dBarValue * dBAR_TO_METER_OF_WATER;
 }
 
 
