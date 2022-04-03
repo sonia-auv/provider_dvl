@@ -95,7 +95,7 @@ void EthernetSocket::ConnectTCP(std::string addr, int port) {
 
 //------------------------------------------------------------------------------
 //
-bool EthernetSocket::Receive() {
+bool EthernetSocket::Receive(int socket) {
   socklen_t len = sizeof(dvl_);
   if ( recvfrom(socketTCP_, mData, mSize, 0, (struct sockaddr*) &dvl_, &len) < 0) {
     ROS_INFO_STREAM("Receive failed");
@@ -103,6 +103,17 @@ bool EthernetSocket::Receive() {
   }
   ROS_DEBUG("Receive successed");
   return true;
+}
+
+//------------------------------------------------------------------------------
+//
+bool EthernetSocket::ReceiveUDP() {
+  return Receive(socketUDP_);
+}
+//------------------------------------------------------------------------------
+//
+bool EthernetSocket::ReceiveTCP() {
+  return Receive(socketTCP_);
 }
 
 //------------------------------------------------------------------------------

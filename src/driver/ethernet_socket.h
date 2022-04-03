@@ -45,8 +45,9 @@ class EthernetSocket {
 
   void ConnectUDP(int const port);
   void ConnectTCP(std::string const addr, int const port);
-  bool Receive();
   void Send(char *data);
+  bool ReceiveUDP();
+  bool ReceiveTCP();
   char* GetRawData();
   size_t size() const {return mSize;}
   
@@ -54,6 +55,7 @@ class EthernetSocket {
   //==========================================================================
   // P R I V A T E   M E M B E R S
 
+  bool Receive(int socket);
   int socketUDP_, socketTCP_;
   sockaddr_in server_, dvl_;
   char* mData;
