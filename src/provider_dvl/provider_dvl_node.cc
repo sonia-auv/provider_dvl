@@ -63,7 +63,7 @@ void PathfinderDvl::SendReceivedMessageThread()
 
     while(!ros::isShuttingDown())
     {
-        mSocket.Receive();
+        mSocket.ReceiveUDP();
 
         ROS_DEBUG("Data received");
 
@@ -143,7 +143,7 @@ void NortekDvl::SendReceivedMessageThread()
 
     while (ros::ok())
         {
-            mSocket.Receive();
+            mSocket.ReceiveTCP();
 
             //ROS_INFO("Data received");
 
