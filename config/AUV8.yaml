@@ -1,2 +1,10 @@
 #Constants informations
 /Provider_dvl/dvl_type: "Pathfinder"
+/Provider_dvl/ip: "192.168.0.32"
+/Provider_dvl/TCPPort: 1033
+/Provider_dvl/UDPPort: 1035
+
+
+
+
+

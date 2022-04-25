@@ -30,5 +30,3 @@ float ProviderDvl::convertDBarToMeters(float dBarValue)
 }
 
 
-
-

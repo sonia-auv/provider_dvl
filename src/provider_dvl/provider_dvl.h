@@ -19,7 +19,7 @@ class ProviderDvl {
     // P U B L I C   C / D T O R S
     ProviderDvl() = delete;
     ProviderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP, size_t dataSize);
-    ~ProviderDvl() = default;
+    virtual ~ProviderDvl() {};
 
     //==========================================================================
     // P U B L I C  V I R T U A L   M E T H O D S

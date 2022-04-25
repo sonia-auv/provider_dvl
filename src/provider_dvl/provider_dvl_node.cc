@@ -110,8 +110,8 @@ void PathfinderDvl::SendReceivedMessageThread()
 
 //------------------------------------------------------------------------------
 //
-NortekDvl::NortekDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pTCP)
-: ProviderDvl(nh,hostName,0, pTCP,sizeof(mDvl_data)), depthOffset_{}
+NortekDvl::NortekDvl(const ros::NodeHandlePtr & nh, std::string hostName, size_t pUDP, size_t pTCP)
+: ProviderDvl(nh,hostName,pUDP, pTCP,sizeof(mDvl_data)), depthOffset_{}
 {
   Connect();
   SetupROSCommunication();

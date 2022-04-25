@@ -33,7 +33,7 @@ class PathfinderDvl :  public ProviderDvl{
       PathfinderDvl() = delete;
       PathfinderDvl(const ros::NodeHandlePtr& nh);
       PathfinderDvl(const ros::NodeHandlePtr &nh, std::string hostName, size_t pUDP, size_t pTCP);
-      ~PathfinderDvl() = default;
+      ~PathfinderDvl() override {};
 
       void SetupROSCommunication() override;
       inline void SendReceivedMessageThread() override;
@@ -58,8 +58,8 @@ class NortekDvl :  public ProviderDvl{
       // P U B L I C   C / D T O R S
       NortekDvl() = delete;
       NortekDvl(const ros::NodeHandlePtr& nh);
-      NortekDvl(const ros::NodeHandlePtr &nh, std::string hostName,size_t pTCP);
-      ~NortekDvl() = default;
+      NortekDvl(const ros::NodeHandlePtr &nh, std::string hostName,size_t pUDP ,size_t pTCP);
+      ~NortekDvl() override {};
 
       void SetupROSCommunication() override;
       inline void SendReceivedMessageThread() override;

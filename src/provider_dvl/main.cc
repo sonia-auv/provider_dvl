@@ -26,30 +26,19 @@
 #include <string>
 #include "provider_dvl/provider_dvl_node.h"
 #include "dvl_data.h"
+#include "dvl_factory.h"
 
 int main(int argc, char *argv[]) {
 
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
 
-  std::string dvl_type;
-
-  if (nh->hasParam("/Provider_dvl/dvl_type")) {
-    nh->getParam("/Provider_dvl/dvl_type", dvl_type);
-  }
-
-  if(dvl_type == "Pathfinder")
+  ProviderDvl * dvl{dvl_factory::createDvl(nh)};
+  if(dvl)
   {
-      PathfinderDvl provider_dvl_Pathfinder(nh,"192.168.0.32", 1035, 1033);
-      provider_dvl_Pathfinder.Spin();
+    dvl->Spin();
   }
-  else if(dvl_type == "Nortek")
-  {
-      NortekDvl provider_dvl_Nortek(nh,"192.168.0.12", 9002);
-      provider_dvl_Nortek.Spin();
-  }
-  
-  
 
+  delete(dvl);
   return 0;
 }

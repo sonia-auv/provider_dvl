@@ -1,2 +1,5 @@
 #Constants informations
 /Provider_dvl/dvl_type: "Nortek"
+/Provider_dvl/ip: "192.168.0.12"
+/Provider_dvl/TCPPort: 9002
+/Provider_dvl/UDPPort: 0
