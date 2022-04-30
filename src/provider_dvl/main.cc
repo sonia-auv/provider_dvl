@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
 
   ros::init(argc, argv, "provider_dvl");
   ros::NodeHandlePtr nh(new ros::NodeHandle("~"));
-
+  dvl_factory::loadRosParams(nh);
   ProviderDvl * dvl{dvl_factory::createDvl(nh)};
   if(dvl)
   {
