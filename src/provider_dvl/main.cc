@@ -22,9 +22,11 @@
  * You should have received a copy of the GNU General Public License
  * along with S.O.N.I.A. software. If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include <ros/ros.h>
 #include <string>
 #include "provider_dvl/provider_dvl_node.h"
+#include "provider_dvl/provider_dvl.h"
 #include "dvl_data.h"
 #include "dvl_factory.h"
 

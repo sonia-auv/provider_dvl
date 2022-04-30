@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 
-#include <std_msgs/Bool.h>
 #include <std_msgs/Float32.h>
+#include <std_msgs/Bool.h>
 #include <ros/node_handle.h>
 #include <sonia_common/BodyVelocityDVL.h>
 
