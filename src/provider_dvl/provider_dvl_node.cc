@@ -94,6 +94,7 @@ void PathfinderDvl::SendReceivedMessageThread()
 
                 dvl_velocity_publisher_.publish(message);
             }
+            else{ROS_INFO("Bad checksum");}
         }
         else
         {
