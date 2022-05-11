@@ -133,7 +133,7 @@ void NortekDvl::SetupROSCommunication()
     dvl_speed_publisher_ = nh()->advertise<sonia_common::BodyVelocityDVL>("/provider_dvl/dvl_velocity", 100);
     dvl_fluid_pressure_publisher_ = nh()->advertise<sensor_msgs::FluidPressure>("/provider_dvl/dvl_pressure", 100);
     dvl_temperature_publisher_ = nh()->advertise<sensor_msgs::Temperature>("/provider_dvl/dvl_water_temperature", 100);
-    dvl_relative_depth_publisher_ = nh()->advertise<std_msgs::Float32>("/provider_dvl/dvl_relative_depth", 100);
+    dvl_relative_depth_publisher_ = nh()->advertise<std_msgs::Float32>("/provider_depth/depth", 100); //ark
     setDepthOffset = nh()->subscribe("/provider_dvl/setDepthOffset", 100, &NortekDvl::setDepthOffsetCallback, this);
     //dvl_bottom_tracking_publisher_ = nh()->advertise<sonia_common::BottomTracking>("/provider_dvl/dvl_data", 100);
 }
