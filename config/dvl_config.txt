@@ -25,7 +25,7 @@ CF11110
 ; Enable single-ping bottom track,
 BP001
 ; Set maximum bottom search depth to 100 meters
-BX01000
+BX0150
 ; **************************************
 ; ExplorerDVL Environment Setup Commands
 ; **************************************
